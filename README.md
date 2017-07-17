@@ -1,4 +1,4 @@
-![Logo of the project](./logo.sample.png)
+![Logo of the project](https://greatbooksblog.files.wordpress.com/2009/12/adlersmile.jpg?w=240&h=300)
 
 # Syntopicon
 > An open source index of ideas
