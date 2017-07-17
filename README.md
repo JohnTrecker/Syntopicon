@@ -5,8 +5,8 @@
 
 "Read the best books first or you may not have a chance to read them at all." -- Henry David Thoreau
 
-Syntopicon is an open API based on the 1952 edition of Encyclopedia Britannica's Great Books of the Western World. The name was coined by its creator, Mortimer J. Adler. This index catalogues 102 fundamental topics around which competing and evolving schools of thought have developed over the past 25 centuries. With over 500,000 references to the works of eminent thinkers indexed under each subtopic the Syntopicon stands as a monument of academic labor but has fallen into relative obscurity. This project aims to revive its use among English-speaking men and women who earnestly seek a liberal education.
-
+Syntopicon is an open API loosely based on the 1952 edition of Encyclopedia Britannica's Great Books of the Western World. The name was coined by its creator, Mortimer J. Adler and the index catalogued 102 fundamental "great ideas" around which competing schools of thought have developed over the past 28 centuries. With over 500,000 references to the works of eminent thinkers, the Syntopicon is a monument of academic labor but has since fallen into relative obscurity. This project aims to revive its use among English-speaking men and women who earnestly seek a liberal education.
+<!--
 ## Installing / Getting started
 
 A quick introduction of the minimal setup you need to get a hello world up &
@@ -101,3 +101,5 @@ Documents your database design and schemas, relations etc...
 ## Licensing
 
 State what the license is and how to find the text version of the license.
+
+-->
