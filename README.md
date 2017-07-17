@@ -1,7 +1,7 @@
 ![Logo of the project](https://greatbooksblog.files.wordpress.com/2009/12/adlersmile.jpg?w=240&h=300)
 
 # Syntopicon
-> An open source index of ideas
+> An open source index of great ideas
 
 "Read the best books first or you may not have a chance to read them at all." -- Henry David Thoreau
 
