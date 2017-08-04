@@ -8,21 +8,20 @@ def write_file(filename1, filename2, filename3):
   output_file = open(filename3, "wb")
   writer = csv.writer(output_file, delimiter=',')
 
-  def writeline():
-    writer.writerow([rid, topic, subtopic, author, vol, alpha, omega, passage, notes])
 
   topics = []
   rid = 0
   topic = ''
   subtopic = ''
   notes = ''
-  count = 0
 
+  def writeline():
+    writer.writerow([rid, topic, subtopic, author, vol, alpha, omega, passage, notes])
 
   for string in topics_file:
     topics.append(string.strip())
-
   topics_file.close()
+
 
   for blob in input_file:
     lines = blob.split('\r')
@@ -32,7 +31,8 @@ def write_file(filename1, filename2, filename3):
           if line[0].isdigit():
             num, description = line.split('\t')
             subtopic = num.rstrip('.')
-            if num == '1.':
+
+            if subtopic == '1':
               topic = topics.pop(0)
 
           elif line[0] == '\t':
