@@ -1,5 +1,6 @@
 import sys
 import csv
+import re
 
 def write_file(filename1, filename2, filename3):
 
@@ -15,6 +16,7 @@ def write_file(filename1, filename2, filename3):
   subtopic = ''
   notes = ''
 
+  writer.writerow(['id','topic','subtopic','author','vol','alpha','omega','passage','notes'])
   def writeline():
     writer.writerow([rid, topic, subtopic, author, vol, alpha, omega, passage, notes])
 
@@ -42,21 +44,34 @@ def write_file(filename1, filename2, filename3):
               vol = vol.rstrip(':')
               refs = refs.split('/')
               author = 'Bible'
-              alpha = ''
-              omega = ''
 
               for ref in refs:
+                alpha = ''
+                omega = ''
+                notes = ''
+
                 ref = ref.strip()
                 if ';' in ref:
                   passages = ref.split(';')
                   book = passages[0].split(',', 1)[0]
                   for passage in passages:
 
-                    # TODO: handle e.g. "passim", "esp"
-
                     if passage[0].isalpha() or passage[1] == " ":
                       passage = passage.split(',', 1)[1]
                     rid += 1
+
+                    if 'passim' in passage or 'esp' in passage:
+                      e = passage.find('esp')
+                      e = e if e > -1 else 50
+
+                      p = passage.find('passim')
+                      p = p if p > -1 else 50
+
+                      index = p if p < e else e
+
+                      verses = passage[0:index]
+                      notes = passage[index:]
+                      passage = verses.strip()
                     passage = book + passage
 
                     writeline()
