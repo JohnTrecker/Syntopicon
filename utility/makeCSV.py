@@ -85,10 +85,10 @@ def write_file(filename1, filename2, filename3):
             else:
               passage = ''
               refs = refs.split(',')
-              author = refs.pop(0)
+              author = refs.pop(0).strip()
               if author == 'James' or author == 'Eliot':
                 surname = refs.pop(0)
-                author = author + ',' + surname
+                author = author + surname.replace(' ', ', ')
               for ref in refs:
                 rid += 1
                 ref = ref.lstrip()
