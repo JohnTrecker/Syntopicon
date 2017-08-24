@@ -41,12 +41,13 @@ for string in file:
       if num[-1] == '.':
         num = num[:-1]
         currSubtopic = num
+        subObj['number'] = num
       elif num[0] == '(':
         num = currSubtopic + num
-      else:
-        print line
+        subObj['number'] = num
 
       alltopics['topics'][-1]['subtopics'].append(subObj)
+
 
 json.dump(alltopics, output)
 output.close()
