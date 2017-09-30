@@ -1,26 +1,45 @@
 const fs = require('fs');
 const WordExtractor = require("word-extractor");
-const sourcePath = '../test'
-const outputPath = '../output'
+// const sourcePath = '../data/text'
+const sourcePath = '../data/input'
+const outputPath = '../data/output'
 
 fs.readdir(sourcePath, (err, files) => {
   if (err) {
     throw err;
   }
 
-  // 160, 32, 112, 32, 105, 105, 105, 160, 32,
+  files.forEach( file => {
 
-  let regex = /\u{0}\sp\s/
-  files.forEach( (file, vol) => {
+    let vol = file.slice(0,-4)
     let path = `${sourcePath}/${file}`
+    let newDir = `${outputPath}/${vol}`
+
+
     let extractor = new WordExtractor();
     let extracted = extractor.extract(path);
+
+    if (fs.existsSync(newDir)) {
+      console.log(`directory ${newDir} already exists!!`)
+      return
+    }
+
+    fs.mkdirSync(newDir, err => {
+      if (err) throw err
+    })
+
     extracted.then(function(doc) {
 
-      doc.getBody().split(regex).slice(1).forEach( page => {
+      doc.getBody().split(/\u{0}\sp\s/).slice(1).forEach( page => {
 
         let [num, text] = page.split(/\s\u{0}\s/)
-        console.log(num.length, '\n\n\n', text, '\n\n\n')
+        let newFile = `${outputPath}/${vol}/${num}`
+        if (fs.existsSync(newFile)) console.log(`${newFile} already exists!!`)
+
+        fs.writeFileSync(newFile, text, 'utf8', (err) => {
+          if (err) throw err
+        })
+
       })
 
     });
@@ -28,38 +47,3 @@ fs.readdir(sourcePath, (err, files) => {
 
   })
 })
-
-
-//     fs.readFile(path, (error, data) => {
-//       if (error) throw error
-
-//       data = data.toString()
-//       console.log('data:', data)
-//       const regex = /p\s(\w+)\s\s/
-//       let text = data.split(regex)
-//       console.log('text:', text)
-
-//       let currentPage = '';
-//       let currentString = '';
-
-//       text.forEach( str => {
-//         if (str.length < 8) {
-//           console.log(str)
-//         //   currentPage = str
-//         //   let currentFile = `${outputPath}/${vol}.${currentPage}.txt`
-
-//         //   fs.writeFile(currentFile, currentString, 'utf8', (err) => {
-//         //     if (err) throw err;
-//         //     console.log(`${currentFile} saved!`)
-//         //   })
-//         //   currentString = ''
-//         // } else {
-//         //   currentString = currentString.concat(str)
-//         }
-
-//       })
-
-
-//     })
-//   })
-// })
