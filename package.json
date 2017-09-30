@@ -1,0 +1,32 @@
+{
+  "name": "syntopicon",
+  "version": "1.0.0",
+  "description": "index of ideas",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnTrecker/syntopicon.git"
+  },
+  "keywords": [
+    "syntopicon",
+    "reference",
+    "encyclopedia",
+    "great",
+    "books"
+  ],
+  "author": "jttrecker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JohnTrecker/syntopicon/issues"
+  },
+  "homepage": "https://github.com/JohnTrecker/syntopicon#readme",
+  "dependencies": {
+    "word-extractor": "^0.1.4"
+  }
+}
