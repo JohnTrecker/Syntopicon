@@ -1,3 +1,5 @@
+// TODO: fix for 10, 13, 32, 42, 53, 55, 56, Aristotle, Aquinas, Shakespeare, Gibbon,
+
 const fs = require('fs');
 const WordExtractor = require("word-extractor");
 // const sourcePath = '../data/text'
