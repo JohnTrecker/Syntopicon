@@ -4,8 +4,6 @@ import re
 
 def write_file(filename1, filename2, filename3):
 
-  topics_file = open(filename1, 'r')
-  input_file = open(filename2, 'r')
   output_file = open(filename3, "wb")
   writer = csv.writer(output_file, delimiter=',')
 
@@ -20,13 +18,11 @@ def write_file(filename1, filename2, filename3):
   def writeline():
     writer.writerow([rid, topic, subtopic, author, vol, alpha, omega, passage, notes])
 
-  for string in topics_file:
-    topics.append(string.strip())
-  topics_file.close()
+  with open(filename1, 'r') as text:
+    topics.append(text.strip())
 
-
-  for blob in input_file:
-    lines = blob.split('\r')
+  with open(filename2, 'r') as text:
+    lines = text.split('\r')
     for line in lines:
       if line:
         if line[0]:
@@ -106,7 +102,6 @@ def write_file(filename1, filename2, filename3):
 
                 writeline()
 
-  input_file.close()
   output_file.close()
 
 def main():
