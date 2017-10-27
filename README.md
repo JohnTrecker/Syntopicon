@@ -1,4 +1,4 @@
-![Logo of the project](https://greatbooksblog.files.wordpress.com/2009/12/adlersmile.jpg?w=240&h=300)
+![Logo of the project](http://media.gettyimages.com/photos/mortimer-j-adler-surrounded-by-his-great-ideas-picture-id50447930?s=594x594)
 
 # Syntopicon
 > An open source index of great ideas
