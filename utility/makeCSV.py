@@ -2,6 +2,10 @@ import sys
 import csv
 import re
 
+# import os
+# path = os.path.dirname(os.path.realpath(__file__))
+# csvpath = os.path.join(path, <directory name>, <file name>)
+
 def write_file(filename1, filename2, filename3):
 
   output_file = open(filename3, "wb")
