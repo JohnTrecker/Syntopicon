@@ -2,10 +2,10 @@ import sys
 import os
 
 def retrieve(vol, page):
-  path = '../data/output/' + str(vol) +'/' + str(page)
-  with open(path, 'r') as output:
+  filepath = os.path.join('..', 'data', 'output', str(vol), str(page))
+  with open(filepath, 'r') as output:
     for text in output:
-      return text;
+      return text
 
 def retrieveMany(vol, start, end):
   data = ''
