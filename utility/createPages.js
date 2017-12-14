@@ -1,15 +1,9 @@
 'use strict';
-// TODO: fix for 10, 13, 32, 42, 53, 55, 56, Aristotle, Aquinas, Shakespeare, Gibbon,
-  // replace `p. xxx` with `__PAGE__NUMBER xxx` ...  ` V [1-2], p [!p]{1,15}p`
-  // print errors to log file
-
-// TODO: Fix 8, 15, 26
 
 const fs = require('fs');
-// const WordExtractor = require("word-extractor");
 const textract = require('textract');
-const sourcePath = '../data/input'
-const outputPath = '../data/output'
+const sourcePath = '../data/input2'
+const outputPath = '../data/output2'
 const errorPath = '../data/output/error_log.txt'
 
 fs.writeFileSync(errorPath, 'ERROR LOG\n\n', 'utf8', (err) => {
@@ -40,7 +34,7 @@ fs.readdir(sourcePath, (err, files) => {
       fs.mkdirSync(newDir, err => {if (err) writeError('error making new directory') });
     }
 
-    const type = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    const type = 'text/plain'
     const config = {
       'preserveLineBreaks': true,
       'exec': {'maxBuffer': 500000}
@@ -55,7 +49,6 @@ fs.readdir(sourcePath, (err, files) => {
         let newFile = `${outputPath}/${vol}/${num}`
 
         if (fs.existsSync(newFile)) {
-          // open newFile and append to it.
           fs.appendFileSync(newFile, text, 'utf8', (err) => {
             if (err) writeError('error appending to file ${newFile}', err)
           });          
