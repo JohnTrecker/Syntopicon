@@ -1,8 +1,16 @@
 import sys
 import os
+from path import Path
+data = '../data/output'
+
+def listFiles(directory=data):
+	o = Path(directory)
+	for d in o.dirs():
+		for f in d.files('*.txt'):
+			print (f)
 
 def retrieve(vol, page):
-  filepath = os.path.join('..', 'data', 'output', str(vol), str(page))
+  filepath = os.path.join(data, str(vol), str(page))
   with open(filepath, 'r') as output:
     for text in output:
       return text
