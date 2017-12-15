@@ -1,4 +1,4 @@
 archive2.js
-data/*
+**/data/*
 .DS_Store
 node_modules
