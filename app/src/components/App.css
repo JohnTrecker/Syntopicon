@@ -38,8 +38,8 @@ body {
 
 ul {
   display: inline-block;
-  height: 40vh;
-  overflow: hidden;
+  height: auto;
+  width: 80vw;
 }
 
 li {
@@ -47,6 +47,9 @@ li {
 }
 
 li:hover {
-  font-size: larger;
   color: sienna;
+}
+
+li.hidden {
+  display: none;
 }

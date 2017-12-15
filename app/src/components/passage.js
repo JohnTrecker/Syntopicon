@@ -6,7 +6,7 @@ class Passage extends React.Component {
     super()
   }
   render(props) {
-    let [vol, alpha, omega] = this.props.passage.split('.')
+    let {passage} = this.props
     return (
       <div>
       </div>
