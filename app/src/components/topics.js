@@ -6,7 +6,7 @@ let Topics = ({update, hidden}) => {
   return (
     <ol className='topics'>
       {topics.map( item =>
-        <li key={item.number} onClick={update} className='topic'>
+        <li key={item.number} onClick={(e) => update(e, item.number, 'topic')} className='topic'>
           {`${item.number}. ${item.topic}`}
         </li>
       )}

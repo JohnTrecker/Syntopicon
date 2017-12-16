@@ -11,7 +11,7 @@ class Subtopics extends React.Component {
         {number ? data.topics[i].subtopics.map( item =>
           <li
             key={item.number}
-            onClick={update}
+            onClick={(e) => update(e, item.number, 'subtopic') }
             style={{ paddingLeft: indent(item.number) }}
             className='subtopic'>
 

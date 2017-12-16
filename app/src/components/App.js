@@ -17,31 +17,13 @@ class App extends React.Component {
       hideauthors:   false,
       hidepassage:   false
     }
-    this.updateTopic    = this.updateTopic.bind(this)
-    this.updateSubtopic = this.updateSubtopic.bind(this)
-    this.updatePassage  = this.updatePassage.bind(this)
-    this.hide           = this.hide.bind(this)
-
+    this.update = this.update.bind(this)
+    this.hide   = this.hide.bind(this)
   }
 
-  updateTopic(e){
-    let value = e.target.innerHTML.split('.')[0]
-    this.setState({...this.state, topic: value})
-    this.hide(e, 'topic')
-    console.log('topic set to', value, '\n', 'e.target ', e)
-  }
-
-  updateSubtopic(e){
-    let value = e.target.innerHTML.split('.')[0]
-    this.setState({...this.state, subtopic: value})
-    this.hide(e, 'subtopic')
-    console.log('subtopic set to', value)
-  }
-
-  updatePassage(e){
-    let value = e.target.innerHTML.split('.')[0]
-    this.setState({passage: value})
-    console.log('passage set to', value)
+  update(e, number, category){
+    this.setState({...this.state, topic: number})
+    this.hide(e, category)
   }
 
   hide(e, name){
@@ -56,9 +38,9 @@ class App extends React.Component {
     return (
       <div id='container'>
         <Topics
-          update={this.updateTopic} />
+          update={this.update} />
         <Subtopics
-          update={this.updateSubtopic}
+          update={this.update}
           number={topic}
           subtopic={subtopic} />
       </div>
