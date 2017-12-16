@@ -52,7 +52,7 @@ class App extends React.Component {
   }
 
   render(){
-    let {topic, subtopic, author, passage, hidetopics, hidesubtopics} = this.state
+    let {topic, subtopic} = this.state
     return (
       <div id='container'>
         <Topics

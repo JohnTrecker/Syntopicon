@@ -1,9 +1,8 @@
 import React from 'react';
-import data from '../data/subtopics.json'
+import data from '../data/subtopics2.json'
 
-let Topics = (props) => {
+let Topics = ({update, hidden}) => {
   const topics = data.topics
-  let { update, hidden } = props
   return (
     <ol className='topics'>
       {topics.map( item =>

@@ -1,14 +1,11 @@
 import React from 'react'
-import data from '../data/subtopics.json'
+import data from '../data/subtopics2.json'
 
 class Subtopics extends React.Component {
-  constructor(){
-    super()
-  }
-  render(props){
-    let {number, subtopic, update, hidden} = this.props
+  render(){
+    let {number, subtopic, update} = this.props
     let i = Number(number) - 1
-    let indent = (str) => `${str.split('.').length - 1 * 5}em`
+    let indent = (str) => `${(str.split('.').length - 1) * 2}em`
     return (
       <ul>
         {number ? data.topics[i].subtopics.map( item =>

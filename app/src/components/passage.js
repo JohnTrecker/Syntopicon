@@ -1,5 +1,5 @@
 import React from 'react'
-import data from '../data/subtopics.json'
+import data from '../data/subtopics2.json'
 
 class Passage extends React.Component {
   constructor(){

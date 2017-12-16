@@ -2,7 +2,7 @@
 
 let fs = require('fs');
 
-module.exports = {
+const utils = {
 
   get: (vol, page) => {
     const path = `${output}/${vol}/${page}`
@@ -30,7 +30,7 @@ module.exports = {
     let subs = obj.subtopics.map( topic => {
       temp[topic.topic] = {}
       topic.subtopics.map( (subtopic, i, collection) => {
-        let [first, second, third] = subtopic.number.split('.')  
+        let [first, second, third] = subtopic.number.split('.')
         if (second) {
           if (!temp[topic.topic][first]) temp[topic.topic][first] = []
           temp[first].push(subtopic)
@@ -46,7 +46,7 @@ module.exports = {
     });
 
     return {'subtopics': subs}
-  }, 
+  },
 
 
   setDepthValue: (num, depth) => {
@@ -64,7 +64,7 @@ module.exports = {
     for (let [index, topic] of iterator) {
         let serialized = topic['subtopics'].map((s, i) => {
             let n = s.number;
-            s.number = serialize(n);
+            s.number = utils.serialize(n);
             return s;
         })
         obj.topics[index].subtopics = serialized;
@@ -96,7 +96,7 @@ module.exports = {
         if (error) throw error
       });
       throw err
-    } 
+    }
 
     fs.readdir(sourcePath, (err, files) => {
       if (err) writeError('error reading sourcePath', err)
@@ -106,7 +106,7 @@ module.exports = {
         let vol = file.split('.docx')[0]
         let path = `${sourcePath}/${file}`
         let newDir = `${outputPath}/${vol}`
-        
+
         if (fs.existsSync(newDir)) {
           writeError('directory already exists', `${newDir} already exists`)
           return
@@ -132,8 +132,8 @@ module.exports = {
             if (fs.existsSync(newFile)) {
               fs.appendFileSync(newFile, text, 'utf8', (err) => {
                 if (err) writeError('error appending to file ${newFile}', err)
-              });          
-            } 
+              });
+            }
             else {
               fs.writeFileSync(newFile, text, 'utf8', (err) => {
                 if (err) writeError('error writing to new file ${newFile}', err)
@@ -146,14 +146,16 @@ module.exports = {
 
   },
 
-  IOjson: (input, output, cb) => {
+  IOjson: (input, outputFile, cb) => {
     fs.readFile(input, 'utf8', (err, json) => {
       if (err) throw err
       let output = JSON.parse(json)
       let result = cb(output)
 
-      fs.writeFile(output, JSON.stringify(result, null, 2), 'utf8', (err) => {if (err) throw err;});
+      fs.writeFile(outputFile, JSON.stringify(result, null, 2), 'utf8', (err) => {if (err) throw err;});
     });
-    
+
   }
 };
+
+module.exports = utils;
