@@ -1,6 +1,25 @@
-import os, re, sys, json, csv, path
+#!/usr/bin/env python
+import os
+import re
+import sys
+import json
+import csv
+import pprint
+
 data = '../data/output'
-cumm = 0 
+cumm = 0
+
+def csv_to_dict():
+  csvpath = os.path.join('..', 'data', 'refs.csv')
+
+  with open(csvpath, 'r') as csvfile:
+    # CSV reader specifies delimiter and variable that holds contents
+    csvreader = csv.reader(csvfile, delimiter=',')
+
+    #  Each row is read as a row
+    for row in csvreader:
+      print(row)
+
 
 def write_file(filename1, filename2, filename3):
 
@@ -264,18 +283,18 @@ def retrieveMany(vol, start, end):
   return data
 
 def main():
-  if len(sys.argv) < 3:
-    print ('usage: ./retrieve.py vol first page [last page]')
-    sys.exit(1)
+  # if len(sys.argv) < 3:
+  #   print ('usage: ./retrieve.py vol first page [last page]')
+  #   sys.exit(1)
 
-  vol = sys.argv[1]
-  start = sys.argv[2]
-  if len(sys.argv) != 4:
-    end = sys.argv[2]
-  else:
-    end = sys.argv[3]
+  # vol = sys.argv[1]
+  # start = sys.argv[2]
+  # if len(sys.argv) != 4:
+  #   end = sys.argv[2]
+  # else:
+  #   end = sys.argv[3]
 
-  retrieveMany(vol, start, end)
+  csv_to_dict()
 
 if __name__ == '__main__':
   main()

@@ -4,12 +4,12 @@ let fs = require('fs');
 
 const utils = {
 
-  get: (vol, page) => {
-    const path = `${output}/${vol}/${page}`
-    fs.readFile(path, 'utf8', (err, text) => {
+  get: (vol, page, cb) => {
+    const path = `../data/output/${vol}/${page}`
+    return fs.readFile(path, 'utf8', (err, text) => {
       if (err) throw err
-      if (text) return text
-      console.log(`text from ${path} retrieved:\n${text.slice(0, 50)}\n`)
+      console.log('text retrieved...')
+      cb(JSON.stringify(text))
     })
   },
 
