@@ -4,12 +4,19 @@ let fs = require('fs');
 
 const utils = {
 
-  get: (vol, page, cb) => {
+  get: async (vol, alpha, omega, cb) => {
+    let result = ''.concat( await utils.getOne(vol, alpha)/*, '\n...\n', await utils.getOne(vol, omega)*/)
+    cb(JSON.stringify(result))
+  },
+
+  getOne: (vol, page, cb) => {
     const path = `../data/output/${vol}/${page}`
-    return fs.readFile(path, 'utf8', (err, text) => {
-      if (err) throw err
-      console.log('text retrieved...')
-      cb(JSON.stringify(text))
+    return new Promise( (resolve, reject) => {
+      fs.readFile(path, 'utf8', (err, text) => {
+        if (err) reject(err)
+        // console.log('text retrieved...')
+        resolve( text )
+      });
     })
   },
 

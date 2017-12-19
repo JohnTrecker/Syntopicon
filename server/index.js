@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
   topics.forEach( topic => {
     buffer += `<a href="/${topic.number}">${topic.topic}</a><br>`
   });
-	res.send(buffer);
+  res.send(buffer);
 });
 
 app.get('/:topic', (req, res) => {
@@ -41,7 +41,7 @@ app.get('/:topic/:subtopic', (req, res) => {
 
   refs.forEach( ref => {
     let [author, vol, alpha, omega, passage, notes] = ref
-    if (omega === '') omega = '00'
+    if (omega === '') omega = alpha
     buffer += `<a href="/api/${vol}/${alpha}/${omega}">${author}</a><br>`
   });
   res.send(buffer)
@@ -51,10 +51,11 @@ app.get('/api/:vol/:alpha/:omega', (req, res) => {
   let {vol, alpha, omega} = req.params
   buffer = `${vol}, ${alpha}, ${omega},`
   console.log('getting ', vol, alpha)
-  // res.send(buffer)
-  utils.get(vol, alpha, function(text){
+  utils.get(vol, alpha, omega, function(text){
     try {
-      res.send(JSON.parse(text))
+      let prev = `<a href="/api/${vol}/${Number(alpha)-1}/${omega}">Page ${Number(alpha)-1}</a>&emsp;&emsp;`
+      let next = `<a href="/api/${vol}/${Number(alpha)+1}/${omega}">Page ${Number(alpha)+1}</a>`
+      res.send( prev.concat(next, '<br><br><br>', JSON.parse(text)) );
     } catch(err) {
       console.log('error fetching reference: ', err)
       throw err
