@@ -6,13 +6,13 @@ let app = express()
 let topics = []
 let subtopics = {}
 
-fs.readFile('../data/subtopics.json', {encoding: 'utf8'}, (err, data) => {
+fs.readFile('../data/subtopics2.json', {encoding: 'utf8'}, (err, data) => {
   if (err) throw err
   let d = JSON.parse(data)
   topics = d.topics
 });
 
-fs.readFile('../data/refs.json', {encoding: 'utf8'}, (err, data) => {
+fs.readFile('../data/refs2.json', {encoding: 'utf8'}, (err, data) => {
     if (err) throw err
     subtopics = JSON.parse(data)
 });
@@ -20,7 +20,7 @@ fs.readFile('../data/refs.json', {encoding: 'utf8'}, (err, data) => {
 app.get('/', (req, res) => {
   let buffer = ''
   topics.forEach( topic => {
-    buffer += `<a href="/${topic.number}">${topic.topic}</a><br>`
+    buffer += `&emsp;${topic.number}.&emsp;<a href="/${topic.number}">${topic.topic}</a><br>`
   });
   res.send(buffer);
 });
@@ -29,7 +29,10 @@ app.get('/:topic', (req, res) => {
   let topic = req.params.topic
   let buffer = ''
   topics[topic - 1].subtopics.forEach( subtopic => {
-    buffer += `<a href="${topic}/${subtopic.number}">${subtopic.subtopic}</a><br>`
+    let spaces = subtopic.number.split('.').length - 1
+    let indent = ''.concat('&emsp;&emsp;'.repeat(spaces))
+    let link = subtopics[topic][subtopic.number] ? `href="${topic}/${subtopic.number}"` : ''
+    buffer += `&emsp;${indent}<a ${link} >${subtopic.subtopic}</a><br>`
   });
   res.send(buffer)
 });
