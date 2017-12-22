@@ -4,9 +4,41 @@ let fs = require('fs');
 
 const utils = {
 
-  getMany: async (vol, alpha, omega, cb) => {
-    let result = ''.concat( await utils.getOne(vol, alpha)/*, '\n...\n', await utils.getOne(vol, omega)*/)
+  retrieve: async (vol, alpha, omega, cb) => {
+    let array = [...Array(omega + 1).keys()].slice(alpha)
+
+    const get = (vol, page) => {
+      const path = `../data/output/${vol}/${page}`
+      return new Promise( (resolve, reject) => {
+        fs.readFile(path, {encoding: 'utf8'}, (err, text) => {
+          if (err) {
+            reject(err)
+            throw err
+          }
+          resolve( text )
+        });
+      });
+    };
+
+    const getMany = async (volume, location) => {
+      let t = await get(volume, location);
+      return t;
+    };
+
+    // limiter
+    if (array.length > 3) {
+      let r = await get(vol, alpha)
+      cb(JSON.stringify(r))
+      return
+    }
+
+    let result = ''
+    for (const page of array){
+      let text = await getMany(vol, page);
+      result += text
+    }
     cb(JSON.stringify(result))
+    return
   },
 
   get: (vol, page) => {
@@ -17,7 +49,7 @@ const utils = {
           reject(err)
           throw err
         }
-        resolve( text )
+        resolve( JSON.stringify(text) )
       });
     })
   },
@@ -167,4 +199,5 @@ const utils = {
   }
 };
 
+// func = (v, p) => utils.get(v,p)
 module.exports = utils;

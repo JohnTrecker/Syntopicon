@@ -1,5 +1,5 @@
 let fs = require('fs')
-let utils = require('../utility/utils.js')
+let {retrieve} = require('../utility/utils.js')
 let express = require('express')
 let app = express()
 
@@ -52,16 +52,16 @@ app.get('/:topic/:subtopic', (req, res) => {
 
 app.get('/api/:vol/:alpha/:omega', (req, res) => {
   let {vol, alpha, omega} = req.params
+  vol = parseInt(vol);
+  alpha = parseInt(alpha);
+  omega = parseInt(omega);
 
-  utils.get(vol, alpha, omega)
-    .then( text => {
-      let prev = `<a href="/api/${vol}/${Number(alpha)-1}/${omega}">Page ${Number(alpha)-1}</a>&emsp;&emsp;`
-      let next = `<a href="/api/${vol}/${Number(alpha)+1}/${omega}">Page ${Number(alpha)+1}</a>`
-      res.send( prev.concat(next, '<br><br><br>', text));
-    })
-    .catch( err => {
-      if (err) console.log(err);
-    });
+  retrieve(vol, alpha, omega, text => {
+    text = JSON.parse(text)
+    let prev = `<a href="/api/${vol}/${Number(alpha)-1}/${omega}">Page ${Number(alpha)-1}</a>&emsp;&emsp;`
+    let next = `<a href="/api/${vol}/${Number(alpha)+1}/${omega}">Page ${Number(alpha)+1}</a>`
+    res.send( prev.concat(next, '<br><br><br>', text));
+  });
 });
 
 app.listen(3000, () => {
