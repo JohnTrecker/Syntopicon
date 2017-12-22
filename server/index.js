@@ -6,13 +6,13 @@ let app = express()
 let topics = []
 let subtopics = {}
 
-fs.readFile('../data/subtopics2.json', {encoding: 'utf8'}, (err, data) => {
+fs.readFile('../data/json/subtopics2.json', {encoding: 'utf8'}, (err, data) => {
   if (err) throw err
   let d = JSON.parse(data)
   topics = d.topics
 });
 
-fs.readFile('../data/refs2.json', {encoding: 'utf8'}, (err, data) => {
+fs.readFile('../data/json/refs2.json', {encoding: 'utf8'}, (err, data) => {
     if (err) throw err
     subtopics = JSON.parse(data)
 });
@@ -52,19 +52,16 @@ app.get('/:topic/:subtopic', (req, res) => {
 
 app.get('/api/:vol/:alpha/:omega', (req, res) => {
   let {vol, alpha, omega} = req.params
-  buffer = `${vol}, ${alpha}, ${omega},`
-  console.log('getting ', vol, alpha)
-  utils.get(vol, alpha, omega, function(text){
-    try {
+
+  utils.get(vol, alpha, omega)
+    .then( text => {
       let prev = `<a href="/api/${vol}/${Number(alpha)-1}/${omega}">Page ${Number(alpha)-1}</a>&emsp;&emsp;`
       let next = `<a href="/api/${vol}/${Number(alpha)+1}/${omega}">Page ${Number(alpha)+1}</a>`
-      res.send( prev.concat(next, '<br><br><br>', JSON.parse(text)) );
-    } catch(err) {
-      console.log('error fetching reference: ', err)
-      throw err
-    }
-
-  });
+      res.send( prev.concat(next, '<br><br><br>', text));
+    })
+    .catch( err => {
+      if (err) console.log(err);
+    });
 });
 
 app.listen(3000, () => {
