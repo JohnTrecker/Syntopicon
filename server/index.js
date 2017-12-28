@@ -12,7 +12,7 @@ fs.readFile('../data/json/subtopics2.json', {encoding: 'utf8'}, (err, data) => {
   topics = d.topics
 });
 
-fs.readFile('../data/json/refs2.json', {encoding: 'utf8'}, (err, data) => {
+fs.readFile('../data/json/refs3.json', {encoding: 'utf8'}, (err, data) => {
     if (err) throw err
     subtopics = JSON.parse(data)
 });
@@ -28,6 +28,10 @@ app.get('/', (req, res) => {
 app.get('/:topic', (req, res) => {
   let topic = req.params.topic
   let buffer = ''
+  if (!topics[topic - 1]) {
+    res.send(topic)
+    return
+  }
   topics[topic - 1].subtopics.forEach( subtopic => {
     let spaces = subtopic.number.split('.').length - 1
     let indent = ''.concat('&emsp;&emsp;'.repeat(spaces))
@@ -40,12 +44,13 @@ app.get('/:topic', (req, res) => {
 app.get('/:topic/:subtopic', (req, res) => {
   let {topic, subtopic} = req.params
   let buffer = ''
-  let refs = subtopics[topic][subtopic]
+  let refs = subtopics[topic][subtopic]['refs']
+  let description = subtopics[topic][subtopic]['description']
 
   refs.forEach( ref => {
     let [author, vol, alpha, omega, passage, notes] = ref
     if (omega === '') omega = alpha
-    buffer += `<a href="/api/${vol}/${alpha}/${omega}">${author}</a><br>`
+    buffer += `<section><a href="/api/${vol}/${alpha}/${omega}">${author}</a>&emsp;<p>${description}</p></section><br>`
   });
   res.send(buffer)
 });
@@ -55,12 +60,12 @@ app.get('/api/:vol/:alpha/:omega', (req, res) => {
   vol = parseInt(vol);
   alpha = parseInt(alpha);
   omega = parseInt(omega);
-
   retrieve(vol, alpha, omega, text => {
     text = JSON.parse(text)
+    // console.log(text)
     let prev = `<a href="/api/${vol}/${Number(alpha)-1}/${omega}">Page ${Number(alpha)-1}</a>&emsp;&emsp;`
     let next = `<a href="/api/${vol}/${Number(alpha)+1}/${omega}">Page ${Number(alpha)+1}</a>`
-    res.send( prev.concat(next, '<br><br><br>', text));
+    res.send( prev.concat(next, '<br><br><br>', `<p style="white-space: pre-wrap">... ${text}...</p>`) );
   });
 });
 
