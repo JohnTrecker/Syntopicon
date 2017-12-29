@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/JohnTrecker/syntopicon#readme",
   "dependencies": {
+    "node-summary": "^1.2.0",
     "textract": "^2.2.0",
     "word-extractor": "^0.1.4"
   }

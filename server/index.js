@@ -1,5 +1,5 @@
 let fs = require('fs')
-let {retrieve} = require('../utility/utils.js')
+let {summarize, retrieve, getSummary} = require('../utility/utils.js')
 let express = require('express')
 let app = express()
 
@@ -41,17 +41,23 @@ app.get('/:topic', (req, res) => {
   res.send(buffer)
 });
 
-app.get('/:topic/:subtopic', (req, res) => {
+app.get('/:topic/:subtopic', async (req, res) => {
   let {topic, subtopic} = req.params
   let buffer = ''
   let refs = subtopics[topic][subtopic]['refs']
   let description = subtopics[topic][subtopic]['description']
+  let x = async (v, a, o, d) => {
+    let r = await getSummary(v, a, o, d)
+    return r
+  }
 
-  refs.forEach( ref => {
+  for (let ref of refs) {
     let [author, vol, alpha, omega, passage, notes] = ref
+    let summary
     if (omega === '') omega = alpha
-    buffer += `<section><a href="/api/${vol}/${alpha}/${omega}">${author}</a>&emsp;<p>${description}</p></section><br>`
-  });
+    if (author !== "Bible") summary = await x(vol, alpha, omega, description)
+    buffer += `<section><a href="/api/${vol}/${alpha}/${omega}">${author}</a>&emsp;<p>${summary}</p></section><br>`
+  }
   res.send(buffer)
 });
 

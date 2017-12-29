@@ -4,20 +4,100 @@ let fs = require('fs');
 
 const utils = {
 
-  retrieve: async (vol, alpha, omega, cb) => {
+  getSummary: async (vol, alpha, omega, description) => {
+    vol = parseInt(vol);
+    alpha = parseInt(alpha);
+    omega = parseInt(omega);
+    let text
+    await utils.retrieve(vol, alpha, omega, (json) => {
+      text = json
+    })
+    let summary = utils.summarize(description, text)
+    return summary.split('\n')[1]
+  },
+
+  summarize: (title, text) => {
+    let result
+    require('node-summary').summarize(title, text, (err, summary) => {
+      if(err) {
+        console.log("Something went wrong man!");
+        throw err
+      }
+      result = summary
+      // console.log("Original Length " + (title.length + content.length));
+      // console.log("Summary Length " + summary.length);
+      // console.log("Summary Ratio: " + (100 - (100 * (summary.length / (title.length + content.length)))));
+    });
+    return result;
+  },
+
+  addRefProp: (input, output, cb, pretty = true) => {
+
+    fs.readFile(input, 'utf8', (err, json) => {
+      if (err) throw err
+        let obj = JSON.parse(json)
+        let result = {}
+
+        for ( let [topNum, value] of Object.entries(obj)) {
+          result[topNum] = {}
+          for (let [subNum, val] of Object.entries(value)) {
+
+            // typeof refs = Array
+            // typeof description = String
+            let {refs, description} = val
+            result[topNum][subNum] = cb(result, topNum, subNum, refs, description)
+
+          }
+        }
+
+      let final = pretty === true ? JSON.stringify(result, null, 2) : JSON.stringify(result);
+      fs.writeFile(output, final, 'utf8', (e) => {
+        if (e) throw e
+      })
+    });
+
+  },
+
+
+  addDescription: () => {
+    fs.readFile('../data/json/subtopics2.json', 'utf8', async (err, json) => {
+      if (err) throw err
+      let obj = JSON.parse(json)
+
+      let result = obj.topics.reduce( (accum, topic) => {
+        accum[topic.number] = {}
+        topic.subtopics.forEach( (s) => {
+          accum[topic.number][s.number] = s.subtopic
+        })
+        return accum
+      }, {});
+
+      fs.writeFile('../data/json/descriptions.json', JSON.stringify(result, null, 2), 'utf8', (err) => {
+        if (err) throw err;
+      });
+    });
+  },
+
+  retrieve: async (vol, alpha, omega, cb = (x) => x) => {
     let array = [...Array(omega + 1).keys()].slice(alpha)
 
     const get = (vol, page) => {
       const path = `../data/output/${vol}/${page}`
       return new Promise( (resolve, reject) => {
-        fs.readFile(path, {encoding: 'utf8'}, (err, text) => {
+        if ( page === '0' || page === undefined ) {
+          console.log('vol and page returned: ', vol, page)
+          reject('vol and page returned: ', vol, page)
+        }
+
+        fs.readFile(path, 'utf8', (err, text) => {
           if (err) {
             reject(err)
             throw err
           }
           resolve( text )
+          return text
         });
-      });
+      })
     };
 
     const getMany = async (volume, location) => {
@@ -26,9 +106,9 @@ const utils = {
     };
 
     // limiter
-    if (array.length > 3) {
+    if (array.length > 10) {
       let r = await get(vol, alpha)
-      cb(JSON.stringify(r))
+      cb( JSON.stringify(r) )
       return
     }
 
@@ -37,7 +117,7 @@ const utils = {
       let text = await getMany(vol, page);
       result += text
     }
-    cb(JSON.stringify(result))
+    cb( JSON.stringify(result) )
     return
   },
 
