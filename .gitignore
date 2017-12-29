@@ -2,3 +2,4 @@ archive2.js
 **/data/*
 .DS_Store
 node_modules
+server/README.md
