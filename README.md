@@ -5,7 +5,32 @@
 
 "Read the best books first or you may not have a chance to read them at all." -- Henry David Thoreau
 
-Syntopicon is an open API of ideas and their understanding. Inspired by the 1952 edition of Encyclopedia Britannica's Great Books of the Western World, the name was coined by Mortimer J. Adler to describe the jewel of his life's work: a catalogued index of 102 fundamental "great ideas" around which competing schools of thought have developed over the past 28 centuries. With over 500,000 references to the works of eminent thinkers from Homer to Shakespeare, Euclid to Einstein, Aristotle to Descartes, the Syntopicon is a monument of academic labor that has fallen into relative obscurity. This project aims to revive its use among English-speaking men and women who earnestly seek a more liberal education.
+Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia Britannica's Great Books of the Western World, the name was coined by Mortimer J. Adler to describe the jewel of his life's work: a catalogued index of 102 fundamental "great ideas" around which competing schools of thought have developed over the past 28 centuries. With over 500,000 references to the works of eminent thinkers from Homer to Shakespeare, Euclid to Einstein, Aristotle to Descartes, the Syntopicon is a monument of academic labor that has fallen into obscurity. This project aims to revive its use among English-speaking men and women who earnestly seek a more liberal education.
+
+## API Schema
+
+|      URL                      | HTTP Verb | Request Body |                        Result                                           |
+|:-----------------------------:|:---------:|:------------:|:-----------------------------------------------------------------------:|
+| /api/topics                   |    GET    |    empty     |                                                Return JSON of all Topics|
+| /api/topics                   |    POST   |     JSON     |                        Create new Topic and return JSON of created Topic|
+| /api/topics                   |   DELETE  |    empty     |                   Delete all Topics in and return JSON of deleted Topics|
+| /api/topics/:id               |    GET    |    empty     |                           Return JSON of single Topic with matching `id`|
+| /api/topics/:id               |    PUT    |     JSON     |         Update Topic with matching `id` and return JSON of updated Topic|
+| /api/topics/:id               |   DELETE  |    empty     |         Delete Topic with matching `id` and return JSON of deleted Topic|
+| /api/topics/:id/suptopics     |    GET    |    empty     |                                             Return JSON of all Subtopics|
+| /api/topics/:id/suptopics     |    POST   |     JSON     |                  Create new Subtopic and return JSON of created Subtopic|
+| /api/topics/:id/suptopics     |    PUT    |     JSON     |                      Update Subtopic and return JSON of updated Subtopic|
+| /api/topics/:id/suptopics     |   DELETE  |    empty     |             Delete all Subtopics in and return JSON of deleted Subtopics|
+| /api/topics/:id/suptopics/:id |    GET    |    empty     |                        Return JSON of single Subtopic with matching `id`|
+| /api/topics/:id/suptopics/:id |    PUT    |     JSON     |   Update Subtopic with matching `id` and return JSON of updated Subtopic|
+| /api/topics/:id/suptopics/:id |   DELETE  |    empty     |   Delete Subtopic with matching `id` and return JSON of deleted Subtopic|
+| /api/references               |    GET    |    empty     |                                            Return JSON of all References|
+| /api/references               |    POST   |     JSON     |                Create new Reference and return JSON of created Reference|
+| /api/references               |   DELETE  |    empty     |           Delete all References in and return JSON of deleted References|
+| /api/references/:id           |    GET    |    empty     |                       Return JSON of single Reference with matching `id`|
+| /api/references/:id           |    PUT    |     JSON     | Update Reference with matching `id` and return JSON of updated Reference|
+| /api/references/:id           |   DELETE  |    empty     | Delete Reference with matching `id` and return JSON of deleted Reference|
+
 <!--
 ## Installing / Getting started
 
