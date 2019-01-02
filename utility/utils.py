@@ -4,22 +4,90 @@ import re
 import sys
 import json
 import csv
-import pprint
+from pprint import pprint
 
 data = '../data/output'
 cumm = 0
 
-def csv_to_dict():
+def make_works_csv(txt_input='works.txt', csv_output='works.csv'):
+  txt_path = os.path.join('..','data', 'txt', txt_input)
+  csv_path = os.path.join('..','data', 'csv', csv_output)
+  output_file = open(csv_path, 'w')
+
+  with open(txt_path, 'r') as input_file:
+    topicwriter = csv.writer(output_file, delimiter=',')
+    topicwriter.writerow(['vol','subtopic_id','author','volume','alpha','omega','passage','notes'])
+
+    for topic_id, subtopics in json.load(input_file).items():
+      for subtopic_id, refs in subtopics.items():
+        for ref in refs:
+          row = [topic_id, subtopic_id, *ref]
+          topicwriter.writerow(row)
+  output_file.close()
+  print(".csv written to %s" % (csv_path))
+
+
+def make_refs_csv(json_input='refs.json', csv_output='refs.csv'):
+  jsonPath = os.path.join('..','data', 'json', json_input)
+  csvPath = os.path.join('..','data', 'csv', csv_output)
+  output_file = open(csvPath, 'w')
+
+  with open(jsonPath, 'r') as input_file:
+    topicwriter = csv.writer(output_file, delimiter=',')
+    topicwriter.writerow(['topic_id','subtopic_id','author','volume','alpha','omega','passage','notes'])
+
+    for topic_id, subtopics in json.load(input_file).items():
+      for subtopic_id, refs in subtopics.items():
+        for ref in refs:
+          row = [topic_id, subtopic_id, *ref]
+          topicwriter.writerow(row)
+  output_file.close()
+  print(".csv written to %s" % (csvPath))
+
+def make_subs_csv(json_input='subtopics.json', csv_output='subs.csv'):
+  jsonPath = os.path.join('..','data', 'json', json_input)
+  csvPath = os.path.join('..','data', 'csv', csv_output)
+  output_file = open(csvPath, 'w')
+
+  with open(jsonPath, 'r') as input_file:
+    topicwriter = csv.writer(output_file, delimiter=',')
+    topicwriter.writerow(['topic_id', 'subtopic_id', 'description'])
+
+    subs_json = input_file.read()
+    subs_dict = json.loads(subs_json)
+    for topic in subs_dict['subtopics']:
+      for subtopic in topic['subtopics']:
+        row = [topic['number'], subtopic['number'], subtopic['subtopic']]
+        topicwriter.writerow(row)
+  output_file.close()
+  print(".csv written to %s" % (csvPath))
+
+def make_tops_csv(json_input='subtopics.json', csv_output='tops.csv'):
+  jsonPath = os.path.join('..','data', 'json', json_input)
+  csvPath = os.path.join('..','data', 'csv', csv_output)
+  output_file = open(csvPath, 'w')
+
+  with open(jsonPath, 'r') as input_file:
+    topicwriter = csv.writer(output_file, delimiter=',')
+    topicwriter.writerow(['topic_id', 'description', 'subtopics_num'])
+
+    subs_json = input_file.read()
+    subs_dict = json.loads(subs_json)
+    for topic in subs_dict['subtopics']:
+      row = [topic['number'], topic['topic'], len(topic['subtopics'])]
+      topicwriter.writerow(row)
+  output_file.close()
+  print(".csv written to %s" % (csvPath))
+
+def csv_to_dict(cb):
   csvpath = os.path.join('..', 'data', 'refs.csv')
 
   with open(csvpath, 'r') as csvfile:
-    # CSV reader specifies delimiter and variable that holds contents
     csvreader = csv.reader(csvfile, delimiter=',')
 
     #  Each row is read as a row
     for row in csvreader:
-      print(row)
-
+      cb(row)
 
 def write_file(filename1, filename2, filename3):
 
@@ -180,7 +248,7 @@ def print_topics(filename, filename2):
   topic_list = topics_dict(filename, filename2)
   topics = topic_list.keys()
   for topic in topics:
-    print topic
+    print(topic)
     # subtopics = topic_list[topic].keys()
     # for subtopic in subtopics:
       # print '\t'
@@ -266,13 +334,17 @@ def listFileSize(directory=data):
   #       cumm += s
   # print(convert_bytes(cumm))
 
-def retrieve(vol, page):
+def retrieve(vol, page, first_para=False):
   filepath = os.path.join(data, str(vol), str(page))
+  text = ''
   with open(filepath, 'r') as output:
-    for text in output:
-      return text
+    for line in output:
+      if first_para and line[0].isspace():
+        break
+      text += line
+  return text
 
-def retrieveMany(vol, start, end):
+def retrieve_many(vol, start, end):
   data = ''
   start = int(start)
   end = int(end)+1
@@ -282,7 +354,49 @@ def retrieveMany(vol, start, end):
   print(data)
   return data
 
+def retrieve_auth_meta(text):
+  for line in text:
+    print('______')
+    print(line)
+    # auth, rest = line.split(':', 1)
+    # work, trans = re.split(' translated by' ,rest.split('.')[0])
+    # contents.append({
+    #   'author': auth, 
+    #   'work': work,
+    #   'translator': trans
+    # })
+  return text
+    
+def retrieve_vol_meta():
+  meta = []
+  error = []
+  for i in range(3, 61):
+    # print('____________')
+    if i == 40:
+      meta.append({
+        'author': 'Thomas Jefferson',
+        'work': 'Constitution of the U.S.',
+        'vol': 40,
+        'translator': None
+      })
+      continue
+    try:
+      text = retrieve(i,'iv',True)
+      # print(text)
+      data = retrieve_auth_meta(text)
+      data['vol'] = i
+      meta.append(data)
+      break
+    except:
+      error.append(i)
+      continue
+  pprint(meta)
+  print(error)
+  return meta
+
 def main():
+  
+  return
   # if len(sys.argv) < 3:
   #   print ('usage: ./retrieve.py vol first page [last page]')
   #   sys.exit(1)
@@ -293,8 +407,11 @@ def main():
   #   end = sys.argv[2]
   # else:
   #   end = sys.argv[3]
-
-  csv_to_dict()
+  # try:
+  #   summarize()
+  # except Exception as e:
+  #   print('Error writing csv file:')
+  #   print(e)
 
 if __name__ == '__main__':
   main()
