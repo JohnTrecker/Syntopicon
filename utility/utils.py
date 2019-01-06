@@ -4,28 +4,74 @@ import re
 import sys
 import json
 import csv
-from pprint import pprint
+from titlecase import titlecase
 
 data = '../data/output'
 cumm = 0
 
-def make_works_csv(txt_input='works.txt', csv_output='works.csv'):
-  txt_path = os.path.join('..','data', 'txt', txt_input)
-  csv_path = os.path.join('..','data', 'csv', csv_output)
-  output_file = open(csv_path, 'w')
-
-  with open(txt_path, 'r') as input_file:
+def make_trans_csv(csv_input='works.csv', csv_output='trans.csv'):
+  inputPath = os.path.join('..','data', 'csv', csv_input)
+  outputPath = os.path.join('..','data', 'csv', csv_output)
+  output_file = open(outputPath, 'w')
+  translators = {}
+  with open(inputPath, 'r') as input_file:
     topicwriter = csv.writer(output_file, delimiter=',')
-    topicwriter.writerow(['vol','subtopic_id','author','volume','alpha','omega','passage','notes'])
+    topicwriter.writerow(['primary', 'secondary'])
 
-    for topic_id, subtopics in json.load(input_file).items():
-      for subtopic_id, refs in subtopics.items():
-        for ref in refs:
-          row = [topic_id, subtopic_id, *ref]
-          topicwriter.writerow(row)
+    for row in csv.reader(input_file):
+      trans = row[3]
+      if not trans in translators:
+        translators[trans] = 1
+    
+    translators_list = list(translators.keys())
+
+    for trans in translators_list:
+      all_translators = trans.split(' and ')
+      primary = all_translators[0]
+      secondary = ''
+      if len(all_translators) > 1:
+        secondary = all_translators[1]
+      row = [primary, secondary]
+      topicwriter.writerow(row)
   output_file.close()
-  print(".csv written to %s" % (csv_path))
+  print(".csv written to %s" % (outputPath))
 
+
+def make_auths_csv(csv_input='works.csv', csv_output='auths.csv'):
+  inputPath = os.path.join('..','data', 'csv', csv_input)
+  outputPath = os.path.join('..','data', 'csv', csv_output)
+  output_file = open(outputPath, 'w')
+  authors = {}
+  with open(inputPath, 'r') as input_file:
+    topicwriter = csv.writer(output_file, delimiter=',')
+    topicwriter.writerow(['last_name', 'first_name'])
+
+    for row in csv.reader(input_file):
+      author = row[1]
+      if not author in authors:
+        authors[author] = 1
+    
+    auths = list(authors.keys())
+
+    for author in auths:
+      name = author.split(' ')
+      first_name = ' '.join(name[0:-1])
+      last_name = name[-1]
+      row = [last_name, first_name]
+      topicwriter.writerow(row)
+  output_file.close()
+  print(".csv written to %s" % (outputPath))
+
+def make_vols_csv(csv_output='vols.csv'):
+  csvPath = os.path.join('..','data', 'csv', csv_output)
+  with open(csvPath, 'w') as output_file:
+    topicwriter = csv.writer(output_file, delimiter=',')
+    topicwriter.writerow(['number','path'])
+    for i in range(3,61):
+      row = [i, 'data/output/{}'.format(i)]
+      topicwriter.writerow(row)
+
+  print(".csv written to %s" % (csvPath))
 
 def make_refs_csv(json_input='refs.json', csv_output='refs.csv'):
   jsonPath = os.path.join('..','data', 'json', json_input)
@@ -329,10 +375,10 @@ def listFileSize(directory=data):
       with open(f, 'r') as z:
         length = str(z)
         print (length)
-  #     s = file_size(f)
-  #     if (s > 7000):
-  #       cumm += s
-  # print(convert_bytes(cumm))
+      s = file_size(f)
+      if (s > 7000):
+        cumm += s
+  print(convert_bytes(cumm))
 
 def retrieve(vol, page, first_para=False):
   filepath = os.path.join(data, str(vol), str(page))
@@ -355,9 +401,7 @@ def retrieve_many(vol, start, end):
   return data
 
 def retrieve_auth_meta(text):
-  for line in text:
-    print('______')
-    print(line)
+  # for line in text:
     # auth, rest = line.split(':', 1)
     # work, trans = re.split(' translated by' ,rest.split('.')[0])
     # contents.append({
@@ -371,7 +415,6 @@ def retrieve_vol_meta():
   meta = []
   error = []
   for i in range(3, 61):
-    # print('____________')
     if i == 40:
       meta.append({
         'author': 'Thomas Jefferson',
@@ -382,7 +425,6 @@ def retrieve_vol_meta():
       continue
     try:
       text = retrieve(i,'iv',True)
-      # print(text)
       data = retrieve_auth_meta(text)
       data['vol'] = i
       meta.append(data)
@@ -390,28 +432,10 @@ def retrieve_vol_meta():
     except:
       error.append(i)
       continue
-  pprint(meta)
-  print(error)
   return meta
 
 def main():
-  
   return
-  # if len(sys.argv) < 3:
-  #   print ('usage: ./retrieve.py vol first page [last page]')
-  #   sys.exit(1)
-
-  # vol = sys.argv[1]
-  # start = sys.argv[2]
-  # if len(sys.argv) != 4:
-  #   end = sys.argv[2]
-  # else:
-  #   end = sys.argv[3]
-  # try:
-  #   summarize()
-  # except Exception as e:
-  #   print('Error writing csv file:')
-  #   print(e)
 
 if __name__ == '__main__':
   main()

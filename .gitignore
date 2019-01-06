@@ -3,3 +3,5 @@ archive2.js
 .DS_Store
 node_modules
 server/README.md
+**/env
+**/__pycache__
