@@ -6,13 +6,13 @@ let app = express()
 let topics = []
 let subtopics = {}
 
-fs.readFile('../data/json/subtopics2.json', {encoding: 'utf8'}, (err, data) => {
+fs.readFile('../data/json/subtopics.json', {encoding: 'utf8'}, (err, data) => {
   if (err) throw err
   let d = JSON.parse(data)
   topics = d.topics
 });
 
-fs.readFile('../data/json/refs3.json', {encoding: 'utf8'}, (err, data) => {
+fs.readFile('../data/json/refs.json', {encoding: 'utf8'}, (err, data) => {
     if (err) throw err
     subtopics = JSON.parse(data)
 });
@@ -44,10 +44,10 @@ app.get('/:topic', (req, res) => {
 app.get('/:topic/:subtopic', async (req, res) => {
   let {topic, subtopic} = req.params
   let buffer = ''
-  let refs = subtopics[topic][subtopic]['refs']
-  let description = subtopics[topic][subtopic]['description']
-  let x = async (v, a, o, d) => {
-    let r = await getSummary(v, a, o, d)
+  let refs = subtopics[topic][subtopic]
+  // let description = subtopics[topic][subtopic]['description']
+  let x = async (v, a, o) => {
+    let r = await getSummary(v, a, o)
     return r
   }
 
@@ -55,7 +55,7 @@ app.get('/:topic/:subtopic', async (req, res) => {
     let [author, vol, alpha, omega, passage, notes] = ref
     let summary
     if (omega === '') omega = alpha
-    if (author !== "Bible") summary = await x(vol, alpha, omega, description)
+    if (author !== "Bible") summary = await x(vol, alpha, omega)
     buffer += `<section><a href="/api/${vol}/${alpha}/${omega}">${author}</a>&emsp;<p>${summary}</p></section><br>`
   }
   res.send(buffer)
