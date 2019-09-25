@@ -1,10 +1,9 @@
 #!/usr/bin/env python
+
 import os
 import re
-import sys
 import json
 import csv
-from titlecase import titlecase
 
 data = '../data/output'
 cumm = 0
@@ -22,7 +21,7 @@ def make_trans_csv(csv_input='works.csv', csv_output='trans.csv'):
       trans = row[3]
       if not trans in translators:
         translators[trans] = 1
-    
+
     translators_list = list(translators.keys())
 
     for trans in translators_list:
@@ -35,7 +34,6 @@ def make_trans_csv(csv_input='works.csv', csv_output='trans.csv'):
       topicwriter.writerow(row)
   output_file.close()
   print(".csv written to %s" % (outputPath))
-
 
 def make_auths_csv(csv_input='works.csv', csv_output='auths.csv'):
   inputPath = os.path.join('..','data', 'csv', csv_input)
@@ -50,7 +48,7 @@ def make_auths_csv(csv_input='works.csv', csv_output='auths.csv'):
       author = row[1]
       if not author in authors:
         authors[author] = 1
-    
+
     auths = list(authors.keys())
 
     for author in auths:
@@ -125,7 +123,7 @@ def make_tops_csv(json_input='subtopics.json', csv_output='tops.csv'):
   output_file.close()
   print(".csv written to %s" % (csvPath))
 
-def csv_to_dict(cb):
+def iterate_csv(cb):
   csvpath = os.path.join('..', 'data', 'refs.csv')
 
   with open(csvpath, 'r') as csvfile:
@@ -380,59 +378,6 @@ def listFileSize(directory=data):
         cumm += s
   print(convert_bytes(cumm))
 
-def retrieve(vol, page, first_para=False):
-  filepath = os.path.join(data, str(vol), str(page))
-  text = ''
-  with open(filepath, 'r') as output:
-    for line in output:
-      if first_para and line[0].isspace():
-        break
-      text += line
-  return text
-
-def retrieve_many(vol, start, end):
-  data = ''
-  start = int(start)
-  end = int(end)+1
-  for i in range(start, end):
-    page = retrieve(vol, i)
-    data += page
-  print(data)
-  return data
-
-def retrieve_auth_meta(text):
-  # for line in text:
-    # auth, rest = line.split(':', 1)
-    # work, trans = re.split(' translated by' ,rest.split('.')[0])
-    # contents.append({
-    #   'author': auth, 
-    #   'work': work,
-    #   'translator': trans
-    # })
-  return text
-    
-def retrieve_vol_meta():
-  meta = []
-  error = []
-  for i in range(3, 61):
-    if i == 40:
-      meta.append({
-        'author': 'Thomas Jefferson',
-        'work': 'Constitution of the U.S.',
-        'vol': 40,
-        'translator': None
-      })
-      continue
-    try:
-      text = retrieve(i,'iv',True)
-      data = retrieve_auth_meta(text)
-      data['vol'] = i
-      meta.append(data)
-      break
-    except:
-      error.append(i)
-      continue
-  return meta
 
 def main():
   return

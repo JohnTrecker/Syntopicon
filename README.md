@@ -7,6 +7,41 @@
 
 Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia Britannica's Great Books of the Western World, the name was coined by Mortimer J. Adler to describe the jewel of his life's work: a catalogued index of 102 fundamental "great ideas" around which competing schools of thought have developed over the past 28 centuries. With over 500,000 references to the works of eminent thinkers from Homer to Shakespeare, Euclid to Einstein, Aristotle to Descartes, the Syntopicon is a monument of academic labor that has fallen into obscurity. This project aims to revive its use among English-speaking men and women who earnestly seek a more liberal education.
 
+<!--
+# GOALS
+
+# [x] replace subtopic_id
+# [x] add author_id
+# [x] revert last_name in auths.csv
+	# [x] T.S. Eliot
+	# [x] George Eliot
+	# [x] William James
+	# [x] Henry James
+# [x] remove passage column
+	# [x] move bible passages to page_start
+	# [x] delete passage column
+# [x] add id
+# [x] add work_id column
+# [] add summary column
+
+# [x] clean data
+	# [x] alpha: esp 123, refs.sort_values('alpha', ascending=False)[71:95]
+	# [x] alpha: null
+	# [] e.g. 2 Samuel, II Samuel
+# [] enforce data types
+	# [x] refs.passage[str | NaN]
+	# [x] refs.page_start[int | str]
+	# [x] works.page_start[int | str]
+	# [] refs.page_start.contains(['i', 'v', 'x'])[int](show roman numerals)
+	# [] refs.page_start Bible passages[int](show bible passages)
+# [x] add refs.work column
+# [] drop passages longer than 20 pgs
+# [] save ref texts to 'texts' table
+# [] save Bible passages to file system
+# [] add ref.summaries column/table
+# [] use 'esp' in refs.notes
+-->
+
 ## API Schema
 
 |      URL                      | HTTP Verb | Request Body |                        Result                                           |
@@ -32,6 +67,10 @@ Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia
 | /api/references/:id           |   DELETE  |    empty     | Delete Reference with matching `id` and return JSON of deleted Reference|
 
 <!--
+
+
+
+
 ## Installing / Getting started
 
 A quick introduction of the minimal setup you need to get a hello world up &
