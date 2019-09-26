@@ -30,5 +30,13 @@
     "node-summary": "^1.2.0",
     "textract": "^2.2.0",
     "word-extractor": "^0.1.4"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^3.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

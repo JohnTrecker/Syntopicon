@@ -6,3 +6,4 @@ node_modules
 server/README.md
 **/env
 **/__pycache__
+utility/venv/
