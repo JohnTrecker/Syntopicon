@@ -2,19 +2,7 @@
 
 import pandas as pd
 import streamlit as st
-import math
 import os
-
-from sumy.nlp.stemmers import Stemmer
-from sumy.parsers.plaintext import PlaintextParser
-from sumy.nlp.tokenizers import Tokenizer
-from sumy.utils import get_stop_words
-from sumy.summarizers.edmundson import EdmundsonSummarizer
-from sumy.summarizers.lsa import LsaSummarizer
-from nltk.tokenize import word_tokenize
-
-
-from librarian import retrieve_many
 
 refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
 subs = pd.read_csv('../data/csv/subs.csv', encoding='utf8', index_col=False)
@@ -81,7 +69,6 @@ def add_indices():
 		df.to_csv(path, index=False, sep=',', encoding='utf-8')
 
 def get_keys(index, df):
-# get volume, alpha
 	d = df.loc[index, ['volume', 'page_start']].to_dict()
 	volume = d.get('volume', None)
 	page_start = d.get('page_start', None)
@@ -136,55 +123,6 @@ def get_work_id(ref_id):
 def set_work_ids():
 	refs['work_id'] = refs.apply(lambda x: get_work_id(x.id), axis=1)
 
-def get_bonus_words(description):
-	filtered_words = []
-	stop_words = get_stop_words('english')
-	for w in word_tokenize(description):
-		if w not in stop_words:
-			filtered_words.append(w)
-
-	st.title('Bonus Words')
-	st.write(filtered_words)
-
-	return filtered_words
-
-def get_ref_meta(ref_id):
-	a = refs.loc[refs.id == ref_id, [
-		'volume', 'page_start', 'page_end', 'subtopic_id']]
-	b = a.values.T.tolist()
-	volume, page_start, page_end, subtopic_id = [item for sublist in b for item in sublist]
-	description = subs.loc[subs.id == subtopic_id, 'description'].values[0]
-	result = (volume, page_start, page_end, description)
-	st.title('vol, page_start, page_end, description')
-	st.write(result)
-	return result
-
-def summarize(ref_id=1):
-	(volume, page_start, page_end, description) = get_ref_meta(ref_id)
-
-	LANGUAGE = 'english'
-	SENTENCES_COUNT = 1
-	text = retrieve_many(volume, page_start, page_end)
-	parser = PlaintextParser.from_string(text, Tokenizer('english'))
-
-	st.title("--Edmundson Summarizer--")
-	summarizer = EdmundsonSummarizer()
-	summarizer.bonus_words = get_bonus_words(description)
-	summarizer.stigma_words = ('blahblah')
-	summarizer.null_words = ('blahblah')
-	summarizer.stop_words = get_stop_words(LANGUAGE)
-
-	for sentence in summarizer(parser.document, SENTENCES_COUNT):
-		st.write(sentence)
-
-	st.title("--LSA Summarizer--")
-	stemmer = Stemmer(LANGUAGE)
-	summarizer_2 = LsaSummarizer(stemmer)
-	summarizer_2.stop_words = get_stop_words(LANGUAGE)
-
-	for sentence in summarizer(parser.document, SENTENCES_COUNT):
-		st.write(sentence)
-
 def get_refs_by_page_length(length, note=None):
 	PAGE_LENGTH = length
 	ps = refs.page_start
@@ -209,16 +147,6 @@ def drop_longs():
 	b.drop(d.index, inplace=True, axis=0)
 	st.write(b.shape[0])
 	st.table(b)
-
-# st.title('refs with notes')
-# z = refs[pd.notnull(refs.notes) & refs.notes.str.contains('esp')]
-# st.write(z.shape[0])
-# st.table(z.head())
-
-# q = refs[refs.volume == 0]
-# st.title('deuterocononical refs')
-# st.write(q.shape[0])
-# st.table(q)
 
 
 def main():

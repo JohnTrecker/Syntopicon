@@ -5,8 +5,40 @@ import re
 import json
 import csv
 
+from summary_intern import Summarizer
+
 data = '../data/output'
 cumm = 0
+
+def make_texts_csv(csv_input='refs.csv', csv_output='texts.csv'):
+  inputPath = os.path.join('..','data', 'csv', csv_input)
+  outputPath = os.path.join('..','data', 'csv', csv_output)
+  output_file = open(outputPath, 'w')
+  corpus = Summarizer()
+
+  with open(inputPath, 'r') as input_file:
+    topicwriter = csv.writer(output_file, delimiter=',')
+    topicwriter.writerow(['id', 'summary'])
+
+    for row in csv.reader(input_file):
+      if row[0] == 'id':
+        continue
+      ref_id = row[0]
+      volume = row[6]
+      start = row[7]
+      end = row[8]
+
+      try:
+        summary = corpus.summarize_text(ref_id, volume=volume, page_start=start, page_end=end)
+        row = [ref_id, summary]
+        topicwriter.writerow(row)
+      except:
+        print('Error summarizing ref {}'.format(ref_id))
+        row = [ref_id, 'error']
+        topicwriter.writerow(row)
+  output_file.close()
+
+  print(".csv written to %s" % (outputPath))
 
 def make_trans_csv(csv_input='works.csv', csv_output='trans.csv'):
   inputPath = os.path.join('..','data', 'csv', csv_input)
