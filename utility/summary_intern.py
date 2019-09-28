@@ -11,23 +11,33 @@ from sumy.utils import get_stop_words
 from sumy.summarizers.lsa import LsaSummarizer
 
 class Summarizer:
-	def __init__(self, sentence_count=1, language='english'):
+	def __init__(self, sentence_count=1, language='english', max_pages=100):
 		self.SENTENCES_COUNT = sentence_count
 		self.LANGUAGE = language
+		self.MAX_PAGES = max_pages
+		self.MAX_LENGTH = 10485760 # max length of varchar in postgres
 
 	def summarize_text(self, ref_id, volume=None,
                     page_start=None, page_end=None, description=None, text=None):
-		if not volume or not page_start or not page_end:
+		if not volume or not page_start:
 			(volume, page_start, page_end, description) = get_ref_meta(ref_id)
 
+		if int(volume) < 3 or (page_end and page_end.isdigit() and \
+			int(page_end) - int(page_start) > self.MAX_PAGES):
+			return ''
+
 		text = text or retrieve_many(volume, page_start, page_end)
+		summary = ''
+
+		if len(text) > self.MAX_LENGTH:
+			print('WARNING... full text will not fit in db table')
+			return ''
 
 		parser = PlaintextParser.from_string(text, Tokenizer('english'))
 		stemmer = Stemmer(self.LANGUAGE)
 		summarizer_2 = LsaSummarizer(stemmer)
 		summarizer_2.stop_words = get_stop_words(self.LANGUAGE)
 
-		summary = ''
 		for lsa_sentence in summarizer_2(parser.document, self.SENTENCES_COUNT):
 			summary += lsa_sentence._text
 

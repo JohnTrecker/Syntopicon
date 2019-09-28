@@ -7,8 +7,6 @@ subs = pd.read_csv('../data/csv/subs.csv', encoding='utf8', index_col=False)
 # vols = pd.read_csv('../data/csv/vols.csv', encoding='utf8', index_col=False)
 # auths = pd.read_csv('../data/csv/auths.csv', encoding='utf8', index_col=False)
 
-
-
 def roman_to_int(roman):
 	"""Convert from Roman numerals to an integer."""
 	if not roman:
@@ -78,16 +76,22 @@ def retrieve(vol, page, data_path='../data/output', first_para=False):
 	"""Retrieve one page from dir"""
 	filepath = os.path.join(data_path, str(vol), str(page))
 	text = ''
-	with open(filepath, 'r') as output:
-		for line in output:
-			if first_para and line[0].isspace():
-				break
-			text += line
+	try:
+		with open(filepath, 'r') as output:
+			for line in output:
+				if first_para and line[0].isspace():
+					break
+				text += line
+	except OSError as e:
+		if e.errno == 2:  # [Errno 2] No such file or directory
+			pass
+		else:
+			raise e
 	return text
 
 def retrieve_many(vol, start, end):
 	"""Retrieve many pages from dir"""
-	if isNaN(end):
+	if not end:
 		return retrieve(vol, start)
 
 	text = ''

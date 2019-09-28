@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+from bs4 import BeautifulSoup
+from urllib.request import urlopen
+
+import time
 import os
 import re
 import json
@@ -10,15 +14,56 @@ from summary_intern import Summarizer
 data = '../data/output'
 cumm = 0
 
+
+def format_urls():
+  domain = 'http://www.sacredbible.org/catholic/'
+  urls = {}
+  bible = {
+      'OT': ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel', '1 Kings', '2 Kings', '1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Tobit', 'Judith', 'Esther', 'Job', 'Psalms', 'Proverbs', 'Ecclesiastes', 'Song', 'Wisdom', 'Sirach', 'Isaiah', 'Jeremiah', 'Lamentations', 'Baruch', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', '1 Maccabees', '2 Maccabees'],
+      'NT': ['Matthew', 'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians', 'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James', '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
+  }
+  for i, corpus in enumerate(bible.items()):
+    volume = i + 1
+    part, books = corpus
+    for j, book in enumerate(books):
+      uri_number = j + 1
+      uri_book = book.replace(' ', '-')
+      uri = '{}-{}_{}.htm'.format(part, uri_number, uri_book)
+      if book == 'Song2':
+        book = 'Song of Songs'
+      urls[book] = {'volume': volume, 'url': domain + uri}
+  return urls
+
+def import_bible():
+  urls = format_urls()
+  log_path = os.path.join('..', 'data', 'output', 'error_log.txt')
+  with open(log_path, 'w') as log_file:
+    for book, meta in urls.items():
+      output_path = os.path.join(
+          '..', 'data', 'output', str(meta['volume']), '{}.html'.format(book))
+      try:
+        with open(output_path, 'w') as output_file:
+          html = urlopen(meta['url'])
+          soup = BeautifulSoup(html, 'html.parser')
+          output_file.write(soup.find('font', size='4'))
+          time.sleep(1)
+      except Exception as e:
+        log_file.write(e)
+
+
 def make_texts_csv(csv_input='refs.csv', csv_output='texts.csv'):
   inputPath = os.path.join('..','data', 'csv', csv_input)
   outputPath = os.path.join('..','data', 'csv', csv_output)
+  log_path = os.path.join('..', 'data', 'csv', 'error_log.txt')
   output_file = open(outputPath, 'w')
+  log_file = open(log_path, 'w')
   corpus = Summarizer()
 
   with open(inputPath, 'r') as input_file:
-    topicwriter = csv.writer(output_file, delimiter=',')
-    topicwriter.writerow(['id', 'summary'])
+    textwriter = csv.writer(output_file, delimiter=',')
+    textwriter.writerow(['id', 'summary'])
+    logwriter = csv.writer(log_file, delimiter=',')
+    logwriter.writerow(['ref_id', 'error'])
 
     for row in csv.reader(input_file):
       if row[0] == 'id':
@@ -31,13 +76,14 @@ def make_texts_csv(csv_input='refs.csv', csv_output='texts.csv'):
       try:
         summary = corpus.summarize_text(ref_id, volume=volume, page_start=start, page_end=end)
         row = [ref_id, summary]
-        topicwriter.writerow(row)
-      except:
-        print('Error summarizing ref {}'.format(ref_id))
-        row = [ref_id, 'error']
-        topicwriter.writerow(row)
-  output_file.close()
+        textwriter.writerow(row)
+      except Exception as e:
+        print('Error summarizing ref {}: {}'.format(ref_id, e))
+        row = [ref_id, e]
+        logwriter.writerow(row)
 
+  output_file.close()
+  log_file.close()
   print(".csv written to %s" % (outputPath))
 
 def make_trans_csv(csv_input='works.csv', csv_output='trans.csv'):
@@ -409,7 +455,6 @@ def listFileSize(directory=data):
       if (s > 7000):
         cumm += s
   print(convert_bytes(cumm))
-
 
 def main():
   return
