@@ -27,6 +27,7 @@ def format_urls():
     part, books = corpus
     for j, book in enumerate(books):
       uri_number = j + 1
+      uri_number = uri_number if uri_number > 9 else '0{}'.format(uri_number)
       uri_book = book.replace(' ', '-')
       uri = '{}-{}_{}.htm'.format(part, uri_number, uri_book)
       if book == 'Song2':
@@ -37,18 +38,20 @@ def format_urls():
 def import_bible():
   urls = format_urls()
   log_path = os.path.join('..', 'data', 'output', 'error_log.txt')
-  with open(log_path, 'w') as log_file:
+  with open(log_path, 'w+') as log_file:
     for book, meta in urls.items():
       output_path = os.path.join(
-          '..', 'data', 'output', str(meta['volume']), '{}.html'.format(book))
+          '..', 'data', 'output', str(meta['volume']), '{}.txt'.format(book))
       try:
-        with open(output_path, 'w') as output_file:
+        with open(output_path, 'w+') as output_file:
           html = urlopen(meta['url'])
           soup = BeautifulSoup(html, 'html.parser')
-          output_file.write(soup.find('font', size='4'))
+          text = soup.find('font', size='4').text
+          output_file.write(text.strip())
           time.sleep(1)
       except Exception as e:
-        log_file.write(e)
+        print(e)
+        log_file.write('Error creating file {}.html: {}\n'.format(book, e))
 
 
 def make_texts_csv(csv_input='refs.csv', csv_output='texts.csv'):
