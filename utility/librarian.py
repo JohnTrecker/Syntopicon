@@ -1,4 +1,6 @@
 import os
+from os import listdir, path
+from os.path import isfile, join
 import pandas as pd
 
 refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
@@ -56,7 +58,7 @@ def get_ref_meta(ref_id):
 	description = subs.loc[subs.id == subtopic_id, 'description'].values[0]
 	return (volume, page_start, page_end, description)
 
-def get_page_range(start, end):
+def get_page_range(start, end, vol=3):
 	"""Return list of all pages (roman num and/or int) from start to end"""
 	if start.isdigit():
 		start = int(start)
@@ -66,11 +68,28 @@ def get_page_range(start, end):
 			end = int(end)
 		return list(range(start, end + 1))
 	else:
+		if end and end.isdigit():
+			return get_page_range_with_front_matter(start, end, vol)
 		start = roman_to_int(start)
-		if end.isdigit():
-			return [start]
-		end = roman_to_int(end)
+		end = roman_to_int(end) if end else start
 		return [int_to_roman(i) for i in range(start, end + 1)]
+
+def get_page_range_with_front_matter(start, end, vol):
+	path_name = join('..', 'data', 'output', str(vol))
+	only_front_matter = [f for f in listdir(path_name) if isfile(
+		join(path_name, f)) and not f.isdigit()]
+	all_front_matter = [roman_to_int(p) for p in only_front_matter]
+	all_front_matter.sort()
+	pages = []
+	if len(all_front_matter):
+		sorted_front_matter = [int_to_roman(p) for p in all_front_matter]
+		try:
+			start_index = sorted_front_matter.index(start)
+			pages = sorted_front_matter[start_index:]
+		except Exception as e:
+			print('Error arranging front matter pages: {}'.format(e))
+	pages.extend(get_page_range('1', end))
+	return pages
 
 def retrieve(vol, page, data_path='../data/output', first_para=False):
 	"""Retrieve one page from dir"""
@@ -95,7 +114,7 @@ def retrieve_many(vol, start, end):
 		return retrieve(vol, start)
 
 	text = ''
-	for i in get_page_range(start, end):
+	for i in get_page_range(start, end, vol):
 		page = retrieve(vol, i)
 		text += page
 	return text
