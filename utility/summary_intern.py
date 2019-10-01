@@ -22,6 +22,8 @@ class Summarizer:
 		if not volume or not page_start:
 			(volume, page_start, page_end, description) = get_ref_meta(ref_id)
 
+		if isinstance(page_end, float) and math.isnan(page_end):
+			page_end = ''
 		if int(volume) < 3 or (page_end and page_end.isdigit() and \
 			int(page_end) - int(page_start) > self.MAX_PAGES):
 			return ''
@@ -30,8 +32,7 @@ class Summarizer:
 		summary = ''
 
 		if len(text) > self.MAX_LENGTH:
-			print('WARNING... full text will not fit in db table')
-			return ''
+			raise ValueError('Error summarizing ref {}: Full text with length {} will not fit in db table '.format(ref_id, len(text)))
 
 		parser = PlaintextParser.from_string(text, Tokenizer('english'))
 		stemmer = Stemmer(self.LANGUAGE)
