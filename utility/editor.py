@@ -3,12 +3,74 @@
 import pandas as pd
 import streamlit as st
 import os
+import csv
+
+from summary_intern import Summarizer
+s = Summarizer()
 
 refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
 subs = pd.read_csv('../data/csv/subs.csv', encoding='utf8', index_col=False)
 # works = pd.read_csv('../data/csv/works.csv', encoding='utf8', index_col=False)
 # vols = pd.read_csv('../data/csv/vols.csv', encoding='utf8', index_col=False)
 # auths = pd.read_csv('../data/csv/auths.csv', encoding='utf8', index_col=False)
+texts = pd.read_csv('../data/csv/texts.csv', encoding='utf8', index_col=False)
+
+def fix_duplicates():
+	refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
+	refs['id'] = refs.index + 1
+	st.write('fixed duplicates')
+	refs.to_csv('../data/csv/refs2.csv', index=False, sep=',', encoding='utf-8')
+
+def get_duplicates():
+	refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
+	a = refs[refs.duplicated(subset='id', keep=False)]
+	st.write('duplicates in refs', a.shape[0])
+	st.table(a)
+
+def get_summary(ref_id, logwriter):
+	try:
+		summary = s.summarize_text(ref_id)
+		st.write('{} summarized: {}'.format(ref_id, summary[:25]))
+		return summary
+	except Exception as e:
+		logwriter.writerow([ref_id, e])
+		return ''
+
+def set_summary(df):
+	with open('../data/csv/error_log3.csv', 'w') as log:
+		logwriter = csv.writer(log, delimiter=',')
+		logwriter.writerow(['id', 'error'])
+		df['summary'] = df.apply(lambda x: get_summary(x.id, logwriter), axis=1)
+
+def complete_summary():
+	a = pd.read_csv('../data/csv/texts.csv', encoding='utf8', index_col=False)
+	st.write('texts size', a.shape[0])
+
+	b = pd.read_csv('../data/csv/error_log.csv', encoding='utf8', index_col=False)
+	st.write('refs size', b.shape[0])
+	set_summary(b)
+
+	c = pd.concat([a, b], ignore_index=True, join="inner", verify_integrity=True)
+	c.sort_values(by=['id'], inplace=True)
+	st.write('resulting size')
+
+	st.write(c.shape[0])
+	st.write(c.head(n=60))
+
+	c.to_csv('../data/csv/new_texts.csv', encoding='utf8', index=False)
+
+	return
+
+def get_cached_summary(df, ref_id: int) -> dict:
+	ref_id = int(ref_id)
+	summary = df.loc[df.id == ref_id, 'summary']
+	st.title('summary')
+	if not summary.empty:
+		st.write(summary.iloc[0])
+		return {'summary': summary.iloc[0]}
+	else:
+		st.write('no summary')
+		return {'summary': None}
 
 def clean_refs():
 	refs = pd.read_csv('../data/csv/legacy/refs_orig.csv', encoding='utf8', index_col=False)
@@ -123,7 +185,7 @@ def get_work_id(ref_id):
 def set_work_ids():
 	refs['work_id'] = refs.apply(lambda x: get_work_id(x.id), axis=1)
 
-def get_refs_by_page_length(length, note=None):
+def get_refs_by_page_length(length = 100, note=None):
 	PAGE_LENGTH = length
 	ps = refs.page_start
 	pe = refs.page_end
@@ -150,7 +212,10 @@ def drop_longs():
 
 
 def main():
-  return
+	get_duplicates()
+	fix_duplicates()
+	get_refs_by_page_length(length=5, note='esp')
+	return
 
 if __name__ == '__main__':
   main()
