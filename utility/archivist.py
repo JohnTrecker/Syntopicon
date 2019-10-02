@@ -8,14 +8,80 @@ import os
 import re
 import json
 import csv
+import streamlit as st
 
 from summary_intern import Summarizer
+from librarian import get_ref_meta
 
 data = '../data/output'
 cumm = 0
 
+def import_cath_bible_summaries(input_txt="apocrypha.txt", log_csv='errors.csv'):
+  input_dir = os.path.join('..', 'data', 'summary')
+  input_path = os.path.join(input_dir, input_txt)
+  log_path = os.path.join(input_dir, log_csv)
+  log_file = open(log_path, 'w')
+  logwriter = csv.writer(log_file, delimiter=',')
+  logwriter.writerow(['book', 'error'])
 
-def format_urls():
+  with open(input_path, 'r') as input_file:
+    book = ''
+    for line in input_file:
+      try:
+        if line.strip():
+          if line[0] == '*':
+            book = line.split('*')[1]
+            dir_path = os.path.join(input_dir, book)
+            os.mkdir(dir_path)
+          else:
+            chapter, summary = line.split(' ', maxsplit=1)
+            output_path = os.path.join(input_dir, book, chapter)
+            with open(output_path, 'w') as output_file:
+              output_file.write(summary)
+      except Exception as e:
+        print('Error writing {}: {}'.format(book, e))
+        logwriter.writerow([book, e])
+
+  log_file.close()
+  return
+
+def import_prot_bible_summaries(log_csv='error_log.csv'):
+  log_path = os.path.join('..', 'data', 'summary', log_csv)
+  with open(log_path, 'w') as log_file:
+    for book_of_bible in format_summary_urls():
+      book, url = book_of_bible.values()
+      dir_path = os.path.join('..', 'data', 'summary', book)
+      os.mkdir(dir_path)
+      try:
+        html = urlopen(url.lower())
+        soup = BeautifulSoup(html, 'html.parser')
+        elements = soup.findAll('p', {'class': 'tweet_content'})
+
+        for i, el in enumerate(elements):
+          chapter = i + 1
+          summary = el.text.split(':')[1]
+          output_path = os.path.join(
+            '..', 'data', 'summary', book, '{}'.format(chapter))
+          with open(output_path, 'w') as output_file:
+            output_file.write(summary)
+
+        time.sleep(1)
+      except Exception as e:
+        print(e)
+        log_file.write('Error creating directory for {}: {}\n'.format(book, e))
+
+def format_summary_urls() -> list:
+  domain = 'https://biblesummary.info/'
+  urls = []
+  bible = ['Genesis', 'Exodus', 'Leviticus', 'Numbers', 'Deuteronomy', 'Joshua', 'Judges', 'Ruth', '1 Samuel', '2 Samuel', '1 Kings', '2 Kings', '1 Chronicles', '2 Chronicles', 'Ezra', 'Nehemiah', 'Esther', 'Job', 'Psalms', 'Proverbs', 'Ecclesiastes', 'Song of Songs', 'Isaiah', 'Jeremiah', 'Lamentations', 'Ezekiel', 'Daniel', 'Hosea', 'Joel', 'Amos', 'Obadiah', 'Jonah', 'Micah', 'Nahum', 'Habakkuk', 'Zephaniah', 'Haggai', 'Zechariah', 'Malachi', 'Matthew', 'Mark', 'Luke', 'John', 'Acts', 'Romans', '1 Corinthians', '2 Corinthians', 'Galatians', 'Ephesians', 'Philippians', 'Colossians', '1 Thessalonians', '2 Thessalonians', '1 Timothy', '2 Timothy', 'Titus', 'Philemon', 'Hebrews', 'James', '1 Peter', '2 Peter', '1 John', '2 John', '3 John', 'Jude', 'Revelation']
+  prot_apocrypha = ['Tobit', 'Judith', 'Wisdom', 'Sirach', 'Baruch', '1 Maccabees', '2 Maccabees']
+
+  for book in bible:
+    uri = book.replace(' ', '-')
+    urls.append({'book': book, 'url': domain + uri})
+  return urls
+
+def format_urls() -> dict:
   domain = 'http://www.sacredbible.org/catholic/'
   urls = {}
   bible = {
@@ -53,6 +119,40 @@ def import_bible():
         print(e)
         log_file.write('Error creating file {}.html: {}\n'.format(book, e))
 
+def complete_texts_csv(csv_output='texts2.csv', log_output='error_log2.txt'):
+  output_path = os.path.join('..', 'data', 'csv', csv_output)
+  log_path = os.path.join('..', 'data', 'csv', log_output)
+
+  output_file = open(output_path, 'w')
+  log_file = open(log_path, 'w')
+
+  corpus = Summarizer()
+  reader = ''
+
+  with open(output_file, 'r') as file:
+    reader = csv.reader(file.readlines())
+
+
+  with open(output_file, 'w') as file:
+    textwriter = csv.writer(file, delimiter=',')
+    textwriter.writerow(['id', 'summary'])
+
+    logwriter = csv.writer(log_file, delimiter=',')
+    logwriter.writerow(['ref_id', 'error'])
+
+    for line in reader:
+      if not line[1]:
+        try:
+          ref_id = line[0]
+          (volume, page_start, page_end, description) = get_ref_meta(ref_id)
+          summary = corpus.summarize_text(ref_id, volume, page_start, page_end)
+          textwriter.writerow([ref_id, summary])
+        except Exception as e:
+          logwriter.writerow([ref_id, e])
+
+  output_file.close()
+  log_file.close()
+  print("texts table %s udapated." % (outputPath))
 
 def make_texts_csv(csv_input='refs.csv', csv_output='texts.csv'):
   inputPath = os.path.join('..','data', 'csv', csv_input)
@@ -227,6 +327,7 @@ def write_file(filename1, filename2, filename3):
   notes = ''
 
   writer.writerow(['id','topic','subtopic','author','vol','alpha','omega','passage','notes'])
+
   def writeline():
     writer.writerow([rid, topic, subtopic, author, vol, alpha, omega, passage, notes])
 
