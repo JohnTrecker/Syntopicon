@@ -2,7 +2,7 @@
 
 import math
 
-from librarian import retrieve_many, get_ref_meta
+from librarian import retrieve_many, get_ref_meta, retrieve_passage_summary
 
 from sumy.nlp.stemmers import Stemmer
 from sumy.parsers.plaintext import PlaintextParser
@@ -17,9 +17,6 @@ class Summarizer:
 		self.MAX_PAGES = max_pages
 		self.MAX_LENGTH = 10485760 # max length of varchar in postgres
 
-	def get_bible_summary(passage: str) -> str:
-		return librarian.retrieve_passage_summary(passage)
-
 	def summarize_text(self, ref_id, volume=None,
                     page_start=None, page_end=None, description=None, text=None):
 		if not volume or not page_start:
@@ -28,7 +25,7 @@ class Summarizer:
 		if isinstance(page_end, float) and math.isnan(page_end):
 			page_end = ''
 		if int(volume) < 3:
-			return get_bible_summary(page_start)
+			return retrieve_passage_summary(page_start)
 
 		if (page_end and page_end.isdigit() and \
 			int(page_end) - int(page_start) > self.MAX_PAGES):

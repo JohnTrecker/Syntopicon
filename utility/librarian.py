@@ -2,6 +2,7 @@ import os
 from os import listdir, path
 from os.path import isfile, join
 import pandas as pd
+import scriptures
 
 refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
 subs = pd.read_csv('../data/csv/subs.csv', encoding='utf8', index_col=False)
@@ -91,7 +92,20 @@ def get_page_range_with_front_matter(start, end, vol):
 	pages.extend(get_page_range('1', end))
 	return pages
 
-def retrieve(vol, page, data_path='../data/output', first_para=False):
+def parse_passage(passage: str) -> list:
+	return scriptures.extract(passage)
+
+def retrieve_passage_summary(passage: str) -> str:
+	parsed_passage = parse_passage(passage)
+	summary_dir = os.path.join('..', 'data', 'summary')
+	summary = ''
+	if len(parsed_passage):
+		for parsed in parsed_passage:
+			(book, ch_start, vs_start, ch_end, vs_end) = parsed
+			summary += retrieve_many(book, ch_start, ch_end, summary_dir)
+	return summary
+
+def retrieve(vol, page, data_path='../data/output', file_path=None, first_para=False):
 	"""Retrieve one page from dir"""
 	filepath = os.path.join(data_path, str(vol), str(page))
 	text = ''
@@ -108,14 +122,14 @@ def retrieve(vol, page, data_path='../data/output', first_para=False):
 			raise e
 	return text
 
-def retrieve_many(vol, start, end):
+def retrieve_many(vol, start, end, data_path='../data/output') -> str:
 	"""Retrieve many pages from dir"""
 	if not end:
 		return retrieve(vol, start)
 
 	text = ''
 	for i in get_page_range(start, end, vol):
-		page = retrieve(vol, i)
+		page = retrieve(vol, i, data_path)
 		text += page
 	return text
 
