@@ -4,22 +4,28 @@ import pandas as pd
 import streamlit as st
 import os
 import csv
+import scriptures
 
 from summary_intern import Summarizer
+from scriptures.texts.deuterocanon import Deuterocanon
+
 s = Summarizer()
+d = Deuterocanon()
+
 
 refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
-subs = pd.read_csv('../data/csv/subs.csv', encoding='utf8', index_col=False)
+# subs = pd.read_csv('../data/csv/subs.csv', encoding='utf8', index_col=False)
 # works = pd.read_csv('../data/csv/works.csv', encoding='utf8', index_col=False)
 # vols = pd.read_csv('../data/csv/vols.csv', encoding='utf8', index_col=False)
 # auths = pd.read_csv('../data/csv/auths.csv', encoding='utf8', index_col=False)
-texts = pd.read_csv('../data/csv/texts.csv', encoding='utf8', index_col=False)
+# texts = pd.read_csv('../data/csv/texts.csv', encoding='utf8', index_col=False)
+
 
 def fix_duplicates():
-	refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
+	refs = pd.read_csv('../data/csv/refs2.csv', encoding='utf8', index_col=False)
 	refs['id'] = refs.index + 1
 	st.write('fixed duplicates')
-	refs.to_csv('../data/csv/refs2.csv', index=False, sep=',', encoding='utf-8')
+	refs.to_csv('../data/csv/refs3.csv', index=False, sep=',', encoding='utf-8')
 
 def get_duplicates():
 	refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
@@ -33,11 +39,12 @@ def get_summary(ref_id, logwriter):
 		st.write('{} summarized: {}'.format(ref_id, summary[:25]))
 		return summary
 	except Exception as e:
+		st.write('ERROR: {} failed to summarize: {}'.format(ref_id, e))
 		logwriter.writerow([ref_id, e])
 		return ''
 
 def set_summary(df):
-	with open('../data/csv/error_log3.csv', 'w') as log:
+	with open('../data/csv/logs/error_log_2019_10_01.csv', 'w') as log:
 		logwriter = csv.writer(log, delimiter=',')
 		logwriter.writerow(['id', 'error'])
 		df['summary'] = df.apply(lambda x: get_summary(x.id, logwriter), axis=1)
@@ -145,7 +152,7 @@ def separate_refs():
 	# a.volume.astype(int)
 	len_a = a.shape[0]
 
-	# seperate out page references with roman numberals
+	# seperate out page references with roman numerals
 	b = refs[pd.notnull(ps) & ps.str.isalpha() & ps.str.islower()]
 	# b.page_start.astype(str)
 	# b.volume.astype(str)
@@ -210,11 +217,39 @@ def drop_longs():
 	st.write(b.shape[0])
 	st.table(b)
 
+def parse_scripture(passage: str) -> (str, int, int, int):
+	"""returns tuple of book name, chapter start, verse start, chapter end, and verse end"""
+	a = scriptures.extract(passage)
+	if len(a) == 0:
+		a = d.extract(passage)
+	return a[0] if len(a) else []
+
+def parse_ref_note(note: str, book: str = None) -> [dict]:
+	"""returns start and end pages/chapters for more precise referencing"""
+	if note.find('esp') == -1:
+		return []
+	passages = note.split('esp ')[1]
+	seperated_refs = []
+	for ref in passages.split(','):
+		if book:
+			seperated_refs.append({
+				'start': '{} {}'.format(book, ref.strip()),
+				'end': None,
+			})
+		else:
+			new_ref = ref.strip().split('-')
+			start = new_ref[0]
+			end = None
+			if len(new_ref) == 2:
+				end = new_ref[1]
+			seperated_refs.append({
+				'start': start,
+				'end': end,
+			})
+	return seperated_refs
 
 def main():
-	get_duplicates()
 	fix_duplicates()
-	get_refs_by_page_length(length=5, note='esp')
 	return
 
 if __name__ == '__main__':
