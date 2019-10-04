@@ -8,7 +8,7 @@
 Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia Britannica's Great Books of the Western World, the name was coined by Mortimer J. Adler to describe the jewel of his life's work: a catalogued index of 102 fundamental "great ideas" around which competing schools of thought have developed over the past 28 centuries. With over 500,000 references to the works of eminent thinkers from Homer to Shakespeare, Euclid to Einstein, Aristotle to Descartes, the Syntopicon is a monument of academic labor that has fallen into obscurity. This project aims to revive its use among English-speaking men and women who earnestly seek a more liberal education.
 
 <!--
-# GOALS
+# TODOS:
 
 # [x] replace subtopic_id
 # [x] add author_id
@@ -27,44 +27,49 @@ Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia
 # [x] clean data
 	# [x] alpha: esp 123, refs.sort_values('alpha', ascending=False)[71:95]
 	# [x] alpha: null
-	# [] e.g. 2 Samuel, II Samuel
-# [] enforce data types
+	# [x] e.g. 2 Samuel, II Samuel
+# [x] enforce data types
 	# [x] refs.passage[str | NaN]
 	# [x] refs.page_start[int | str]
 	# [x] works.page_start[int | str]
-	# [] refs.page_start.contains(['i', 'v', 'x'])[int](show roman numerals)
-	# [] refs.page_start Bible passages[int](show bible passages)
+	# [x] refs.page_start.contains(['i', 'v', 'x'])[int](show roman numerals)
+	# [x] refs.page_start Bible passages[int](show bible passages)
 # [x] add refs.work column
-# [] drop passages longer than 20 pgs
-# [] save ref texts to 'texts' table
-# [] save Bible passages to file system
-# [] add ref.summaries column/table
-# [] use 'esp' in refs.notes
+# [] drop passages longer than 100 pgs
+# [x] save Bible passages to file system
+# [x] add texts.summary table/column
+# [x] fix duplicate ref.id values e.g. 29823
+# [x] normalize Bible refs
+# [x] update refs with 'esp' in refs.notes ...focus_refs_csv
+#	[x] update texts table
+	# [x] include bible summaries
+		# [x] normalize deuterocanonical books in
+				python-scriptures module
 -->
 
 ## API Schema
 
-|      URL                      | HTTP Verb | Request Body |                        Result                                           |
-|:-----------------------------:|:---------:|:------------:|:-----------------------------------------------------------------------:|
-| /api/topics                   |    GET    |    empty     |                                                Return JSON of all Topics|
-| /api/topics                   |    POST   |     JSON     |                        Create new Topic and return JSON of created Topic|
-| /api/topics                   |   DELETE  |    empty     |                   Delete all Topics in and return JSON of deleted Topics|
-| /api/topics/:id               |    GET    |    empty     |                           Return JSON of single Topic with matching `id`|
-| /api/topics/:id               |    PUT    |     JSON     |         Update Topic with matching `id` and return JSON of updated Topic|
-| /api/topics/:id               |   DELETE  |    empty     |         Delete Topic with matching `id` and return JSON of deleted Topic|
-| /api/topics/:id/suptopics     |    GET    |    empty     |                                             Return JSON of all Subtopics|
-| /api/topics/:id/suptopics     |    POST   |     JSON     |                  Create new Subtopic and return JSON of created Subtopic|
-| /api/topics/:id/suptopics     |    PUT    |     JSON     |                      Update Subtopic and return JSON of updated Subtopic|
-| /api/topics/:id/suptopics     |   DELETE  |    empty     |             Delete all Subtopics in and return JSON of deleted Subtopics|
-| /api/topics/:id/suptopics/:id |    GET    |    empty     |                        Return JSON of single Subtopic with matching `id`|
-| /api/topics/:id/suptopics/:id |    PUT    |     JSON     |   Update Subtopic with matching `id` and return JSON of updated Subtopic|
-| /api/topics/:id/suptopics/:id |   DELETE  |    empty     |   Delete Subtopic with matching `id` and return JSON of deleted Subtopic|
-| /api/references               |    GET    |    empty     |                                            Return JSON of all References|
-| /api/references               |    POST   |     JSON     |                Create new Reference and return JSON of created Reference|
-| /api/references               |   DELETE  |    empty     |           Delete all References in and return JSON of deleted References|
-| /api/references/:id           |    GET    |    empty     |                       Return JSON of single Reference with matching `id`|
-| /api/references/:id           |    PUT    |     JSON     | Update Reference with matching `id` and return JSON of updated Reference|
-| /api/references/:id           |   DELETE  |    empty     | Delete Reference with matching `id` and return JSON of deleted Reference|
+|      URL                  | HTTP Verb | Request Body |                        Result                                           |
+|:-------------------------:|:---------:|:------------:|:-----------------------------------------------------------------------:|
+| /topics                   |    GET    |    empty     |                                                Return JSON of all Topics|
+| /topics                   |    POST   |     JSON     |                        Create new Topic and return JSON of created Topic|
+| /topics                   |   DELETE  |    empty     |                   Delete all Topics in and return JSON of deleted Topics|
+| /topics/:id               |    GET    |    empty     |                           Return JSON of single Topic with matching `id`|
+| /topics/:id               |    PUT    |     JSON     |         Update Topic with matching `id` and return JSON of updated Topic|
+| /topics/:id               |   DELETE  |    empty     |         Delete Topic with matching `id` and return JSON of deleted Topic|
+| /topics/:id/suptopics     |    GET    |    empty     |                                             Return JSON of all Subtopics|
+| /topics/:id/suptopics     |    POST   |     JSON     |                  Create new Subtopic and return JSON of created Subtopic|
+| /topics/:id/suptopics     |    PUT    |     JSON     |                      Update Subtopic and return JSON of updated Subtopic|
+| /topics/:id/suptopics     |   DELETE  |    empty     |             Delete all Subtopics in and return JSON of deleted Subtopics|
+| /topics/:id/suptopics/:id |    GET    |    empty     |                        Return JSON of single Subtopic with matching `id`|
+| /topics/:id/suptopics/:id |    PUT    |     JSON     |   Update Subtopic with matching `id` and return JSON of updated Subtopic|
+| /topics/:id/suptopics/:id |   DELETE  |    empty     |   Delete Subtopic with matching `id` and return JSON of deleted Subtopic|
+| /references               |    GET    |    empty     |                                            Return JSON of all References|
+| /references               |    POST   |     JSON     |                Create new Reference and return JSON of created Reference|
+| /references               |   DELETE  |    empty     |           Delete all References in and return JSON of deleted References|
+| /references/:id           |    GET    |    empty     |                       Return JSON of single Reference with matching `id`|
+| /references/:id           |    PUT    |     JSON     | Update Reference with matching `id` and return JSON of updated Reference|
+| /references/:id           |   DELETE  |    empty     | Delete Reference with matching `id` and return JSON of deleted Reference|
 
 <!--
 
