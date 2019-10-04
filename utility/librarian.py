@@ -124,6 +124,8 @@ def retrieve(vol, page, data_path='../data/output', file_path=None, first_para=F
 
 def retrieve_many(vol, start, end, data_path='../data/output') -> str:
 	"""Retrieve many pages from dir"""
+	start = str(start)
+	end = str(end)
 	if not end:
 		return retrieve(vol, start)
 
