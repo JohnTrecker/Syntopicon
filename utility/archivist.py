@@ -190,10 +190,10 @@ def complete_texts_csv(csv_output='texts2.csv', log_output='error_log2.txt'):
   log_file.close()
   print("texts table %s updated." % (outputPath))
 
-def make_texts_csv(csv_input='refs.csv', csv_output='texts_2019_10_03.csv'):
-  inputPath = os.path.join('..','data', 'csv', csv_input)
-  outputPath = os.path.join('..','data', 'csv', csv_output)
-  log_path = os.path.join('..', 'data', 'csv', 'logs', 'error_log_2019_10_03.txt')
+def make_texts_csv(csv_input='missing_refs.csv', csv_output='missing_refs_texts.csv'):
+  inputPath = os.path.join('..','data', 'csv', 'test', csv_input)
+  outputPath = os.path.join('..','data', 'csv', 'test', csv_output)
+  log_path = os.path.join('..', 'data', 'csv', 'test', 'error_log_2019_10_04.txt')
   output_file = open(outputPath, 'w')
   log_file = open(log_path, 'w')
   corpus = Summarizer()
@@ -212,14 +212,16 @@ def make_texts_csv(csv_input='refs.csv', csv_output='texts_2019_10_03.csv'):
       start = row[7]
       end = row[8]
 
+      not_yet_written = True
       try:
         summary = corpus.summarize_text(ref_id, volume=volume, page_start=start, page_end=end)
-        row = [ref_id, summary]
-        textwriter.writerow(row)
+        textwriter.writerow([ref_id, summary])
+        not_yet_written = False
       except Exception as e:
         print('Error summarizing ref {}: {}'.format(ref_id, e))
-        row = [ref_id, e]
-        logwriter.writerow(row)
+        if not_yet_written:
+          textwriter.writerow([ref_id, ''])
+        logwriter.writerow([ref_id, e])
 
   output_file.close()
   log_file.close()
