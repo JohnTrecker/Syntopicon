@@ -8,13 +8,49 @@ import os
 import re
 import json
 import csv
-import streamlit as st
+# import streamlit as st
 
 from summary_intern import Summarizer
 from librarian import get_ref_meta
+from editor import parse_scripture, parse_ref_note
 
 data = '../data/output'
 cumm = 0
+
+def focus_refs_csv(csv_input='refs.csv', csv_output='refs2.csv'):
+	"""swaps long page range references for narrower ranges in notes where applicable"""
+	inputPath = os.path.join('..', 'data', 'csv', csv_input)
+	outputPath = os.path.join('..', 'data', 'csv', csv_output)
+	output_file = open(outputPath, 'w')
+
+	with open(inputPath, 'r') as input_file:
+		refwriter = csv.writer(output_file, delimiter=',')
+
+		for i, row in enumerate(csv.reader(input_file)):
+			ref_id = i
+			notes = row[9]
+
+			if notes and notes.find('esp') != -1:
+				v = row[6]
+				book = None
+				new_notes = 'passim {}-{}'.format(row[7], row[8])  # page_start, page_end
+				if int(v) < 3:
+					parsed = parse_scripture(row[7])
+					if len(parsed):
+						book = parsed[0]
+						new_notes = 'passim {}'.format(row[7])  # <book> <chapter(s)>
+
+				for new_ref in parse_ref_note(notes, book):
+					s = new_ref.get('start', '')
+					e = new_ref.get('end', '')
+					new_row = [ref_id, *row[1:7], s, e, new_notes]
+					print(new_row)
+					refwriter.writerow(new_row)
+			else:
+				refwriter.writerow([ref_id, *row[1:]])
+
+	output_file.close()
+	return
 
 def import_cath_bible_summaries(input_txt="apocrypha.txt", log_csv='errors.csv'):
   input_dir = os.path.join('..', 'data', 'summary')
@@ -152,12 +188,12 @@ def complete_texts_csv(csv_output='texts2.csv', log_output='error_log2.txt'):
 
   output_file.close()
   log_file.close()
-  print("texts table %s udapated." % (outputPath))
+  print("texts table %s updated." % (outputPath))
 
-def make_texts_csv(csv_input='refs.csv', csv_output='texts.csv'):
+def make_texts_csv(csv_input='refs.csv', csv_output='texts_2019_10_03.csv'):
   inputPath = os.path.join('..','data', 'csv', csv_input)
   outputPath = os.path.join('..','data', 'csv', csv_output)
-  log_path = os.path.join('..', 'data', 'csv', 'error_log.txt')
+  log_path = os.path.join('..', 'data', 'csv', 'logs', 'error_log_2019_10_03.txt')
   output_file = open(outputPath, 'w')
   log_file = open(log_path, 'w')
   corpus = Summarizer()
@@ -561,6 +597,7 @@ def listFileSize(directory=data):
   print(convert_bytes(cumm))
 
 def main():
+  make_texts_csv()
   return
 
 if __name__ == '__main__':
