@@ -53,11 +53,13 @@ def isNaN(num):
 
 def get_ref_meta(ref_id):
 	a = refs.loc[refs.id == ref_id, [
-		'volume', 'page_start', 'page_end', 'subtopic_id']]
+		'volume', 'page_start', 'page_end']]
 	b = a.values.T.tolist()
-	volume, page_start, page_end, subtopic_id = [item for sublist in b for item in sublist]
-	description = subs.loc[subs.id == subtopic_id, 'description'].values[0]
-	return (volume, page_start, page_end, description)
+	volume, page_start, page_end = [item for sublist in b for item in sublist]
+	# ALT: volume, page_start, page_end, subtopic_id = [item for sublist in b for item in sublist]
+	# ALT: description = subs.loc[subs.id == subtopic_id, 'description'].values[0]
+	# ALT: return (volume, page_start, page_end, description)
+	return (volume, page_start, page_end)
 
 def get_page_range(start, end, vol=3):
 	"""Return list of all pages (roman num and/or int) from start to end"""
