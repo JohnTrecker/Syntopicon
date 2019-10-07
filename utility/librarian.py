@@ -2,7 +2,10 @@ import os
 from os import listdir, path
 from os.path import isfile, join
 import pandas as pd
+
 import scriptures
+from scriptures.texts.deuterocanon import Deuterocanon
+d = Deuterocanon()
 
 refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
 subs = pd.read_csv('../data/csv/subs.csv', encoding='utf8', index_col=False)
@@ -52,14 +55,14 @@ def isNaN(num):
 	return num != num
 
 def get_ref_meta(ref_id):
-	a = refs.loc[refs.id == ref_id, [
+	a = refs.loc[refs.id == int(ref_id), [
 		'volume', 'page_start', 'page_end']]
 	b = a.values.T.tolist()
 	volume, page_start, page_end = [item for sublist in b for item in sublist]
-	# ALT: volume, page_start, page_end, subtopic_id = [item for sublist in b for item in sublist]
-	# ALT: description = subs.loc[subs.id == subtopic_id, 'description'].values[0]
-	# ALT: return (volume, page_start, page_end, description)
 	return (volume, page_start, page_end)
+	# volume, page_start, page_end, subtopic_id = [item for sublist in b for item in sublist]
+	# description = subs.loc[subs.id == subtopic_id, 'description'].values[0]
+	# return (volume, page_start, page_end, description)
 
 def get_page_range(start, end, vol=3):
 	"""Return list of all pages (roman num and/or int) from start to end"""
@@ -94,20 +97,27 @@ def get_page_range_with_front_matter(start, end, vol):
 	pages.extend(get_page_range('1', end))
 	return pages
 
-def parse_passage(passage: str) -> list:
-	return scriptures.extract(passage)
+def parse_scripture(passage: str) -> (str, int, int, int):
+	"""returns tuple of book name, chapter start, verse start, chapter end, and verse end"""
+	a = scriptures.extract(passage)
+	if len(a) == 0:
+		a = d.extract(passage)
+	return a if len(a) else []
 
 def retrieve_passage_summary(passage: str) -> str:
-	parsed_passage = parse_passage(passage)
+	parsed_passage = parse_scripture(passage)
 	summary_dir = os.path.join('..', 'data', 'summary')
 	summary = ''
 	if len(parsed_passage):
 		for parsed in parsed_passage:
-			(book, ch_start, vs_start, ch_end, vs_end) = parsed
-			summary += retrieve_many(book, ch_start, ch_end, summary_dir)
-	return summary
+			book = parsed[0]
+			ch_start = parsed[1]
+			ch_end = parsed[3]
+			summary += retrieve_many(book, ch_start, ch_end, data_path=summary_dir)
+	summary = summary.splitlines()
+	return ' '.join(summary)
 
-def retrieve(vol, page, data_path='../data/output', file_path=None, first_para=False):
+def retrieve(vol, page, data_path='../data/output', first_para=False):
 	"""Retrieve one page from dir"""
 	filepath = os.path.join(data_path, str(vol), str(page))
 	text = ''
