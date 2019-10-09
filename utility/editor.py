@@ -13,9 +13,9 @@ s = Summarizer()
 d = Deuterocanon()
 
 
-refs = pd.read_csv('../data/csv/refs.csv', encoding='utf8', index_col=False)
+refs = pd.read_csv('../data/csv/test/refs.csv', encoding='utf8', index_col=False)
 # subs = pd.read_csv('../data/csv/subs.csv', encoding='utf8', index_col=False)
-# works = pd.read_csv('../data/csv/works.csv', encoding='utf8', index_col=False)
+works = pd.read_csv('../data/csv/works.csv', encoding='utf8', index_col=False)
 # vols = pd.read_csv('../data/csv/vols.csv', encoding='utf8', index_col=False)
 # auths = pd.read_csv('../data/csv/auths.csv', encoding='utf8', index_col=False)
 # texts = pd.read_csv('../data/csv/texts.csv', encoding='utf8', index_col=False)
@@ -186,11 +186,11 @@ def get_work_id(ref_id):
 	g = f.query('page_start <= {}'.format(page_start))
 	work_id = g.tail(1).id.values[0]
 	return work_id
-	# title = g.tail(1).title.values[0]
-	# return title
 
 def set_work_ids():
-	refs['work_id'] = refs.apply(lambda x: get_work_id(x.id), axis=1)
+	a = refs.copy()
+	a['work_id'] = a.apply(lambda x: get_work_id(x.id), axis=1)
+	a.to_csv(path_or_buf='../data/csv/test/refs_updated_work_ids.csv', index=False)
 
 def get_refs_by_page_length(length = 100, note=None):
 	PAGE_LENGTH = length
@@ -208,7 +208,8 @@ def get_refs_by_page_length(length = 100, note=None):
 		b = c
 	st.title('References longer than {} pages'.format(PAGE_LENGTH))
 	st.write(b.shape[0])
-	st.table(b)
+	# st.table(b.head())
+	return b
 
 def drop_longs():
 	a, b, c = separate_refs()
@@ -249,8 +250,8 @@ def parse_ref_note(note: str, book: str = None) -> [dict]:
 	return seperated_refs
 
 def main():
-	fix_duplicates()
 	return
+
 
 if __name__ == '__main__':
   main()
