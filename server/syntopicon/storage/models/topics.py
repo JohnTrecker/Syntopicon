@@ -3,20 +3,20 @@ from sqlalchemy.types import TIMESTAMP
 from . import BaseModel
 
 
-class Volumes(BaseModel):
-    __tablename__ = 'volumes'
+class Topics(BaseModel):
+    __tablename__ = 'topics'
 
     id = Column(Integer(), primary_key=True)
-    path = Column(String())
+    name = Column(String())
+    num_subtopics = Column(Integer())
     modified = Column(TIMESTAMP(), server_default=text('NOW()'))
     created = Column(TIMESTAMP(), server_default=text('NOW()'))
 
     def json(self):
         return {
             'id': self.id,
-            'path': self.path,
+            'name': self.name,
+            'num_subtopics': self.num_subtopics,
             'modified': self.modified,
             'created': self.created,
         }
-
-
