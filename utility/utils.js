@@ -58,7 +58,6 @@ const utils = {
 
   },
 
-
   addDescription: () => {
     fs.readFile('../data/json/subtopics2.json', 'utf8', async (err, json) => {
       if (err) throw err
@@ -146,33 +145,50 @@ const utils = {
     return {'subtopics': subs}
   },
 
-  nest: (obj) => {
-    let temp = {}
-    let subs = obj.subtopics.map( topic => {
-      temp[topic.topic] = {}
-      topic.subtopics.map( (subtopic, i, collection) => {
-        let [first, second, third] = subtopic.number.split('.')
-        if (second) {
-          if (!temp[topic.topic][first]) temp[topic.topic][first] = []
-          temp[first].push(subtopic)
-          collection[i] = null
-        }
-        return subtopic
-      })
+  nest: (json) => {
+    /**
+     * folds flat subtopics.csv into a nested_subtopics.json
+     */
+    return json.topics.reduce((taxonomy, topic) => {
+      const { topic: topicName, number: topicNum, subtopics } = topic
 
-      for (let [key, value] of Object.entries(temp)) {
-        console.log(topic.subtopics[key-1])
+      const topicTaxonomy = []
+      const alphaNumKey = {
+        'a': 0,
+        'b': 1,
+        'c': 2,
+        'd': 3,
+        'e': 4,
+        'f': 5,
+        'g': 6,
+        'h': 7,
+        'i': 8,
       }
-      return topic
-    });
 
-    return {'subtopics': subs}
+      for (let i = 0; i < subtopics.length; i++) {
+        const { number, subtopic } = subtopics[i]
+        let [ first, second, third ] = number.split('.')
+        const subs = { ...subtopics[i], subtopics: [] }
+        first = parseInt(first, 10) - 1
+
+        if (third) {
+          second = alphaNumKey[second]
+          console.log(topicTaxonomy[first].subtopics)
+          topicTaxonomy[first].subtopics[second].subtopics.push(subs)
+        }
+        else if (second) {
+          topicTaxonomy[first].subtopics.push(subs)
+        }
+        else {
+          topicTaxonomy.push(subs)
+        }
+      }
+
+      taxonomy[topicNum] = { ...topic, subtopics: topicTaxonomy }
+      return taxonomy
+    }, {})
   },
 
-
-  setDepthValue: (num, depth) => {
-    return num.split('.', depth).join(".")
-  },
 
   serialize: (str) => {
       const replacer = (match, s1, s2, s3, offset, string) => [s1, s2, s3].filter(val => val !== '').join('.')
@@ -267,8 +283,8 @@ const utils = {
 
   },
 
-  IOjson: (input, outputFile, cb) => {
-    fs.readFile(input, 'utf8', (err, json) => {
+  IOjson: (inputFile, outputFile, cb) => {
+    fs.readFile(inputFile, 'utf8', (err, json) => {
       if (err) throw err
       let output = JSON.parse(json)
       let result = cb(output)
