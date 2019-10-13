@@ -11,11 +11,35 @@ import csv
 # import streamlit as st
 
 from summary_intern import Summarizer
-from librarian import get_ref_meta
-from editor import parse_scripture, parse_ref_note
+from librarian import get_ref_meta, parse_scripture
+from editor import parse_ref_note
 
 data = '../data/output'
 cumm = 0
+
+
+def add_subs_to_tops(json_input='subtopics_nested.json', csv_input='tops.csv', csv_output='tops2.csv'):
+  inputJSONPath = os.path.join('..', 'data', 'json', json_input)
+  inputCSVPath = os.path.join('..', 'data', 'csv', csv_input)
+  outputPath = os.path.join('..', 'data', 'csv', csv_output)
+  outputFile = open(outputPath, 'w')
+  topicwriter = csv.writer(outputFile, delimiter=',')
+
+
+  with open(inputJSONPath, 'r') as jsonFile:
+    reader = json.load(jsonFile)
+
+  with open(inputCSVPath, 'r') as inputFile:
+    for line in csv.reader(inputFile):
+      topic_id = line[0]
+      if topic_id == 'id':
+        topicwriter.writerow(line + ['subtopics'])
+        continue
+      topic = reader[str(topic_id)]
+      all_subs_under_topic = json.dumps(topic['subtopics'])
+      topicwriter.writerow(line + [all_subs_under_topic])
+
+  outputFile.close()
 
 def focus_refs_csv(csv_input='refs.csv', csv_output='refs2.csv'):
 	"""swaps long page range references for narrower ranges in notes where applicable"""
@@ -155,24 +179,21 @@ def import_bible():
         print(e)
         log_file.write('Error creating file {}.html: {}\n'.format(book, e))
 
-def complete_texts_csv(csv_output='texts2.csv', log_output='error_log2.txt'):
-  output_path = os.path.join('..', 'data', 'csv', csv_output)
-  log_path = os.path.join('..', 'data', 'csv', log_output)
-
-  output_file = open(output_path, 'w')
+def complete_texts_csv(csv_input='texts.csv',  csv_output='texts2.csv', log_output='error_log_2019_10_06.txt'):
+  input_file = os.path.join('..', 'data', 'csv', csv_input)
+  output_file = os.path.join('..', 'data', 'csv', csv_output)
+  log_path = os.path.join('..', 'data', 'csv', 'logs', log_output)
   log_file = open(log_path, 'w')
 
   corpus = Summarizer()
   reader = ''
 
-  with open(output_file, 'r') as file:
+  with open(input_file, 'r') as file:
     reader = csv.reader(file.readlines())
 
 
   with open(output_file, 'w') as file:
     textwriter = csv.writer(file, delimiter=',')
-    textwriter.writerow(['id', 'summary'])
-
     logwriter = csv.writer(log_file, delimiter=',')
     logwriter.writerow(['ref_id', 'error'])
 
@@ -180,15 +201,17 @@ def complete_texts_csv(csv_output='texts2.csv', log_output='error_log2.txt'):
       if not line[1]:
         try:
           ref_id = line[0]
-          (volume, page_start, page_end, description) = get_ref_meta(ref_id)
-          summary = corpus.summarize_text(ref_id, volume, page_start, page_end)
+          summary = corpus.summarize_text(ref_id)
           textwriter.writerow([ref_id, summary])
         except Exception as e:
+          print('error on ref id {}: {}'.format(ref_id, e))
           logwriter.writerow([ref_id, e])
+      else:
+          textwriter.writerow(line)
 
-  output_file.close()
+
   log_file.close()
-  print("texts table %s updated." % (outputPath))
+  print("texts table %s updated." % (output_file))
 
 def make_texts_csv(csv_input='missing_refs.csv', csv_output='missing_refs_texts.csv'):
   inputPath = os.path.join('..','data', 'csv', 'test', csv_input)
@@ -599,7 +622,7 @@ def listFileSize(directory=data):
   print(convert_bytes(cumm))
 
 def main():
-  make_texts_csv()
+  add_subs_to_tops()
   return
 
 if __name__ == '__main__':
