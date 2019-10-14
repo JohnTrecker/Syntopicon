@@ -1,24 +1,22 @@
 from sqlalchemy import Column, String, Integer, text
-from sqlalchemy.dialects.postgresql import JSON
 from sqlalchemy.types import TIMESTAMP
 from . import BaseModel
 
 
-class Topics(BaseModel):
-    __tablename__ = 'topics'
+class Translator(BaseModel):
+    __tablename__ = 'translator'
 
     id = Column(Integer(), primary_key=True)
-    name = Column(String())
-    num_subtopics = Column(Integer())
-    subtopics = Column(JSON())
+    primary_trans = Column(String())
+    secondary_trans = Column(String())
     modified = Column(TIMESTAMP(), server_default=text('NOW()'))
     created = Column(TIMESTAMP(), server_default=text('NOW()'))
 
     def json(self):
         return {
             'id': self.id,
-            'name': self.name,
-            'num_subtopics': self.num_subtopics,
+            'primary_trans': self.primary_trans,
+            'secondary_trans': self.secondary_trans,
             'modified': self.modified,
             'created': self.created,
         }

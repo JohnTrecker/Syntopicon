@@ -1,21 +1,18 @@
-from sqlalchemy import Column, String, Integer, text
+from sqlalchemy import Column, String, Integer, text, ForeignKey
 from sqlalchemy.types import TIMESTAMP
 from . import BaseModel
 
 
-class References(BaseModel):
-    __tablename__ = 'references'
+class Reference(BaseModel):
+    __tablename__ = 'reference'
 
-
-id, topic_id, subtopic_id, work_id, author_id, author, volume, page_start, page_end, notes
-
-    id = Column(Integer(), primary_key=True)
-    topic_id = Column(Integer())
-    subtopic_id = Column(Integer())
-    work_id = Column(Integer())
-    author_id = Column(Integer())
+    id = Column(Integer(), autoincrement=False, primary_key=True)
+    topic_id = Column(Integer(), ForeignKey('topic.id'))
+    subtopic_id = Column(Integer(), ForeignKey('subtopic.id'))
+    work_id = Column(Integer(), ForeignKey('work.id'))
+    author_id = Column(Integer(), ForeignKey('author.id'))
     author = Column(String())
-    volume = Column(Integer())
+    volume = Column(Integer(), ForeignKey('volume.id'))
     page_start = Column(String())
     page_end = Column(String())
     notes = Column(String())
