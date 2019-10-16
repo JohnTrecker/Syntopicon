@@ -8,15 +8,38 @@ import os
 import re
 import json
 import csv
-# import streamlit as st
 
 from summary_intern import Summarizer
-from librarian import get_ref_meta, parse_scripture
+from librarian import get_ref_meta, parse_scripture, retrieve_many
 from editor import parse_ref_note
 
 data = '../data/output'
 cumm = 0
 
+
+def insert_full_texts(user, password, host, database):
+	import dataset
+
+  db = dataset.connect(f'postgresql://{user}:{password}@{host}/{database}')
+	table = db['text_full']
+	with open('../data/csv/reference.csv') as csvfile:
+		reader = csv.reader(csvfile)
+		header = next(reader)
+		values_list = []
+
+		try:
+			for row in reader:
+				text = retrieve_many(row[6], row[7], row[8])
+				values = dict(reference_id=row[0], text=text)
+				values_list.append(values)
+				if len(values_list) >= 500:
+					table.insert_many(values_list)
+					values_list.clear()
+			table.insert_many(values_list)
+		except Exception as ex:
+			db.rollback()
+			print(ex)
+	return
 
 def add_subs_to_tops(json_input='subtopics_nested.json', csv_input='tops.csv', csv_output='tops2.csv'):
   inputJSONPath = os.path.join('..', 'data', 'json', json_input)
