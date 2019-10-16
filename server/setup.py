@@ -19,6 +19,7 @@ classifiers = [
 entry_points = {
     'console_scripts': [
         'syntopicon = syntopicon.server:main'
+        # 'seed = syntopicon.utils.seed:seed'
     ]
 }
 
