@@ -8,6 +8,8 @@ import os
 import re
 import json
 import csv
+import shutil
+import dataset
 
 from summary_intern import Summarizer
 from librarian import get_ref_meta, parse_scripture, retrieve_many
@@ -17,29 +19,81 @@ data = '../data/output'
 cumm = 0
 
 
-def insert_full_texts(user, password, host, database):
-	import dataset
+def extract_passage(old_path: str, new_path: str) -> None:
+	"""creates new json file for each book containing lists of verses"""
+	current_book = []
+	current_chapter = {
+		'chapter': 'zero',
+		'verses': []
+	}
 
-  db = dataset.connect(f'postgresql://{user}:{password}@{host}/{database}')
-	table = db['text_full']
-	with open('../data/csv/reference.csv') as csvfile:
-		reader = csv.reader(csvfile)
-		header = next(reader)
-		values_list = []
+	with open(old_path, 'r') as readFile:
+		reader = readFile.readlines()
 
-		try:
-			for row in reader:
-				text = retrieve_many(row[6], row[7], row[8])
-				values = dict(reference_id=row[0], text=text)
-				values_list.append(values)
-				if len(values_list) >= 500:
-					table.insert_many(values_list)
-					values_list.clear()
-			table.insert_many(values_list)
-		except Exception as ex:
-			db.rollback()
-			print(ex)
+		for line in reader:
+			# new chapter
+			if line.startswith('['):
+				chapter = line.split(' ')[-1].split(']')[0]
+				if current_chapter.get('chapter', None):
+					current_book.append(current_chapter)
+				current_chapter = {
+					'chapter': chapter,
+					# initilizes verses[0] with empty string for easier verse lookup
+					'verses': ['']
+				}
+
+			# new verse
+			if line.startswith('{'):
+				verse = line.replace('{', '[', 1).replace('}', ']', 1)
+				current_chapter.get('verses', []).append(verse)
+
+	if current_chapter.get('chapter', None):  # last one
+		current_book.append(current_chapter)
+
+	with open(new_path, 'w') as writeFile:
+		json.dump(current_book, writeFile)
+
 	return
+
+def subdivide_scripture_texts() -> None:
+	"""creates new dir for each book of bible and executes callback"""
+	for i in range(1, 3):
+		text_path = os.path.join('..', 'data', 'output', str(i))
+		dirs = os.listdir(text_path)
+
+		for file in dirs:
+			book, extension = file.split('.')
+			if extension != 'txt':
+				print(file)
+				continue
+			old_book_path = os.path.join(text_path, f'{book}.txt')
+			new_book_path = os.path.join(text_path, f'{book}.json')
+
+			extract_passage(old_book_path, new_book_path)
+
+	return
+
+def insert_full_texts(user, password, host, database):
+  db = dataset.connect(f'postgresql://{user}:{password}@{host}/{database}')
+  table = db['text_full']
+  with open('../data/csv/reference.csv') as csvfile:
+    reader = csv.reader(csvfile)
+    header = next(reader)
+    values_list = []
+
+    try:
+      for row in reader:
+        text = retrieve_many(row[6], row[7], row[8])
+        values = dict(reference_id=row[0], text=text)
+        values_list.append(values)
+        if len(values_list) >= 500:
+          table.insert_many(values_list)
+          values_list.clear()
+      table.insert_many(values_list)
+    except Exception as ex:
+      db.rollback()
+      print(ex)
+  return
 
 def add_subs_to_tops(json_input='subtopics_nested.json', csv_input='tops.csv', csv_output='tops2.csv'):
   inputJSONPath = os.path.join('..', 'data', 'json', json_input)
@@ -645,7 +699,6 @@ def listFileSize(directory=data):
   print(convert_bytes(cumm))
 
 def main():
-  add_subs_to_tops()
   return
 
 if __name__ == '__main__':
