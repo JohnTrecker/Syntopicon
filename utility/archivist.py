@@ -20,58 +20,58 @@ cumm = 0
 
 
 def extract_passage(old_path: str, new_path: str) -> None:
-	"""creates new json file for each book containing lists of verses"""
-	current_book = []
-	current_chapter = {
-		'chapter': 'zero',
-		'verses': []
-	}
+  """creates new json file for each book containing lists of verses"""
+  current_book = []
+  current_chapter = {
+    'chapter': 0,
+    'verses': []
+  }
 
-	with open(old_path, 'r') as readFile:
-		reader = readFile.readlines()
+  with open(old_path, 'r') as readFile:
+    reader = readFile.readlines()
 
-		for line in reader:
-			# new chapter
-			if line.startswith('['):
-				chapter = line.split(' ')[-1].split(']')[0]
-				if current_chapter.get('chapter', None):
-					current_book.append(current_chapter)
-				current_chapter = {
-					'chapter': chapter,
-					# initilizes verses[0] with empty string for easier verse lookup
-					'verses': ['']
-				}
+    for line in reader:
+      # new chapter
+      if line.startswith('['):
+        chapter = line.split(' ')[-1].split(']')[0]
+        chapter = int(chapter) if chapter.isdigit() else chapter
+        if current_chapter.get('chapter', None):
+          current_book.append(current_chapter)
+        current_chapter = {
+          'chapter': chapter,
+          'verses': []
+        }
 
-			# new verse
-			if line.startswith('{'):
-				verse = line.replace('{', '[', 1).replace('}', ']', 1)
-				current_chapter.get('verses', []).append(verse)
+      # new verse
+      if line.startswith('{'):
+        verse = line.replace('{', '[', 1).replace('}', ']', 1)
+        current_chapter.get('verses', []).append(verse)
 
-	if current_chapter.get('chapter', None):  # last one
-		current_book.append(current_chapter)
+    # last verse
+    if current_chapter.get('chapter', None):
+      current_book.append(current_chapter)
 
-	with open(new_path, 'w') as writeFile:
-		json.dump(current_book, writeFile)
+    with open(new_path, 'w') as writeFile:
+      json.dump(current_book, writeFile)
 
-	return
+      return
 
 def subdivide_scripture_texts() -> None:
-	"""creates new dir for each book of bible and executes callback"""
-	for i in range(1, 3):
-		text_path = os.path.join('..', 'data', 'output', str(i))
-		dirs = os.listdir(text_path)
+  """creates new dir for each book of bible and executes callback"""
+  for i in range(1, 3):
+    text_path = os.path.join('..', 'data', 'output', str(i))
+    dirs = os.listdir(text_path)
 
-		for file in dirs:
-			book, extension = file.split('.')
-			if extension != 'txt':
-				print(file)
-				continue
-			old_book_path = os.path.join(text_path, f'{book}.txt')
-			new_book_path = os.path.join(text_path, f'{book}.json')
+    for file in dirs:
+      book, extension = file.split('.')
+      if extension != 'txt':
+        continue
+      old_book_path = os.path.join(text_path, f'{book}.txt')
+      new_book_path = os.path.join(text_path, f'{book}.json')
 
-			extract_passage(old_book_path, new_book_path)
+      extract_passage(old_book_path, new_book_path)
 
-	return
+  return
 
 def insert_full_texts(user, password, host, database):
   db = dataset.connect(f'postgresql://{user}:{password}@{host}/{database}')
