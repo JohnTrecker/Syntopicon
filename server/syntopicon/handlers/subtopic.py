@@ -11,7 +11,7 @@ class OneSubtopicHandler(BaseHandler):
     def get(self):
       try:
         path_segments = self.request.uri.split('/')
-        subtopic_id = int(path_segments[5])
+        subtopic_id = int(path_segments[3])
 
         keys = ('id', 'topic_id', 'description')
         record = self.db_session\

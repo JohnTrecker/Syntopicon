@@ -67,13 +67,13 @@ Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia
 |    x    | /topics/:id               |    GET    |    empty     |                           Return JSON of single Topic with matching `id`|
 |         | /topics/:id               |    PUT    |     JSON     |         Update Topic with matching `id` and return JSON of updated Topic|
 |         | /topics/:id               |   DELETE  |    empty     |         Delete Topic with matching `id` and return JSON of deleted Topic|
-|    x    | /topics/:id/suptopics     |    GET    |    empty     |                                             Return JSON of all Subtopics|
-|         | /topics/:id/suptopics     |    POST   |     JSON     |                  Create new Subtopic and return JSON of created Subtopic|
-|         | /topics/:id/suptopics     |    PUT    |     JSON     |                      Update Subtopic and return JSON of updated Subtopic|
-|         | /topics/:id/suptopics     |   DELETE  |    empty     |             Delete all Subtopics in and return JSON of deleted Subtopics|
-|         | /topics/:id/suptopics/:id |    GET    |    empty     |                        Return JSON of single Subtopic with matching `id`|
-|         | /topics/:id/suptopics/:id |    PUT    |     JSON     |   Update Subtopic with matching `id` and return JSON of updated Subtopic|
-|         | /topics/:id/suptopics/:id |   DELETE  |    empty     |   Delete Subtopic with matching `id` and return JSON of deleted Subtopic|
+|    x    | /suptopics                |    GET    |    empty     |                                             Return JSON of all Subtopics|
+|         | /suptopics                |    POST   |     JSON     |                  Create new Subtopic and return JSON of created Subtopic|
+|         | /suptopics                |    PUT    |     JSON     |                      Update Subtopic and return JSON of updated Subtopic|
+|         | /suptopics                |   DELETE  |    empty     |             Delete all Subtopics in and return JSON of deleted Subtopics|
+|    x    | /suptopics/:id            |    GET    |    empty     |                        Return JSON of single Subtopic with matching `id`|
+|         | /suptopics/:id            |    PUT    |     JSON     |   Update Subtopic with matching `id` and return JSON of updated Subtopic|
+|         | /suptopics/:id            |   DELETE  |    empty     |   Delete Subtopic with matching `id` and return JSON of deleted Subtopic|
 |         | /references               |    GET    |    empty     |                                            Return JSON of all References|
 |         | /references               |    POST   |     JSON     |                Create new Reference and return JSON of created Reference|
 |         | /references               |   DELETE  |    empty     |           Delete all References in and return JSON of deleted References|
