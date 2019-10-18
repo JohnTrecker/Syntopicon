@@ -13,6 +13,6 @@ topic_route = [
     Url(
         pattern=r'/v1/topics/?$',
         handler=ManyTopicsHandler,
-        name='Topic Handler'
+        name='Topics Handler'
     )
 ]

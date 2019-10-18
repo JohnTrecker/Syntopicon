@@ -4,16 +4,14 @@ from tornado.gen import coroutine
 from syntopicon.handlers.base import BaseHandler
 from syntopicon.storage.models.topic import Topic
 
-class OneTopicHandler(BaseHandler):
+class ManySubtopicsHandler(BaseHandler):
     def get(self):
       try:
         path_segments = self.request.uri.split('/')
         topic_id = int(path_segments[3])
-
-        keys = ('id', 'name', 'num_subtopics')
-        record = self.db_session.query(Topic.id, Topic.name, Topic.num_subtopics)\
-                                .filter(Topic.id == topic_id).first()
-        data = dict(zip(keys, record))
+        record = self.db_session.query(Topic).filter(Topic.id == topic_id).first()
+        data = record.__dict__
+        del data['_sa_instance_state']
         self.write_response(data)
       except exc.SQLAlchemyError as err:
         self.db_session.rollback()
