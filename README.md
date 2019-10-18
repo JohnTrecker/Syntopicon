@@ -35,7 +35,6 @@ Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia
 	# [x] refs.page_start.contains(['i', 'v', 'x'])[int](show roman numerals)
 	# [x] refs.page_start Bible passages[int](show bible passages)
 # [x] add refs.work column
-# [] drop passages longer than 100 pgs
 # [x] save Bible passages to file system
 # [x] add texts.summary table/column
 # [x] fix duplicate ref.id values e.g. 29823
@@ -43,33 +42,44 @@ Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia
 # [x] update refs with 'esp' in refs.notes ...focus_refs_csv
 #	[x] update texts table
 	# [x] include bible summaries
-		# [x] normalize deuterocanonical books in
-				python-scriptures module
+		# [x] normalize deuterocanonical books in python-scriptures module
+# [] prepare tables for deployment
+		[] clean tables
+			[] make tables text and summary many-to-one
+			[] refs
+				[] drop passages longer than 100 pgs
+				[] add refs.referencer column
+				[] add refs.summary_id column
+				[] add refs.text_id column
+				[] sequentialize refs.id
+			[] standardize author name references
+		[] compress tables
+	[] routes
 -->
 
 ## API Schema
 
-|      URL                  | HTTP Verb | Request Body |                        Result                                           |
-|:-------------------------:|:---------:|:------------:|:-----------------------------------------------------------------------:|
-| /topics                   |    GET    |    empty     |                                                Return JSON of all Topics|
-| /topics                   |    POST   |     JSON     |                        Create new Topic and return JSON of created Topic|
-| /topics                   |   DELETE  |    empty     |                   Delete all Topics in and return JSON of deleted Topics|
-| /topics/:id               |    GET    |    empty     |                           Return JSON of single Topic with matching `id`|
-| /topics/:id               |    PUT    |     JSON     |         Update Topic with matching `id` and return JSON of updated Topic|
-| /topics/:id               |   DELETE  |    empty     |         Delete Topic with matching `id` and return JSON of deleted Topic|
-| /topics/:id/suptopics     |    GET    |    empty     |                                             Return JSON of all Subtopics|
-| /topics/:id/suptopics     |    POST   |     JSON     |                  Create new Subtopic and return JSON of created Subtopic|
-| /topics/:id/suptopics     |    PUT    |     JSON     |                      Update Subtopic and return JSON of updated Subtopic|
-| /topics/:id/suptopics     |   DELETE  |    empty     |             Delete all Subtopics in and return JSON of deleted Subtopics|
-| /topics/:id/suptopics/:id |    GET    |    empty     |                        Return JSON of single Subtopic with matching `id`|
-| /topics/:id/suptopics/:id |    PUT    |     JSON     |   Update Subtopic with matching `id` and return JSON of updated Subtopic|
-| /topics/:id/suptopics/:id |   DELETE  |    empty     |   Delete Subtopic with matching `id` and return JSON of deleted Subtopic|
-| /references               |    GET    |    empty     |                                            Return JSON of all References|
-| /references               |    POST   |     JSON     |                Create new Reference and return JSON of created Reference|
-| /references               |   DELETE  |    empty     |           Delete all References in and return JSON of deleted References|
-| /references/:id           |    GET    |    empty     |                       Return JSON of single Reference with matching `id`|
-| /references/:id           |    PUT    |     JSON     | Update Reference with matching `id` and return JSON of updated Reference|
-| /references/:id           |   DELETE  |    empty     | Delete Reference with matching `id` and return JSON of deleted Reference|
+| exposed |      URL                  | HTTP Verb | Request Body |                        Result                                           |
+|:-------:|:--------------------------|:---------:|:------------:|:------------------------------------------------------------------------|
+|    x    | /topics                   |    GET    |    empty     |                                                Return JSON of all Topics|
+|         | /topics                   |    POST   |     JSON     |                        Create new Topic and return JSON of created Topic|
+|         | /topics                   |   DELETE  |    empty     |                   Delete all Topics in and return JSON of deleted Topics|
+|    x    | /topics/:id               |    GET    |    empty     |                           Return JSON of single Topic with matching `id`|
+|         | /topics/:id               |    PUT    |     JSON     |         Update Topic with matching `id` and return JSON of updated Topic|
+|         | /topics/:id               |   DELETE  |    empty     |         Delete Topic with matching `id` and return JSON of deleted Topic|
+|    x    | /topics/:id/suptopics     |    GET    |    empty     |                                             Return JSON of all Subtopics|
+|         | /topics/:id/suptopics     |    POST   |     JSON     |                  Create new Subtopic and return JSON of created Subtopic|
+|         | /topics/:id/suptopics     |    PUT    |     JSON     |                      Update Subtopic and return JSON of updated Subtopic|
+|         | /topics/:id/suptopics     |   DELETE  |    empty     |             Delete all Subtopics in and return JSON of deleted Subtopics|
+|         | /topics/:id/suptopics/:id |    GET    |    empty     |                        Return JSON of single Subtopic with matching `id`|
+|         | /topics/:id/suptopics/:id |    PUT    |     JSON     |   Update Subtopic with matching `id` and return JSON of updated Subtopic|
+|         | /topics/:id/suptopics/:id |   DELETE  |    empty     |   Delete Subtopic with matching `id` and return JSON of deleted Subtopic|
+|         | /references               |    GET    |    empty     |                                            Return JSON of all References|
+|         | /references               |    POST   |     JSON     |                Create new Reference and return JSON of created Reference|
+|         | /references               |   DELETE  |    empty     |           Delete all References in and return JSON of deleted References|
+|         | /references/:id           |    GET    |    empty     |                       Return JSON of single Reference with matching `id`|
+|         | /references/:id           |    PUT    |     JSON     | Update Reference with matching `id` and return JSON of updated Reference|
+|         | /references/:id           |   DELETE  |    empty     | Delete Reference with matching `id` and return JSON of deleted Reference|
 
 <!--
 
