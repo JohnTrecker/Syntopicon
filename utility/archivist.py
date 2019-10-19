@@ -75,27 +75,55 @@ def subdivide_scripture_texts() -> None:
 
 def insert_full_texts(user, password, host, database):
   db = dataset.connect(f'postgresql://{user}:{password}@{host}/{database}')
-  table = db['text_full']
+  text_table = db['text']
+  ref_table = db['reference_text']
   with open('../data/csv/reference.csv') as csvfile:
     reader = csv.reader(csvfile)
     header = next(reader)
-    values_list = []
+    cache = set()
+    text_list = []
+    ref_list = []
+    count = 0
+    for row in reader:
+      count += 1
+      try:
+        alt_id = f'{row[6]}-{row[7]}-{row[8]}'
+        if alt_id in cache:
+          pass
+        else:
+          cache.add(alt_id)
+          text_list.append(dict(id=count, reference_id=row[0], text=retrieve_many(row[6], row[7], row[8])))
 
-    try:
-      for row in reader:
-        text = retrieve_many(row[6], row[7], row[8])
-        values = dict(reference_id=row[0], text=text)
-        values_list.append(values)
-        if len(values_list) >= 500:
-          table.insert_many(values_list)
-          values_list.clear()
-      table.insert_many(values_list)
+        ref_list.append(dict(reference_id=row[0], text_id=count))
+      except Exception as exc:
+        print(f'Error retrieving / appending ref {row[0]}: {exc}')
+        pass
+
+      if len(text_list) >= 500:
+        try:
+          text_table.insert_many(text_list)
+          text_list.clear()
+        except Exception as exc:
+          print(f'Error inserting ref {row[0]} to text table: {exc}')
+          db.rollback()
+
+      if len(ref_list) >= 1000:
+        try:
+          ref_table.insert_many(ref_list)
+          ref_list.clear()
+        except Exception as exc:
+          print(f'Error inserting ref {row[0]} to ref_text table: {exc}')
+          db.rollback()
+
+    try: # for the remaining values
+      text_table.insert_many(text_list)
+      ref_table.insert_many(ref_list)
     except Exception as ex:
+      print(f'Error inserting final refs/texts to tables: {exc}')
       db.rollback()
-      print(ex)
   return
 
-def add_subs_to_tops(json_input='subtopics_nested.json', csv_input='tops.csv', csv_output='tops2.csv'):
+def add_subs_to_tops(json_input='subtopics_nested.json', csv_input='topic.csv', csv_output='topic2.csv'):
   inputJSONPath = os.path.join('..', 'data', 'json', json_input)
   inputCSVPath = os.path.join('..', 'data', 'csv', csv_input)
   outputPath = os.path.join('..', 'data', 'csv', csv_output)
@@ -256,7 +284,7 @@ def import_bible():
         print(e)
         log_file.write('Error creating file {}.html: {}\n'.format(book, e))
 
-def complete_texts_csv(csv_input='texts.csv',  csv_output='texts2.csv', log_output='error_log_2019_10_06.txt'):
+def complete_summary_csv(csv_input='summary.csv',  csv_output='texts2.csv', log_output='error_log_2019_10_06.txt'):
   input_file = os.path.join('..', 'data', 'csv', csv_input)
   output_file = os.path.join('..', 'data', 'csv', csv_output)
   log_path = os.path.join('..', 'data', 'csv', 'logs', log_output)
@@ -290,7 +318,7 @@ def complete_texts_csv(csv_input='texts.csv',  csv_output='texts2.csv', log_outp
   log_file.close()
   print("texts table %s updated." % (output_file))
 
-def make_texts_csv(csv_input='missing_refs.csv', csv_output='missing_refs_texts.csv'):
+def make_summary_csv(csv_input='missing_refs.csv', csv_output='missing_refs_texts.csv'):
   inputPath = os.path.join('..','data', 'csv', 'test', csv_input)
   outputPath = os.path.join('..','data', 'csv', 'test', csv_output)
   log_path = os.path.join('..', 'data', 'csv', 'test', 'error_log_2019_10_04.txt')
@@ -442,17 +470,15 @@ def make_tops_csv(json_input='subtopics.json', csv_output='tops.csv'):
   output_file.close()
   print(".csv written to %s" % (csvPath))
 
-def iterate_csv(cb):
-  csvpath = os.path.join('..', 'data', 'refs.csv')
+def iterate_csv(csv_path, cb):
+  csvpath = os.path.join(csv_path)
 
   with open(csvpath, 'r') as csvfile:
     csvreader = csv.reader(csvfile, delimiter=',')
-
-    #  Each row is read as a row
     for row in csvreader:
       cb(row)
 
-def write_file(filename1, filename2, filename3):
+def write_refs_file(filename1, filename2, filename3):
 
   output_file = open(filename3, "wb")
   writer = csv.writer(output_file, delimiter=',')
@@ -699,6 +725,7 @@ def listFileSize(directory=data):
   print(convert_bytes(cumm))
 
 def main():
+  insert_full_texts(user='syntopicon', password='syntopicon_dev', host='localhost:5432', database='syntopicon_dev')
   return
 
 if __name__ == '__main__':
