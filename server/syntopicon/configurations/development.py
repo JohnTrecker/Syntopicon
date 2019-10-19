@@ -12,7 +12,7 @@ server = {
 
 endpoints = {}
 
-public_routes = ["/version"]
+public_routes = ["/version", "/topics", "/subtopics", "/references"]
 
 storage = {
     'psql': 'postgresql+psycopg2://%s:%s@%s/%s' % (
