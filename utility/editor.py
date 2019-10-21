@@ -4,6 +4,7 @@ import pandas as pd
 import streamlit as st
 import os
 import csv
+import json
 import scriptures
 
 from summary_intern import Summarizer
@@ -13,11 +14,12 @@ s = Summarizer()
 d = Deuterocanon()
 
 
-refs = pd.read_csv('../data/csv/test/refs.csv', encoding='utf8', index_col=False)
-# subs = pd.read_csv('../data/csv/subs.csv', encoding='utf8', index_col=False)
-works = pd.read_csv('../data/csv/works.csv', encoding='utf8', index_col=False)
+refs = pd.read_csv('../data/csv/reference.csv', encoding='utf8', index_col=False)
+subs = pd.read_csv('../data/csv/subtopic.csv', encoding='utf8', index_col=False)
+tops = pd.read_csv('../data/csv/topic.csv', encoding='utf8', index_col=False)
+works = pd.read_csv('../data/csv/work.csv', encoding='utf8', index_col=False)
 # vols = pd.read_csv('../data/csv/vols.csv', encoding='utf8', index_col=False)
-# auths = pd.read_csv('../data/csv/auths.csv', encoding='utf8', index_col=False)
+# auths = pd.read_csv('../data/csv/author.csv', encoding='utf8', index_col=False)
 # texts = pd.read_csv('../data/csv/texts.csv', encoding='utf8', index_col=False)
 
 
@@ -172,9 +174,9 @@ def separate_refs():
 
 	return (a, b, c)
 
-def get_work_id(ref_id):
-	volume = refs.loc[refs.id == ref_id, 'volume'].values[0].item()
-	page_start = refs.loc[refs.id == ref_id, 'page_start'].values[0]
+def get_work_id(ref_id, volume, page_start):
+	# volume = refs.loc[refs.id == ref_id, 'volume'].values[0].item()
+	# page_start = refs.loc[refs.id == ref_id, 'page_start'].values[0]
 
 	if volume is None or page_start is None:
 			return None
@@ -182,15 +184,17 @@ def get_work_id(ref_id):
 	if volume < 3 or (page_start.isalpha() and page_start.islower()):
 		page_start = 1
 
-	f = works.loc[works.volume == volume]
-	g = f.query('page_start <= {}'.format(page_start))
+	f = works.loc[works.volume_id == volume]
+	g = f.query(f'page_start <= {page_start}')
 	work_id = g.tail(1).id.values[0]
 	return work_id
 
 def set_work_ids():
-	a = refs.copy()
-	a['work_id'] = a.apply(lambda x: get_work_id(x.id), axis=1)
-	a.to_csv(path_or_buf='../data/csv/test/refs_updated_work_ids.csv', index=False)
+	a = refs.drop(['work_id'], axis=1)
+	st.write(a.head(n=5))
+	a['work_id'] = a.apply(lambda x: get_work_id(x.id, x.volume, x.page_start), axis=1)
+	a.to_csv(path_or_buf='../data/csv/test/refs_2019_10_19.csv', index=False)
+	st.write('new refs written')
 
 def get_refs_by_page_length(length = 100, note=None):
 	PAGE_LENGTH = length
@@ -208,8 +212,8 @@ def get_refs_by_page_length(length = 100, note=None):
 		b = c
 	st.title('References longer than {} pages'.format(PAGE_LENGTH))
 	st.write(b.shape[0])
-	# st.table(b.head())
-	return b
+	st.table(b)
+	return b['id']
 
 def drop_longs():
 	a, b, c = separate_refs()
@@ -248,6 +252,40 @@ def parse_ref_note(note: str, book: str = None) -> [dict]:
 				'end': end,
 			})
 	return seperated_refs
+
+def combine_vals(a,b,c):
+	return f'{a}-{b}-{c}'
+
+def create_subtopics_json(outPath='../data/json/subtopics2.json'):
+	a = subs.merge(tops, left_on='topic_id', right_on='id', suffixes=('_subs', '_tops'))
+	a.drop(['id_tops', 'num_subtopics', 'subtopics', 'referrer_id'], axis=1, inplace=True)
+	results = {'topics': []}
+	current_topic = 0
+
+	for i, subtopic in a.iterrows():
+		row = dict(subtopic)
+		if row.get('topic_id', None) == current_topic:
+			results['topics'][current_topic - 1]['subtopics'].append({
+				'id': row.get('id_subs', None),
+				'number': row.get('alt_id', None),
+				'subtopic': row.get('description', None),
+			})
+		else:
+			current_topic = row.get('topic_id', None)
+			results['topics'].append({
+				'topic': row.get('name', None),
+				'number': row.get('topic_id', None),
+				'subtopics': [{
+					'id': row.get('id_subs', None),
+					'number': row.get('alt_id', None),
+					'subtopic': row.get('description', None)
+				}]
+			})
+
+	with open(outPath, 'w') as outFile:
+		outFile.write(json.dumps(results))
+
+	return
 
 def main():
 	return
