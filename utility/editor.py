@@ -15,9 +15,9 @@ d = Deuterocanon()
 
 
 refs = pd.read_csv('../data/csv/reference.csv', encoding='utf8', index_col=False)
-subs = pd.read_csv('../data/csv/subtopic.csv', encoding='utf8', index_col=False)
-tops = pd.read_csv('../data/csv/topic.csv', encoding='utf8', index_col=False)
-works = pd.read_csv('../data/csv/work.csv', encoding='utf8', index_col=False)
+# subs = pd.read_csv('../data/csv/subtopic.csv', encoding='utf8', index_col=False)
+# tops = pd.read_csv('../data/csv/topic.csv', encoding='utf8', index_col=False)
+# works = pd.read_csv('../data/csv/work.csv', encoding='utf8', index_col=False)
 # vols = pd.read_csv('../data/csv/vols.csv', encoding='utf8', index_col=False)
 # auths = pd.read_csv('../data/csv/author.csv', encoding='utf8', index_col=False)
 # texts = pd.read_csv('../data/csv/texts.csv', encoding='utf8', index_col=False)
@@ -150,20 +150,20 @@ def separate_refs():
 	ps = refs.page_start
 
 	a = refs[pd.notnull(ps) & ps.str.isnumeric()]
-	# a.page_stard.astype(int)
-	# a.volume.astype(int)
+	a.page_stard.astype(int)
+	a.volume.astype(int)
 	len_a = a.shape[0]
 
 	# seperate out page references with roman numerals
 	b = refs[pd.notnull(ps) & ps.str.isalpha() & ps.str.islower()]
-	# b.page_start.astype(str)
-	# b.volume.astype(str)
+	b.page_start.astype(str)
+	b.volume.astype(str)
 	len_b = b.shape[0]
 
 	# seperate out page references with unique references
 	c = refs[~refs.id.isin(a.id) & ~refs.id.isin(b.id)]
-	# c.page_start.astype(str)
-	# c.volume.astype(str)
+	c.page_start.astype(str)
+	c.volume.astype(str)
 	len_c = c.shape[0]
 
 	st.title('seperated refs')
@@ -175,9 +175,6 @@ def separate_refs():
 	return (a, b, c)
 
 def get_work_id(ref_id, volume, page_start):
-	# volume = refs.loc[refs.id == ref_id, 'volume'].values[0].item()
-	# page_start = refs.loc[refs.id == ref_id, 'page_start'].values[0]
-
 	if volume is None or page_start is None:
 			return None
 
@@ -212,15 +209,20 @@ def get_refs_by_page_length(length = 100, note=None):
 		b = c
 	st.title('References longer than {} pages'.format(PAGE_LENGTH))
 	st.write(b.shape[0])
-	st.table(b)
-	return b['id']
+	return b
+
+def get_long_goethe_refs():
+	a = refs.copy()
+	b = a[(a.author == 'Goethe') & (a.page_start == 'xv') & (a.page_end == '162')]
+	return b
 
 def drop_longs():
-	a, b, c = separate_refs()
-	d = b[pd.notnull(b.page_end) & b.page_end.str.isnumeric() & b.page_end.str.startswith('162')]
-	b.drop(d.index, inplace=True, axis=0)
-	st.write(b.shape[0])
-	st.table(b)
+	a = pd.concat([get_refs_by_page_length(), get_long_goethe_refs()])
+	a.set_index('id', verify_integrity=True, inplace=True)
+	b = refs.copy().set_index('id', verify_integrity=True)
+	c = b.drop(a.index, axis=0)
+	c.to_csv('../data/csv/reference2.csv', index=True, sep=',', encoding='utf-8')
+	return
 
 def parse_scripture(passage: str) -> (str, int, int, int):
 	"""returns tuple of book name, chapter start, verse start, chapter end, and verse end"""
