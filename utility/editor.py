@@ -15,6 +15,7 @@ d = Deuterocanon()
 
 
 refs = pd.read_csv('../data/csv/reference.csv', encoding='utf8', index_col=False)
+summ = pd.read_csv('../data/csv/summary.csv', encoding='utf8', index_col=False)
 # subs = pd.read_csv('../data/csv/subtopic.csv', encoding='utf8', index_col=False)
 # tops = pd.read_csv('../data/csv/topic.csv', encoding='utf8', index_col=False)
 # works = pd.read_csv('../data/csv/work.csv', encoding='utf8', index_col=False)
@@ -217,11 +218,16 @@ def get_long_goethe_refs():
 	return b
 
 def drop_longs():
-	a = pd.concat([get_refs_by_page_length(), get_long_goethe_refs()])
-	a.set_index('id', verify_integrity=True, inplace=True)
-	b = refs.copy().set_index('id', verify_integrity=True)
-	c = b.drop(a.index, axis=0)
+	longs = pd.concat([get_refs_by_page_length(), get_long_goethe_refs()])
+	longs.set_index('id', verify_integrity=True, inplace=True)
+	new_ref = refs.copy().set_index('id', verify_integrity=True)
+	new_summary = summ.copy().set_index('id', verify_integrity=True)
+
+	c = new_ref.drop(longs.index, axis=0)
 	c.to_csv('../data/csv/reference2.csv', index=True, sep=',', encoding='utf-8')
+
+	d = new_summary.drop(longs.index, axis=0)
+	d.to_csv('../data/csv/summary2.csv', index=True, sep=',', encoding='utf-8')
 	return
 
 def parse_scripture(passage: str) -> (str, int, int, int):
