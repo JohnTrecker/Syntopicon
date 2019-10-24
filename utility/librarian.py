@@ -6,7 +6,8 @@ import json
 
 import scriptures
 from scriptures.texts.deuterocanon import Deuterocanon
-d = Deuterocanon()
+import logging
+logger = logging.getLogger(__name__)
 
 refs = pd.read_csv('../data/csv/reference.csv', encoding='utf8', index_col=False)
 subs = pd.read_csv('../data/csv/subtopic.csv', encoding='utf8', index_col=False)
@@ -102,6 +103,7 @@ def parse_scripture(passage: str) -> {str, int, int, int, int}:
 	"""returns dict of book name, chapter start, verse start, chapter end, and verse end"""
 	a = scriptures.extract(passage)
 	if len(a) == 0:
+		d = Deuterocanon()
 		a = d.extract(passage)
 
 	if len(a):
@@ -118,38 +120,40 @@ def retrieve_passage(volume: int, passage: str) -> str:
 	ch_end = p.get('ch_end', None)
 	vs_end = p.get('vs_end', None)
 
-	ch_st_index = ch_st - 1
+	ch_st_index = ch_st - 1 if book != 'Sirach' else ch_st
 	vs_st_index = vs_st - 1
 	ch_end_index = ch_end
 	vs_end_index = vs_end
 
-	print(p)
-	print(ch_st_index, vs_st_index, ch_end_index, vs_end_index)
 	jsonFile = f'{book}.json'
 	readpath = os.path.join('..', 'data', 'output', str(volume), jsonFile)
 
-	with open(readpath, 'r') as readFile:
-		chapters = json.load(readFile)
-		relevant_chapters = chapters[ch_st_index: ch_end_index]
-		result = ''
+	try:
+		with open(readpath, 'r') as readFile:
+			chapters = json.load(readFile)
+			relevant_chapters = chapters[ch_st_index: ch_end_index]
+			result = ''
 
-		for chapter in relevant_chapters:
-			ch = chapter.get('chapter', 0)
-			verses = chapter.get('verses', [])
+			for chapter in relevant_chapters:
+				ch = chapter.get('chapter', 0)
+				verses = chapter.get('verses', [])
 
-			if ch == ch_st and ch != ch_end:
-				verses = verses[vs_st_index:]
+				if ch == ch_st and ch != ch_end:
+					verses = verses[vs_st_index:]
 
-			if ch == ch_end and ch != ch_st:
-				verses = verses[: vs_end_index]
+				if ch == ch_end and ch != ch_st:
+					verses = verses[: vs_end_index]
 
-			if ch == ch_end and ch == ch_st:
-				verses = verses[vs_st_index: vs_end_index]
+				if ch == ch_end and ch == ch_st:
+					verses = verses[vs_st_index: vs_end_index]
 
-			for verse in verses:
-				result += verse
+				for verse in verses:
+					result += verse
 
-		return result.strip()
+			return result.strip()
+	except Exception as error:
+		logger.error(error)
+		raise
 
 def retrieve_passage_summary(passage: str) -> str:
 	parsed_passage = parse_scripture(passage)
