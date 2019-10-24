@@ -5,10 +5,12 @@ import streamlit as st
 import os
 import csv
 import json
+import time
 import scriptures
 
 from summary_intern import Summarizer
 from scriptures.texts.deuterocanon import Deuterocanon
+from librarian import get_ref_meta
 
 s = Summarizer()
 d = Deuterocanon()
@@ -261,7 +263,10 @@ def parse_ref_note(note: str, book: str = None) -> [dict]:
 			})
 	return seperated_refs
 
-def combine_vals(a,b,c):
+def combine_vals(x):
+	a = x[0]
+	b = x[1]
+	c = x[2]
 	return f'{a}-{b}-{c}'
 
 def create_subtopics_json(outPath='../data/json/subtopics2.json'):
@@ -295,7 +300,39 @@ def create_subtopics_json(outPath='../data/json/subtopics2.json'):
 
 	return
 
+def get_author_mismatches():
+	a = refs.copy()
+	b = a.merge(works, left_on='work_id', right_on='id', suffixes=('_x', '_y'))
+	c = b[b.author_x != b.author_y].sort_values(['volume', 'page_start_x'])
+	c.set_index('id_x', inplace=True)
+	c.drop(['work_id', 'notes', 'id_y', 'translator', 'page_start_y'], axis=1, inplace=True)
+	st.write(f'{c.shape[0]} refs with mismatching authors')
+	st.table(c)
+
+def create_summary():
+	a = summ.copy()
+	b = a.merge(refs, on='id', validate='1:1', suffixes=('_x', '_y'))
+	b.drop(['topic_id', 'subtopic_id', 'author_id', 'work_id', 'author', 'notes'], axis=1, inplace=True)
+	start = time.time()
+	b['alt_id'] = b[['volume', 'page_start', 'page_end']].apply(lambda x: combine_vals(x), axis=1)
+	end = time.time()
+	st.write(f'took {round(end - start, 2)} seconds to run .apply')
+	b.drop(['volume', 'page_start', 'page_end'], axis=1, inplace=True)
+	b.drop_duplicates(subset=['alt_id'], inplace=True)
+	b.reset_index(inplace=True)
+	b['index'] += 1
+	b.drop(['id'], axis=1, inplace=True)
+	# b.set_index(['index'], inplace=True)
+	st.write(b.head())
+	b.to_csv('../data/csv/summary2.csv', index=False, sep=',', encoding='utf-8')
+
+	# st.write(f'size before dropping dupicates: {a.shape[0]}')
+	# st.write(f'size after dropping dupicates: {b.shape[0]}')
+
+
 def main():
+	create_summary()
+
 	return
 
 
