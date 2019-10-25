@@ -1,5 +1,6 @@
 import syntopicon.configurations # noqa: F401,E261
 from sqlalchemy import create_engine
+from sqlalchemy import event as sqlEvent
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import DDL
 from tornado.options import options
@@ -29,6 +30,12 @@ def initialize_schema():
         Reference,
         Work,
     ]
+
+    [sqlEvent.listen(
+        model.__table__,
+        'before_create',
+        DDL('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"'))
+        for model in models]
 
     BaseModel.metadata.create_all(engine)
 
