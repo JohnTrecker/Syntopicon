@@ -1,6 +1,5 @@
 import syntopicon.configurations # noqa: F401,E261
 from sqlalchemy import create_engine
-from sqlalchemy import event as sqlEvent
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.schema import DDL
 from tornado.options import options
@@ -11,17 +10,25 @@ BaseModel = declarative_base()
 
 
 def initialize_schema():
-    from syntopicon.storage.models.volumes import Volumes
+    from syntopicon.storage.models.author import Author
+    from syntopicon.storage.models.excerpt import Excerpt
+    from syntopicon.storage.models.reference import Reference
+    from syntopicon.storage.models.referrer import Referrer
+    from syntopicon.storage.models.subtopic import Subtopic
+    from syntopicon.storage.models.summary import Summary
+    from syntopicon.storage.models.topic import Topic
+    from syntopicon.storage.models.work import Work
 
     models = [
-        Volumes
+        Author,
+        Excerpt,
+        Referrer,
+        Subtopic,
+        Summary,
+        Topic,
+        Reference,
+        Work,
     ]
-
-    [sqlEvent.listen(
-        model.__table__,
-        'before_create',
-        DDL('CREATE EXTENSION IF NOT EXISTS "uuid-ossp"'))
-        for model in models]
 
     BaseModel.metadata.create_all(engine)
 

@@ -1,5 +1,5 @@
-from sqlalchemy import Column, String, Integer, text, ForeignKey
-from sqlalchemy.types import TIMESTAMP
+from sqlalchemy import Column, String, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 from . import BaseModel
 
 
@@ -7,22 +7,17 @@ class Work(BaseModel):
     __tablename__ = 'work'
 
     id = Column(Integer(), autoincrement=False, primary_key=True)
-    volume_id = Column(Integer(), ForeignKey('volume.id'))
-    author = Column(String())
+    author_id = Column(Integer(), ForeignKey('author.id'))
     title = Column(String())
     translator = Column(String())
-    page_start = Column(Integer())
-    modified = Column(TIMESTAMP(), server_default=text('NOW()'))
-    created = Column(TIMESTAMP(), server_default=text('NOW()'))
+
+    author = relationship("Author")
 
     def json(self):
         return {
             'id': self.id,
-            'volume_id': self.volume_id,
-            'author': self.author,
+            'author_id': self.author_id,
+            'author': self.author.last_name,
             'title': self.title,
             'translator': self.translator,
-            'page_start': self.page_start,
-            'modified': self.modified,
-            'created': self.created,
         }
