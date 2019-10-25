@@ -16,14 +16,14 @@ s = Summarizer()
 d = Deuterocanon()
 
 
-refs = pd.read_csv('../data/csv/reference.csv', encoding='utf8', index_col=False)
-summ = pd.read_csv('../data/csv/summary.csv', encoding='utf8', index_col=False)
+# refs = pd.read_csv('../data/csv/reference.csv', encoding='utf8', index_col=False)
+# summ = pd.read_csv('../data/csv/summary.csv', encoding='utf8', index_col=False)
 # subs = pd.read_csv('../data/csv/subtopic.csv', encoding='utf8', index_col=False)
 # tops = pd.read_csv('../data/csv/topic.csv', encoding='utf8', index_col=False)
-# works = pd.read_csv('../data/csv/work.csv', encoding='utf8', index_col=False)
+works = pd.read_csv('../data/csv/work.csv', encoding='utf8', index_col=False)
 # vols = pd.read_csv('../data/csv/vols.csv', encoding='utf8', index_col=False)
-# auths = pd.read_csv('../data/csv/author.csv', encoding='utf8', index_col=False)
-# texts = pd.read_csv('../data/csv/texts.csv', encoding='utf8', index_col=False)
+auths = pd.read_csv('../data/csv/author.csv', encoding='utf8', index_col=False)
+# texts = pd.read_csv('../data/csv/text.csv', encoding='utf8', index_col=False)
 
 
 def fix_duplicates():
@@ -313,26 +313,58 @@ def create_summary():
 	a = summ.copy()
 	b = a.merge(refs, on='id', validate='1:1', suffixes=('_x', '_y'))
 	b.drop(['topic_id', 'subtopic_id', 'author_id', 'work_id', 'author', 'notes'], axis=1, inplace=True)
-	start = time.time()
 	b['alt_id'] = b[['volume', 'page_start', 'page_end']].apply(lambda x: combine_vals(x), axis=1)
-	end = time.time()
-	st.write(f'took {round(end - start, 2)} seconds to run .apply')
 	b.drop(['volume', 'page_start', 'page_end'], axis=1, inplace=True)
 	b.drop_duplicates(subset=['alt_id'], inplace=True)
-	b.reset_index(inplace=True)
-	b['index'] += 1
-	b.drop(['id'], axis=1, inplace=True)
-	# b.set_index(['index'], inplace=True)
-	st.write(b.head())
-	b.to_csv('../data/csv/summary2.csv', index=False, sep=',', encoding='utf-8')
+	b = b.reset_index()
+	b.index += 1
+	b.drop(['id', 'index'], axis=1, inplace=True)
+	b.to_csv('../data/csv/summary2.csv', index=True, sep=',', encoding='utf-8')
 
-	# st.write(f'size before dropping dupicates: {a.shape[0]}')
-	# st.write(f'size after dropping dupicates: {b.shape[0]}')
+def create_ref_summary_id():
+	a = refs.copy()
+	a['alt_id'] = a[['volume', 'page_start', 'page_end']].apply(
+		lambda x: combine_vals(x), axis=1)
 
+	b = a.merge(summ[['id','alt_id']], on='alt_id', validate='m:1', suffixes=('_x', '_y'))
+	columns = {'id_x': 'id', 'id_y': 'summary_id'}
+	b.drop(['alt_id'], axis=1, inplace=True)
+	b.rename(columns=columns, inplace=True)
+	b.sort_values(by=['id'], axis=0, inplace=True)
+	st.write(b.head(n=100))
+	b.to_csv('../data/csv/reference2.csv', index=False, sep=',', encoding='utf-8')
+
+def create_ref_text_id():
+	a = refs.copy()
+	a['alt_id'] = a[['volume', 'page_start', 'page_end']].apply(
+		lambda x: combine_vals(x), axis=1)
+
+	b = a.merge(texts[['id','alt_id']], on='alt_id', validate='m:1', suffixes=('_x', '_y'))
+	columns = {'id_x': 'id', 'id_y': 'text_id'}
+	b.drop(['alt_id'], axis=1, inplace=True)
+	b.rename(columns=columns, inplace=True)
+	b.sort_values(by=['id'], axis=0, inplace=True)
+	st.write(b.head(n=100))
+	b.to_csv('../data/csv/reference2.csv', index=False, sep=',', encoding='utf-8')
+
+def add_auth_id_to_works():
+	a = works.copy().merge(auths, left_on='author', right_on='last_name',
+		               validate='m:1', suffixes=('_x', '_y'))
+	b = a.drop(['last_name', 'first_name'], axis=1)
+	columns = {'id_x': 'id', 'id_y': 'author_id'}
+	b.rename(columns=columns, inplace=True)
+	c = b[['id', 'volume_id', 'author_id', 'author', 'title', 'translator', 'page_start']]
+	c.sort_values(by=['id'], axis=0, inplace=True)
+	c.loc[c.author == 'TSEliot', 'author'] = 'T.S. Eliot'
+	c.loc[c.author == 'GEliot', 'author'] = 'George Eliot'
+	c.loc[c.author == 'WJames', 'author'] = 'William James'
+	c.loc[c.author == 'HJames', 'author'] = 'Henry James'
+	st.table(c)
+	c.to_csv('../data/legacy_csv/work_2019_10_24.csv', index=False, sep=',', encoding='utf-8')
+	d = c.drop(['page_start'], axis=1)
+	d.to_csv('../data/csv/work2.csv', index=False, sep=',', encoding='utf-8')
 
 def main():
-	create_summary()
-
 	return
 
 
