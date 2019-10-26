@@ -21,7 +21,7 @@ class OneSubtopicHandler(BaseHandler):
 
         record2 = self.db_session\
           .query(Topic.name)\
-          .filter(Subtopic.id == subtopic_id).first()
+          .filter(Topic.id == data.get('topic_id', None)).first()
 
         data['topic'] = record2[0]
         self.write_response(data)
