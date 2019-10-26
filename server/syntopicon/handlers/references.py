@@ -3,6 +3,7 @@ from tornado.gen import coroutine
 
 from syntopicon.handlers.base import BaseHandler
 from syntopicon.storage.models.reference import Reference
+from syntopicon.storage.models.work import Work
 
 class ManyReferencesHandler(BaseHandler):
     def get(self):
@@ -10,6 +11,7 @@ class ManyReferencesHandler(BaseHandler):
         data = []
         subtopic_id = self.request.uri.split('/')[3]
         records = self.db_session.query(Reference)\
+          .join(Work)\
           .filter(Reference.subtopic_id == subtopic_id)\
           .all()
 
@@ -21,7 +23,9 @@ class ManyReferencesHandler(BaseHandler):
             'work_id': record.work_id,
             'page_start': record.page_start,
             'page_end': record.page_end,
-            'notes': record.notes
+            'title': record.work.title,
+            'translator': record.work.translator,
+            'summary': record.summary.summary
           })
         self.write_response(data)
       except exc.SQLAlchemyError as err:
