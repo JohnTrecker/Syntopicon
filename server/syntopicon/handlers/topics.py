@@ -7,8 +7,8 @@ from syntopicon.storage.models.topic import Topic
 class ManyTopicsHandler(BaseHandler):
     def get(self):
       try:
-        keys = ('id', 'name', 'num_subtopics')
-        records = self.db_session.query(Topic.id, Topic.name, Topic.num_subtopics)
+        keys = ('id', 'name')
+        records = self.db_session.query(Topic.id, Topic.name)
         data = [dict(zip(keys, record)) for record in records]
         self.write_response(data)
       except exc.SQLAlchemyError as err:
