@@ -22,8 +22,9 @@ d = Deuterocanon()
 # tops = pd.read_csv('../data/csv/topic.csv', encoding='utf8', index_col=False)
 works = pd.read_csv('../data/csv/work.csv', encoding='utf8', index_col=False)
 # vols = pd.read_csv('../data/csv/vols.csv', encoding='utf8', index_col=False)
-auths = pd.read_csv('../data/csv/author.csv', encoding='utf8', index_col=False)
+# auths = pd.read_csv('../data/csv/author.csv', encoding='utf8', index_col=False)
 # texts = pd.read_csv('../data/csv/text.csv', encoding='utf8', index_col=False)
+# trans = pd.read_csv('../data/csv/translator.csv', encoding='utf8', index_col=False)
 
 
 def fix_duplicates():
@@ -363,6 +364,14 @@ def add_auth_id_to_works():
 	c.to_csv('../data/legacy_csv/work_2019_10_24.csv', index=False, sep=',', encoding='utf-8')
 	d = c.drop(['page_start'], axis=1)
 	d.to_csv('../data/csv/work2.csv', index=False, sep=',', encoding='utf-8')
+
+def add_crowdsourced_inputs_to_refs():
+	a = refs.copy()
+	a['referrer_id'] = 1
+	a['upvotes'] = 0
+	a['downvotes'] = 0
+	st.write(a.head())
+	a.to_csv('../data/csv/reference2.csv', index=False, sep=',', encoding='utf-8')
 
 def main():
 	return
