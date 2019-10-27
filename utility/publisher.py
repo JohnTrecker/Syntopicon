@@ -4,7 +4,7 @@ import editor
 import summary_intern
 
 def main():
-  archivist.main()
+  return
 
 if __name__ == '__main__':
   main()

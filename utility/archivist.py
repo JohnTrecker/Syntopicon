@@ -76,51 +76,60 @@ def subdivide_scripture_texts() -> None:
 def insert_full_texts(user, password, host, database):
   db = dataset.connect(f'postgresql://{user}:{password}@{host}/{database}')
   text_table = db['text']
-  ref_table = db['reference_text']
+
+  log_path = os.path.join('..', 'data', 'logs', 'errors_2019_10_24.csv')
+  log_file = open(log_path, 'w')
+  logwriter = csv.writer(log_file, delimiter=',')
+  logwriter.writerow(['ref_id', 'text_id', 'error'])
+  start = time.time()
+
   with open('../data/csv/reference.csv') as csvfile:
     reader = csv.reader(csvfile)
     header = next(reader)
+
     cache = set()
     text_list = []
-    ref_list = []
     count = 0
+
     for row in reader:
-      count += 1
       try:
-        alt_id = f'{row[6]}-{row[7]}-{row[8]}'
+        vol, start, end = row[6:9]
+        end = end if end else 'nan'
+        alt_id = f'{vol}-{start}-{end}'
         if alt_id in cache:
           pass
         else:
+          count += 1
           cache.add(alt_id)
-          text_list.append(dict(id=count, reference_id=row[0], text=retrieve_many(row[6], row[7], row[8])))
-
-        ref_list.append(dict(reference_id=row[0], text_id=count))
+          text_list.append(dict(id=count,
+                                text=retrieve_many(row[6], row[7], row[8])))
       except Exception as exc:
-        print(f'Error retrieving / appending ref {row[0]}: {exc}')
-        pass
+        error = f'Error retrieving / appending ref {row[0]}: {exc}'
+        logwriter.writerow([row[0], count, error])
 
       if len(text_list) >= 500:
         try:
           text_table.insert_many(text_list)
           text_list.clear()
         except Exception as exc:
-          print(f'Error inserting ref {row[0]} to text table: {exc}')
-          db.rollback()
+          error = f'Error inserting ref {row[0]} to text table: {exc}'
+          logwriter.writerow([row[0], count, error])
 
-      if len(ref_list) >= 1000:
-        try:
-          ref_table.insert_many(ref_list)
-          ref_list.clear()
-        except Exception as exc:
-          print(f'Error inserting ref {row[0]} to ref_text table: {exc}')
-          db.rollback()
+    if len(text_list):
+      try: # for the remaining values
+        text_table.insert_many(text_list)
+      except Exception as exc:
+        error = f'Error inserting final refs/texts to tables: {exc}'
+        logwriter.writerow([None, f'last {len(text_list)} unique texts', error])
 
-    try: # for the remaining values
-      text_table.insert_many(text_list)
-      ref_table.insert_many(ref_list)
-    except Exception as ex:
-      print(f'Error inserting final refs/texts to tables: {exc}')
-      db.rollback()
+  end = time.time()
+  try:
+    print(f'insert_full_texts() took {(end - start)} seconds to run')
+    logwriter.writerow(
+        [f'insert_full_texts() took {(end - start)} seconds to run', None, None])
+  except Exception:
+    pass
+
   return
 
 def add_subs_to_tops(json_input='subtopics_nested.json', csv_input='topic.csv', csv_output='topic2.csv'):

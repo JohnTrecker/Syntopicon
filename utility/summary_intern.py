@@ -20,14 +20,14 @@ class Summarizer:
 	def summarize_text(self, ref_id, volume=None,
                     page_start=None, page_end=None, description=None, text=None):
 		if not volume or not page_start:
-			(volume, page_start, page_end, description) = get_ref_meta(ref_id)
+			(volume, page_start, page_end) = get_ref_meta(ref_id)
 
 		if isinstance(page_end, float) and math.isnan(page_end):
 			page_end = ''
 		if int(volume) < 3:
-			return retrieve_passage_summary(page_start)
+			return retrieve_passage_summary(page_start).strip()
 
-		if (page_end and page_end.isdigit() and \
+		if (page_end and page_start.isdigit() and page_end.isdigit() and \
 			int(page_end) - int(page_start) > self.MAX_PAGES):
 			return ''
 

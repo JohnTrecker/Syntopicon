@@ -4,12 +4,12 @@ let fs = require('fs');
 
 const utils = {
 
-  getSummary: async (vol, alpha, omega, description) => {
+  getSummary: (vol, alpha, omega, description) => {
     vol = parseInt(vol);
     alpha = parseInt(alpha);
     omega = parseInt(omega);
     let text
-    await utils.retrieve(vol, alpha, omega, (json) => {
+    utils.retrieve(vol, alpha, omega, (json) => {
       text = json
     })
     let summary = utils.summarize(description, text)
@@ -59,7 +59,7 @@ const utils = {
   },
 
   addDescription: () => {
-    fs.readFile('../data/json/subtopics2.json', 'utf8', async (err, json) => {
+    fs.readFile('../data/json/subtopics2.json', 'utf8', (err, json) => {
       if (err) throw err
       let obj = JSON.parse(json)
 
@@ -77,7 +77,7 @@ const utils = {
     });
   },
 
-  retrieve: async (vol, alpha, omega, cb = (x) => x) => {
+  retrieve: (vol, alpha, omega, cb = (x) => x) => {
     let array = [...Array(omega + 1).keys()].slice(alpha)
 
     const get = (vol, page) => {
@@ -99,22 +99,19 @@ const utils = {
       })
     };
 
-    const getMany = async (volume, location) => {
-      let t = await get(volume, location);
-      return t;
+    const getMany = (volume, location) => {
+      return get(volume, location);
     };
 
     // limiter
     if (array.length > 10) {
-      let r = await get(vol, alpha)
-      cb( JSON.stringify(r) )
+      cb(JSON.stringify(get(vol, alpha)))
       return
     }
 
     let result = ''
     for (const page of array){
-      let text = await getMany(vol, page);
-      result += text
+      result += getMany(vol, page);
     }
     cb( JSON.stringify(result) )
     return
