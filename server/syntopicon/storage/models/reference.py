@@ -16,7 +16,6 @@ class Reference(BaseModel):
     topic_id = Column(Integer, ForeignKey('topic.id'))
     work_id = Column(Integer, ForeignKey('work.id'))
 
-    author = Column(String)
     page_start = Column(String)
     page_end = Column(String)
     upvotes = Column(Integer)

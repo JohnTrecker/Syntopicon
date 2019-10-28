@@ -16,9 +16,11 @@ class ManyReferencesHandler(BaseHandler):
           .all()
 
         for record in records:
+          first_name = record.author.first_name
+          last_name = record.author.last_name
           data.append({
             'id': record.id,
-            'author': record.author,
+            'author': self.get_full_name(last_name, first_name),
             'author_id': record.author_id,
             'work_id': record.work_id,
             'page_start': record.page_start,
@@ -31,6 +33,9 @@ class ManyReferencesHandler(BaseHandler):
       except exc.SQLAlchemyError as err:
         self.db_session.rollback()
         raise self.write_error(500, reason='Database Error', error=list(err.args))
+
+    def get_full_name(self, last, first=None):
+      return f'{first} {last}' if first else last
 
     @coroutine
     def post(self):

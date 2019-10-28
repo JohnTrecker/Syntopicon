@@ -734,7 +734,6 @@ def listFileSize(directory=data):
   print(convert_bytes(cumm))
 
 def main():
-  insert_full_texts(user='syntopicon', password='syntopicon_dev', host='localhost:5432', database='syntopicon_dev')
   return
 
 if __name__ == '__main__':
