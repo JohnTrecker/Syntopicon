@@ -9,7 +9,7 @@ class OneReferenceHandler(BaseHandler):
       try:
         path_segments = self.request.uri.split('/')
         reference_id = int(path_segments[3])
-        data = []
+        data = {}
 
         records = self.db_session\
           .query(Reference)\
@@ -17,7 +17,7 @@ class OneReferenceHandler(BaseHandler):
           .all()
 
         for record in records:
-          data.append({
+          data = {
               'id': record.id,
               'author': record.author.last_name,
               'author_id': record.author_id,
@@ -31,7 +31,7 @@ class OneReferenceHandler(BaseHandler):
               'upvotes': record.upvotes,
               'downvotes': record.downvotes,
               'referrer': '{} {}'.format(record.referrer.first_name, record.referrer.last_name)
-          })
+          }
 
         self.write_response(data)
       except exc.SQLAlchemyError as err:
