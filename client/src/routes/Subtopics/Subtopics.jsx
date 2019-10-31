@@ -19,15 +19,28 @@ function Subtopics(props) {
     setSubtopic(subtopic)
   }
 
+  function generateTaxonomy(subtopics) {
+    return subtopics.map(subtopic => {
+      const classNm = `indent-${subtopic.number.split('.').length}`
+      return <ol>
+        <li
+          key={subtopic.id}
+          className={classNm}
+          onClick={() => handleSelect(subtopic)}
+        >
+          <p>
+            <sup>{subtopic.number}  </sup>
+            {subtopic.subtopic}
+          </p>
+          {subtopic.subtopics.length > 0 && generateTaxonomy(subtopic.subtopics)}
+        </li>
+      </ol>
+    })
+  }
+
   return (
     <div>
-      <ol>
-        {subtopics.map(subtopic =>
-          <li key={subtopic.id} onClick={() => handleSelect(subtopic)}>
-            {subtopic.subtopic}
-          </li>
-        )}
-      </ol>
+      {generateTaxonomy(subtopics)}
       {selected && <Redirect
         to={{
           pathname: "/references",
