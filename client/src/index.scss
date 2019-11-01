@@ -1,0 +1,48 @@
+body {
+  margin: 0;
+  font-family: -apple-system, Futura, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+span {
+  display: flex;
+}
+
+li {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+}
+
+p {
+  cursor: pointer;
+  width: fit-content;
+  margin: 0 10px;
+}
+
+.indent-1 { text-indent: 0; }
+.indent-2 { text-indent: 2em; }
+.indent-3 { text-indent: 4em; }
+.indent-4 { text-indent: 6em; }
+
+sup {
+  margin: 0 5px;
+  text-decoration: underline;
+  color: blue;
+}
+
+$thought-provoking-background-1: rgb(236,208,120); // #ECD078
+$thought-provoking-background-2: rgb(217,91,67);   // #D95B43
+$thought-provoking-background-3: rgb(192,41,66);   // #C02942
+$thought-provoking-background-4: rgb(84,36,55);    // #542437
+$thought-provoking-background-5: rgb(83,119,122);  // #53777A
+
+$giant-goldfish-background-1: rgb(105,210,231); // 69D2E7
+$giant-goldfish-background-2: rgb(167,219,216); // A7DBD8
+$giant-goldfish-background-3: rgb(224,228,204); // E0E4CC
+$giant-goldfish-background-4: rgb(243,134,48);  // F38630
+$giant-goldfish-background-5: rgb(250,105,0);   // FA6900
