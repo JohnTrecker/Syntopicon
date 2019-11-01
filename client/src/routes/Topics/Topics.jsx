@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
+import './Topics.scss'
+
 const axios = require('axios');
+
 
 function Topics() {
   const [topics, setTopics] = useState([])
@@ -20,10 +23,14 @@ function Topics() {
 
   return (
     <div>
-      <ol>
+      <ol className='boxes-container'>
         {topics.map(topic =>
-          <li key={topic.id} onClick={() => handleSelect(topic)}>
-            {topic.name}
+          <li
+            key={topic.id}
+            onClick={() => handleSelect(topic)}
+            className="topic-box"
+          >
+            <p>{topic.name}</p>
           </li>
         )}
       </ol>
