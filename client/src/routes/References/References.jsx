@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
+import './References.css';
 const axios = require('axios');
 
 function References(props) {
@@ -19,14 +20,26 @@ function References(props) {
     setReference(ref)
   }
 
+  function getAttribution(ref){
+    const { author, title, page_start, page_end } = ref
+    return author === 'Bible'
+      ? `${page_start} (${title})`
+      : `${author} (${title})`
+  }
+
   return (
     <div>
       <ul>
         {references.map(ref =>
-          <li key={ref.id} onClick={() => handleSelect(ref)}>
+          <li key={ref.id}>
             <q>{ref.summary}</q>
             <br/>
-            <span>{`${ref.author} (${ref.title})`}</span>
+            <span>
+              {getAttribution(ref)}
+              <p className="p-link" onClick={() => handleSelect(ref)}>More</p>
+            </span>
+            <br/>
+            <br/>
           </li>
         )}
       </ul>

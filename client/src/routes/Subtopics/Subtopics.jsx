@@ -26,9 +26,10 @@ function Subtopics(props) {
         <li
           key={subtopic.id}
           className={classNm}
-          onClick={() => handleSelect(subtopic)}
         >
-          <p>
+          <p
+            onClick={() => handleSelect(subtopic)}
+          >
             <sup>{subtopic.number}  </sup>
             {subtopic.subtopic}
           </p>
