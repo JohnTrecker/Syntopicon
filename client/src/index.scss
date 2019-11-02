@@ -19,10 +19,10 @@ li {
 }
 
 p {
-  cursor: pointer;
   width: fit-content;
   margin: 0 10px;
 }
+.clickable { cursor: pointer; }
 
 .indent-1 { text-indent: 0; }
 .indent-2 { text-indent: 2em; }

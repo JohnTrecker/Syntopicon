@@ -1,10 +1,11 @@
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom';
-
+import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
-const ErrorBoundary = import('./components/ErrorBoundary');
+// const ErrorBoundary = import('./components/ErrorBoundary');
+const Landing = lazy(() => import('./routes/Landing'));
 const Topics = lazy(() => import('./routes/Topics'));
 const Subtopics = lazy(() => import('./routes/Subtopics'));
 const References = lazy(() => import('./routes/References'));
@@ -16,10 +17,12 @@ ReactDOM.render(
     <Suspense fallback={<div>Loading...</div>}>
       <Switch>
         {/* <ErrorBoundary> */}
+          <Route exact path="/" component={Landing} />
           <Route exact path="/topics" component={Topics} />
-          <Route path="/subtopics" component={Subtopics} />
-          <Route path="/references" component={References} />
-          <Route path="/excerpt" component={Text} />
+          <Route exact path="/subtopics" component={Subtopics} />
+          <Route exact path="/references" component={References} />
+          <Route exact path="/excerpt" component={Text} />
+          <Redirect to='/'/>
         {/* </ErrorBoundary> */}
       </Switch>
     </Suspense>
