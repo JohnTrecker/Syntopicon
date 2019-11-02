@@ -28,6 +28,7 @@ function Subtopics(props) {
           className={classNm}
         >
           <p
+            className='clickable'
             onClick={() => handleSelect(subtopic)}
           >
             <sup>{subtopic.number}  </sup>

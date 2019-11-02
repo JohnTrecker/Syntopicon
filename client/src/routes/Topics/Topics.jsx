@@ -28,7 +28,7 @@ function Topics() {
           <li
             key={topic.id}
             onClick={() => handleSelect(topic)}
-            className="topic-box"
+            className="topic-box clickable"
           >
             <p>{topic.name}</p>
           </li>

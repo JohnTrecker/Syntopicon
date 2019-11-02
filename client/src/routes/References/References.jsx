@@ -36,7 +36,7 @@ function References(props) {
             <br/>
             <span>
               {getAttribution(ref)}
-              <p className="p-link" onClick={() => handleSelect(ref)}>More</p>
+              <p className="p-link clickable" onClick={() => handleSelect(ref)}>More</p>
             </span>
             <br/>
             <br/>
