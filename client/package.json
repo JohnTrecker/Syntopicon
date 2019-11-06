@@ -10,6 +10,7 @@
   "dependencies": {
     "axios": "^0.19.0",
     "react": "^16.11.0",
+    "react-d3-tree": "^1.15.3",
     "react-dom": "^16.11.0"
   },
   "scripts": {
