@@ -46,6 +46,7 @@ class Autocomplete extends Component {
   };
 
   onClick = e => {
+    this.props.handleSelect(e.currentTarget.innerText)
     this.setState({
       activeSuggestion: 0,
       filteredSuggestions: [],
