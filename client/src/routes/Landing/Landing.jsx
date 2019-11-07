@@ -10,17 +10,24 @@ import Logo from 'icons';
 import suggestions from 'data/suggestions.json';
 
 const initialData = {
-  name: 'Parent',
+  name: 'Selection',
   children: [{
-    name: 'Child One',
+    name: 'Topic One',
     children: [{
-      name: 'Child Three'
+      name: 'Subtopic One',
+      meta: {subtopic_id: undefined}
     },{
-      name: 'Child Four'
+      name: 'Subtopic Two',
+      meta: {subtopic_id: undefined}
     }]
   }, {
-    name: 'Child Two'
-  }]
+    name: 'Topic Two'
+  },{
+    name: 'Topic Third'
+  },
+  {
+    name: 'Topic Four'
+  },]
 }
 
 
@@ -37,6 +44,7 @@ function Landing() {
           <Link className='btn-landing cta' to='/topics'>Explore</Link>
           <p className='cta-text'>Or search for a topic</p>
           <Autocomplete
+            autofocus
             suggestions={Object.keys(suggestions)}
             handleSelect={handleSelect}
           />

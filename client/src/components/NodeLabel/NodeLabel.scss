@@ -1,0 +1,11 @@
+.tree-node-text {
+  width: 600px;
+  height: auto;
+
+  p {
+    z-index: 1;
+    background: rgba(500, 500, 500, 0.85);
+    margin-left: 12px;
+    overflow: visible;
+  }
+}

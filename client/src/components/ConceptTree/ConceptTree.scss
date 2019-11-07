@@ -1,4 +1,22 @@
 .tree-container {
   width: 100%;
   height: 100%;
+
+  .nodeBase {
+    .tree-node-text {
+      max-width: 200px;
+    }
+  }
+
+  .leafNodeBase {
+    fill: white;
+  }
+
+  svg > g {
+    // transition: translateX .3s ease-out, opacity 0s linear;
+    transition-property: translateX, all;
+    transition-duration: 0s, 0.3s;
+    transition-timing-function: ease-out;
+    transition-delay: 0s, 0s;
+  }
 }
