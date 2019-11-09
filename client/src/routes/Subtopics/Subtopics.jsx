@@ -4,28 +4,28 @@ const axios = require('axios');
 
 function Subtopics(props) {
   const [subtopics, setSubtopics] = useState([])
-  const [selected, setSubtopic] = useState('')
+  const [selected, setSelected] = useState('')
 
   useEffect(fetchSubtopics, [])
 
   function fetchSubtopics() {
-    const { id } = props.location.state;
+    const { topic_id: id } = props.location.state;
     axios.get(`http://localhost:8888/v1/topics/${id}`)
       .then(res => setSubtopics(res.data.data.subtopics))
       .catch(err => console.log(err))
   }
 
-  function handleSelect(subtopic) {
-    setSubtopic(subtopic)
+  function handleSelect(selected) {
+    const { id: subtopic_id, subtopic } = selected
+    setSelected({subtopic_id, subtopic})
   }
 
   function generateTaxonomy(subtopics) {
-    return subtopics.map(subtopic => {
-      const classNm = `indent-${subtopic.number.split('.').length}`
-      return <ol>
+    return subtopics.map(subtopic => (
+      <ol>
         <li
           key={subtopic.id}
-          className={classNm}
+          className={`indent-${subtopic.number.split('.').length}`}
         >
           <p
             className='clickable'
@@ -37,7 +37,7 @@ function Subtopics(props) {
           {subtopic.subtopics.length > 0 && generateTaxonomy(subtopic.subtopics)}
         </li>
       </ol>
-    })
+    ))
   }
 
   return (
@@ -46,8 +46,8 @@ function Subtopics(props) {
       {selected && <Redirect
         to={{
           pathname: "/references",
-          search: `?sub=${selected.id}`,
-          state: { id: selected.id }
+          search: `?sub=${selected.subtopic_id}`,
+          state: { ...props.location.state, ...selected }
         }}
       />}
     </div>

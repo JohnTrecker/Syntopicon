@@ -8,7 +8,7 @@ function Text(props) {
   useEffect(fetchText, [])
 
   function fetchText() {
-    const { id } = props.location.state;
+    const { ref_id: id } = props.location.state;
     axios.get(`http://localhost:8888/v1/references/${id}`)
       .then(res => setText(res.data.data))
       .catch(err => console.log(err))
@@ -24,7 +24,6 @@ function Text(props) {
   function getText(){
     if (!excerpt) return ''
     const { text } = excerpt
-    console.log(text)
     let indexStart = 0
     let indexEnd = text.length
     const delimiters = ['.', '!', '?']

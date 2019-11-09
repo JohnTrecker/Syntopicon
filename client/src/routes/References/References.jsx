@@ -5,19 +5,20 @@ const axios = require('axios');
 
 function References(props) {
   const [references, setReferences] = useState([])
-  const [selected, setReference] = useState('')
+  const [selected, setSelected] = useState('')
 
   useEffect(fetchReferences, [])
 
   function fetchReferences() {
-    const { id } = props.location.state;
+    const { subtopic_id: id } = props.location.state;
     axios.get(`http://localhost:8888/v1/subtopics/${id}/references`)
       .then(res => setReferences(res.data.data))
       .catch(err => console.log(err))
   }
 
-  function handleSelect(ref) {
-    setReference(ref)
+  function handleSelect(selection) {
+    const { id: ref_id, title: ref } = selection
+    setSelected({ref_id, ref})
   }
 
   function getAttribution(ref){
@@ -46,8 +47,8 @@ function References(props) {
       {selected && <Redirect
         to={{
           pathname: "/excerpt",
-          search: `?refs=${selected.id}`,
-          state: { id: selected.id }
+          search: `?refs=${selected.ref_id}`,
+          state: { ...props.location.state, ...selected }
         }}
       />}
     </div>

@@ -7,7 +7,7 @@ const axios = require('axios');
 
 function Topics() {
   const [topics, setTopics] = useState([])
-  const [selected, setTopic] = useState('')
+  const [selected, setSelected] = useState('')
 
   useEffect(fetchTopics, [])
 
@@ -17,10 +17,12 @@ function Topics() {
       .catch(err => console.log(err))
   }
 
-  function handleSelect(topic) {
-    setTopic(topic)
+  function handleSelect(selected) {
+    const { id: topic_id, name: topic } = selected
+    setSelected({ topic_id, topic })
   }
 
+  console.log(selected)
   return (
     <div>
       <ol className='boxes-container'>
@@ -37,8 +39,8 @@ function Topics() {
       {selected && <Redirect
         to={{
           pathname: "/subtopics",
-          search: `?topic=${selected.id}`,
-          state: { id: selected.id }
+          search: `?topic=${selected.topic_id}`,
+          state: { ...selected }
         }}
       />}
     </div>

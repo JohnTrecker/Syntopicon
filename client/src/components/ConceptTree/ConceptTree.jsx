@@ -9,17 +9,12 @@ import './ConceptTree.scss'
 const ConceptTree = (props) => {
   const { width, height } = useWindowDimensions()
   const _pathwidth = 250
-  const _baseY = height / 4
-  const _baseX = width / 2 - _pathwidth
+  const { _baseX, _baseY } = positionSVG()
 
-  const [selected, setSelected] = useState()
+  const [selected, setSelected] = useState({})
   const [translate, setTranslate] = useState({ x: _baseX, y: _baseY })
 
-  useEffect(() => {
-    if (!selected) setTranslate({ x: _baseX, y: _baseY })
-  }, [props.data.name])
-
-  const handleClick = (nodeData, evt) => {
+  function handleClick (nodeData, evt) {
     const { _collapsed, depth, meta, children } = nodeData
     if (depth === 1) {
       if (_collapsed) setTranslate({ x: _baseX, y: _baseY})
@@ -27,15 +22,30 @@ const ConceptTree = (props) => {
     }
     if (depth === 2) {
       if (!meta.subtopic_id) return
-      setSelected(meta.subtopic_id)
+      handleSelect(nodeData)
     }
+  }
+
+  // TODO: include topic_id as well
+  function handleSelect(nodeData) {
+    const { name: subtopic, parent, meta } = nodeData
+    const { subtopic_id } = meta
+    const { name: topic } = parent
+    setSelected({ subtopic_id, subtopic, topic })
+  }
+
+  // TODO: modify nodeSize, translation, or zoom depending on number of topic nodes, number / positionq of leaf nodes
+  function positionSVG() {
+    let _baseY = height / 4
+    let _baseX = width / 2 - _pathwidth
+
+    return {_baseX , _baseY}
   }
 
   const nodeSize = { x: _pathwidth, y: props.data.children.length > 3 ? 55 : 150 }
 
   return (
     <div className='tree-container'>
-      <p style={{ border: '1px solid red;', position: 'absolute', top: '50%', left: 0}}>{width} ~ {height}</p>
       <Tree
         className='svg-tree'
         data={props.data}
@@ -48,13 +58,12 @@ const ConceptTree = (props) => {
         allowForeignObjects
         shouldCollapseNeighborNodes
         useCollapseData
-        // style={{transform: 'translate(50%)'}}
       />
       {selected && <Redirect
         to={{
           pathname: "/references",
-          search: `?sub=${selected}`,
-          state: { id: selected }
+          search: `?sub=${selected.subtopic_id}`,
+          state: { ...selected }
         }}
     />}
     </div>

@@ -5,6 +5,7 @@
   .nodeBase {
     .tree-node-text {
       max-width: 200px;
+      width: fit-content;
     }
   }
 
@@ -13,7 +14,6 @@
   }
 
   svg > g {
-    // transition: translateX .3s ease-out, opacity 0s linear;
     transition-property: translateX, all;
     transition-duration: 0s, 0.3s;
     transition-timing-function: ease-out;
