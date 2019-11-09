@@ -8,32 +8,11 @@ import ConceptTree from 'components/ConceptTree'
 
 import Logo from 'icons';
 import suggestions from 'data/suggestions.json';
-
-const initialData = {
-  name: 'Selection',
-  children: [{
-    name: 'Topic One',
-    children: [{
-      name: 'Subtopic One',
-      meta: {subtopic_id: undefined}
-    },{
-      name: 'Subtopic Two',
-      meta: {subtopic_id: undefined}
-    }]
-  }, {
-    name: 'Topic Two'
-  },{
-    name: 'Topic Third'
-  },
-  {
-    name: 'Topic Four'
-  },]
-}
-
+import template from 'data/template.json'
 
 
 function Landing() {
-  const [data, setData] = useState(initialData)
+  const [data, setData] = useState(template)
   const handleSelect = (topic) => setData(suggestions[topic])
 
   return (
