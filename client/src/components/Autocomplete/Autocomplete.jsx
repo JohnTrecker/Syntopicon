@@ -1,53 +1,41 @@
-import React, { Component, Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import PropTypes from "prop-types";
 import './Autocomplete.scss'
 
+const Autocomplete = (props) => {
+  const [state, setState] = useState({
+    activeSuggestion: 0,
+    filteredSuggestions: [],
+    showSuggestions: false,
+    userInput: ""
+  })
 
-class Autocomplete extends Component {
-  static propTypes = {
-    suggestions: PropTypes.instanceOf(Array)
-  };
+  const filteredSuggestions = (suggestions, userInput) => suggestions.filter(
+    suggestion =>
+      suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
+  );
 
-  static defaultProps = {
-    suggestions: []
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      // The active selection's index
-      activeSuggestion: 0,
-      // The suggestions that match the user's input
-      filteredSuggestions: [],
-      // Whether or not the suggestion list is shown
-      showSuggestions: false,
-      // What the user has entered
-      userInput: ""
-    };
+  const renderSelectionTree = () => {
+    const { activeSuggestion, filteredSuggestions } = state;
+    const selection = filteredSuggestions[activeSuggestion]
+    if (selection) props.handleSelect(filteredSuggestions[activeSuggestion])
   }
 
-  onChange = e => {
-    const { suggestions } = this.props;
+  const onChange = e => {
+    const { suggestions } = props;
     const userInput = e.currentTarget.value;
 
-    // Filter our suggestions that don't contain the user's input
-    const filteredSuggestions = suggestions.filter(
-      suggestion =>
-        suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
-    );
-
-    this.setState({
+    setState({
       activeSuggestion: 0,
-      filteredSuggestions,
+      filteredSuggestions: filteredSuggestions(suggestions, userInput),
       showSuggestions: true,
       userInput: e.currentTarget.value
     });
   };
 
-  onClick = e => {
-    this.props.handleSelect(e.currentTarget.innerText)
-    this.setState({
+  const onClick = e => {
+    renderSelectionTree()
+    setState({
       activeSuggestion: 0,
       filteredSuggestions: [],
       showSuggestions: false,
@@ -55,15 +43,17 @@ class Autocomplete extends Component {
     });
   };
 
-  onKeyDown = e => {
-    const { activeSuggestion, filteredSuggestions } = this.state;
+  const onKeyDown = e => {
+    const { activeSuggestion, filteredSuggestions } = state;
 
     // User pressed the enter key
     if (e.keyCode === 13) {
-      this.setState({
+      renderSelectionTree()
+      setState({
+        ...state,
         activeSuggestion: 0,
         showSuggestions: false,
-        userInput: filteredSuggestions[activeSuggestion]
+        userInput: filteredSuggestions[activeSuggestion] || ""
       });
     }
     // User pressed the up arrow
@@ -72,52 +62,51 @@ class Autocomplete extends Component {
         return;
       }
 
-      this.setState({ activeSuggestion: activeSuggestion - 1 });
+      setState({ ...state, showSuggestions: true, activeSuggestion: activeSuggestion - 1 });
     }
-    // User pressed the down arrow
+    // User pressed the down arrow or tab
     else if (e.keyCode === 40) {
       if (activeSuggestion - 1 === filteredSuggestions.length) {
         return;
       }
 
-      this.setState({ activeSuggestion: activeSuggestion + 1 });
+      setState({ ...state, showSuggestions: true, activeSuggestion: activeSuggestion + 1 });
     }
   };
 
-  render() {
-    const {
-      onChange,
-      onClick,
-      onKeyDown,
-      state: {
-        activeSuggestion,
-        filteredSuggestions,
-        showSuggestions,
-        userInput
-      }
-    } = this;
-
+  const suggestionsListComponent = () => {
+    const { activeSuggestion, filteredSuggestions, showSuggestions, userInput } = state
+    const n = filteredSuggestions.length
     let suggestionsListComponent;
 
     if (showSuggestions && userInput) {
-      if (filteredSuggestions.length) {
+      if (n) {
+        // Cf. Note on select size = 1 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes
+        const visibleOptions = n > 5 ? 5 : n === 1 ? 2 : n
         suggestionsListComponent = (
-          <ul className="suggestions">
+          <select className="header-select" name="suggestions" size={visibleOptions}>
             {filteredSuggestions.map((suggestion, index) => {
-              let className;
+              let className = "header-option";
+              let selected = false
 
-              // Flag the active suggestion with a class
               if (index === activeSuggestion) {
-                className = "suggestion-active";
+                className = "header-option active";
+                selected = true
               }
 
               return (
-                <li className={className} key={suggestion} onClick={onClick}>
+                <option
+                  className={className}
+                  selected={selected}
+                  key={suggestion}
+                  value={suggestion}
+                  onClick={onClick}
+                >
                   {suggestion}
-                </li>
+                </option>
               );
             })}
-          </ul>
+          </select>
         );
       } else {
         suggestionsListComponent = (
@@ -127,20 +116,23 @@ class Autocomplete extends Component {
         );
       }
     }
-
-    return (
-      <Fragment>
-        <input
-          type="text"
-          className="landing-input"
-          onChange={onChange}
-          onKeyDown={onKeyDown}
-          value={userInput}
-        />
-        {suggestionsListComponent}
-      </Fragment>
-    );
+    return suggestionsListComponent
   }
+
+  return (
+    <Fragment>
+      <input
+        type="text"
+        className="landing-input"
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        value={state.userInput}
+        tabIndex={1}
+        autoFocus
+      />
+      {suggestionsListComponent()}
+    </Fragment>
+  );
 }
 
 export default Autocomplete;
