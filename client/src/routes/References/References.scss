@@ -1,0 +1,32 @@
+.p-link {
+  text-decoration: underline;
+  color: blue;
+}
+
+.reference-list {
+
+  position: absolute;
+  top: 15vh;
+  height: 85vh;
+  width: 100vw;
+
+  &-item {
+    width: inherit;
+    height: auto;
+    min-height: 2em;
+    border: 1px solid black;
+    margin: 35px 15px;
+    padding: 25px;
+
+
+    .attribution {
+      position: relative;
+      top: 39px;
+      left: 10%;
+      width: fit-content;
+      padding: 5px;
+      border: 1px solid grey;
+      background: white;
+    }
+  }
+}

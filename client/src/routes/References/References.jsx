@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
-import './References.css';
+import './References.scss';
+
 const axios = require('axios');
+
 
 function References(props) {
   const [references, setReferences] = useState([])
@@ -30,18 +32,15 @@ function References(props) {
 
   return (
     <div>
-      <ul>
+      <ul className="reference-list">
         {references.map(ref =>
-          <li key={ref.id}>
-            <q>{ref.summary}</q>
-            <br/>
-            <span>
+          <div key={ref.id} className="reference-list-item">
+            <q className="quote">{ref.summary}</q>
+            <span className="attribution">
               {getAttribution(ref)}
               <p className="p-link clickable" onClick={() => handleSelect(ref)}>More</p>
             </span>
-            <br/>
-            <br/>
-          </li>
+          </div>
         )}
       </ul>
       {selected && <Redirect
