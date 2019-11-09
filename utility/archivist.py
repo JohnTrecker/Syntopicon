@@ -1,150 +1,137 @@
 #!/usr/bin/env python
 
-from bs4 import BeautifulSoup
-from urllib.request import urlopen
+# from bs4 import BeautifulSoup
+# from urllib.request import urlopen
 
 import time
 import os
 import re
 import json
 import csv
-import shutil
-import dataset
 
-from summary_intern import Summarizer
-from librarian import get_ref_meta, parse_scripture, retrieve_many
-from editor import parse_ref_note
-
-data = '../data/output'
-cumm = 0
-
+# TODO: fix typos in ../data/text/text.txt that yield `{}` values in suggestion.json
 class Suggestions():
-  """generates suggestions dict for user search input in the form of
-  		{
-        TERM: { name: TERM, children: [ { name: TOPIC, children: [ { name: SUBTOPIC } ]}]}
-      }
-  """
-	def __init__(self, *args, **kwargs):
-		super().__init__(*args, **kwargs)
-		self.termsPath = os.path.join('..', 'data', 'text', 'terms.txt')
-		self.subsPath = os.path.join('..', 'data', 'json', 'subtopics_by_topic.json')
-		self.suggestions = {}
-		self.topics_to_id = {'Angel': 1,'Animal': 2,'Aristocracy': 3,'Art': 4,'Astronomy and Cosmology': 5,'Beauty': 6,'Being': 7,'Cause': 8,'Chance': 9,'Change': 10,'Citizen': 11,'Constitution': 12,'Courage': 13,'Custom and Convention': 14,'Definition': 15,'Democracy': 16,'Desire': 17,'Dialectic': 18,'Duty': 19,'Education': 20,'Element': 21,'Emotion': 22,'Eternity': 23,'Evolution': 24,'Experience': 25,'Family': 26,'Fate': 27,'Form': 28,'God': 29,'Good and Evil': 30,'Government': 31,'Habit': 32,'Happiness': 33,'History': 34,'Honor': 35,'Hypothesis': 36,'Idea': 37,'Immortality': 38,'Induction': 39,'Infinity': 40,'Judgment': 41,'Justice': 42,'Knowledge': 43,'Labor': 44,'Language': 45,'Law': 46,'Liberty': 47,'Life and Death': 48,'Logic': 49,'Love': 50,'Man': 51,'Mathematics': 52,'Matter': 53,'Mechanics': 54,'Medicine': 55,'Memory and Imagination': 56,'Metaphysics': 57,'Mind': 58,'Monarchy': 59,'Nature': 60,'Necessity and Contingency': 61,'Oligarchy': 62,'One and Many': 63,'Opinion': 64,'Opposition': 65,'Philosophy': 66,'Physics': 67,'Pleasure and Pain': 68,'Poetry': 69,'Principle': 70,'Progress': 71,'Prophecy': 72,'Prudence': 73,'Punishment': 74,'Quality': 75,'Quantity': 76,'Reasoning': 77,'Relation': 78,'Religion': 79,'Revolution': 80,'Rhetoric': 81,'Same and Other': 82,'Science': 83,'Sense': 84,'Sign and Symbol': 85,'Sin': 86,'Slavery': 87,'Soul': 88,'Space': 89,'State': 90,'Temperance': 91,'Theology': 92,'Time': 93,'Truth': 94,'Tyranny and Despotism': 95,'Universal and Particular': 96,'Virtue and Vice': 97,'War and Peace': 98,'Wealth': 99,'Will': 100,'Wisdom': 101,'World': 102}
-		self.subtopics = None
-	
-	def construct_suggestions(self):
-		with open(self.termsPath, 'r') as termsFile:
-			reader = termsFile.readlines()
+  def __init__(self, *args, **kwargs):
+    super().__init__(*args, **kwargs)
+    self.termsPath = os.path.join('..', 'data', 'text', 'terms.txt')
+    self.subsPath = os.path.join('..', 'data', 'json', 'subtopics_by_topic.json')
+    self.suggestions = {}
+    self.topics_to_id = {'Angel': 1,'Animal': 2,'Aristocracy': 3,'Art': 4,'Astronomy and Cosmology': 5,'Beauty': 6,'Being': 7,'Cause': 8,'Chance': 9,'Change': 10,'Citizen': 11,'Constitution': 12,'Courage': 13,'Custom and Convention': 14,'Definition': 15,'Democracy': 16,'Desire': 17,'Dialectic': 18,'Duty': 19,'Education': 20,'Element': 21,'Emotion': 22,'Eternity': 23,'Evolution': 24,'Experience': 25,'Family': 26,'Fate': 27,'Form': 28,'God': 29,'Good and Evil': 30,'Government': 31,'Habit': 32,'Happiness': 33,'History': 34,'Honor': 35,'Hypothesis': 36,'Idea': 37,'Immortality': 38,'Induction': 39,'Infinity': 40,'Judgment': 41,'Justice': 42,'Knowledge': 43,'Labor': 44,'Language': 45,'Law': 46,'Liberty': 47,'Life and Death': 48,'Logic': 49,'Love': 50,'Man': 51,'Mathematics': 52,'Matter': 53,'Mechanics': 54,'Medicine': 55,'Memory and Imagination': 56,'Metaphysics': 57,'Mind': 58,'Monarchy': 59,'Nature': 60,'Necessity and Contingency': 61,'Oligarchy': 62,'One and Many': 63,'Opinion': 64,'Opposition': 65,'Philosophy': 66,'Physics': 67,'Pleasure and Pain': 68,'Poetry': 69,'Principle': 70,'Progress': 71,'Prophecy': 72,'Prudence': 73,'Punishment': 74,'Quality': 75,'Quantity': 76,'Reasoning': 77,'Relation': 78,'Religion': 79,'Revolution': 80,'Rhetoric': 81,'Same and Other': 82,'Science': 83,'Sense': 84,'Sign and Symbol': 85,'Sin': 86,'Slavery': 87,'Soul': 88,'Space': 89,'State': 90,'Temperance': 91,'Theology': 92,'Time': 93,'Truth': 94,'Tyranny and Despotism': 95,'Universal and Particular': 96,'Virtue and Vice': 97,'War and Peace': 98,'Wealth': 99,'Will': 100,'Wisdom': 101,'World': 102}
+    self.subtopics = None
 
-			with open(self.subsPath, 'r') as subsFile:
-				self.subtopics = json.load(subsFile)
+  def construct_suggestions(self):
+    with open(self.termsPath, 'r') as termsFile:
+      reader = termsFile.readlines()
 
-				for line in reader:
-					term, rest = line.split(':')
-					recommendations = rest.split(';')
+      with open(self.subsPath, 'r') as subsFile:
+        self.subtopics = json.load(subsFile)
 
-					term_args = dict(term=term, refs=recommendations)
-					term_children = self.get_term_children(term_args)
+        for line in reader:
+          term, rest = line.split(':')
+          recommendations = rest.split(';')
 
-					self.suggestions[term] = dict(name=term, children=term_children)
-			
-		return self.suggestions
+          term_args = dict(refs=recommendations)
+          term_children = self.get_term_children(term_args)
 
-	def get_term_children(self, term_args):
-		term = term_args.get('term', None)
-		refs = term_args.get('refs', None)
-		
-		term_children = []
-		if term in self.suggestions:
-			return self.suggestions[term]['children']
-		for ref in refs:
-			pair = ref.strip().split('|')
-			topic = pair[0]
-			alt_ids = pair[1] if len(pair) > 1 else ''
+          self.suggestions[term] = dict(name=term, children=term_children)
 
-			topic_args = dict(topic=topic, alt_ids=alt_ids)
-			topic_children = self.get_topic_children(topic_args)
+    return self.suggestions
 
-			data = dict(name=topic, children=topic_children)
-			term_children.append(data)
+  def get_term_children(self, term_args):
+    refs = term_args.get('refs', None)
 
-		return term_children
-	
-	def get_topic_children(self, topic_args):
-		topic = topic_args.get('topic', None)
-		alt_ids = topic_args.get('alt_ids', None)
+    term_children = []
+    for ref in refs:
+      pair = ref.strip().split('|')
+      topic = pair[0]
+      alt_ids = pair[1] if len(pair) > 1 else ''
 
-		topic_children = []
-		for alt_id in alt_ids.split(','):
-			if alt_id == '':
-				break
-			else:
-				topic_children.extend(self.get_subtopics(alt_id, topic))
+      if alt_ids == '' and not self.topics_to_id.get(topic, None):
+        term_children.append(self.suggestions[topic])
+        continue
 
-		return topic_children
+      topic_args = dict(topic=topic, alt_ids=alt_ids)
+      topic_children = self.get_topic_children(topic_args)
 
-	def get_subtopics(self, alt_id, topic):
-		subtopics = []
-		if '-' in alt_id:
-			for subtopic in self.get_many_subtopics(alt_id, topic):
-				subtopics.append(subtopic)
-		else:
-			subtopics.append(self.get_one_subtopic(alt_id, topic))
-		
-		return subtopics
+      data = dict(name=topic, _collapsed=True, children=topic_children)
+      term_children.append(data)
 
-	def get_many_subtopics(self, alt_id, topic):
-		start, end = alt_id.split('-')
-		topic_index = self.topics_to_id.get(topic, None)
-		if not topic_index:
-			self.prYellow('Error in `get_many_subtopics`: No topic_index for topic: {}, alt_id: {}'.format(topic, alt_id))
-			return []
+    return term_children
 
-		capture = False
+  def get_topic_children(self, topic_args):
+    topic = topic_args.get('topic', None)
+    alt_ids = topic_args.get('alt_ids', None)
 
-		subtopics = []
-		for sub in self.subtopics['topics'][topic_index - 1]['subtopics']:
-			if sub['number'] == start:
-				capture = True
+    topic_children = []
+    for alt_id in alt_ids.split(','):
+      alt_id = alt_id.strip()
+      if alt_id == '':
+        break
+      else:
+        topic_children.extend(self.get_subtopics(alt_id, topic))
 
-			if capture:
-				subtopics.append(self.construct_subtopic(topic, sub))
+    return topic_children
 
-			if sub['number'] == end:
-				break
+  def get_subtopics(self, alt_id, topic):
+    subtopics = []
+    if '-' in alt_id:
+      for subtopic in self.get_many_subtopics(alt_id, topic):
+        subtopics.append(subtopic)
+    else:
+      subtopics.append(self.get_one_subtopic(alt_id, topic))
 
-		return subtopics
+    return subtopics
 
-	def get_one_subtopic(self, alt_id, topic):
-		topic_index = self.topics_to_id.get(topic, None)
-		if not topic_index:
-			self.prYellow('Error in `get_one_subtopic`: No topic_index for topic: {}, alt_id: {}'.format(topic, alt_id))
-			return {}
+  def get_many_subtopics(self, alt_id, topic):
+    start, end = alt_id.split('-')
+    topic_index = self.topics_to_id.get(topic, None)
+    if not topic_index:
+      self.prYellow('Error in `get_many_subtopics`: No topic_index for topic: {}, alt_id: {}'.format(topic, alt_id))
+      return []
 
-		subtopic = {}
-		for sub in self.subtopics['topics'][topic_index - 1]['subtopics']:
-			if sub['number'] == alt_id:
-				subtopic = sub
-				break
-		return self.construct_subtopic(topic, subtopic)
+    capture = False
 
-	def construct_subtopic(self, topic: str, subtopic: dict) -> dict:
-		topic_index = self.topics_to_id.get(topic, None)
-		if not subtopic.get('subtopic', None):
-			return {}
+    subtopics = []
+    for sub in self.subtopics['topics'][topic_index - 1]['subtopics']:
+      if sub['number'] == start:
+        capture = True
 
-		return {
-			'name': subtopic.get('subtopic', '---'),
-			'attributes': {
-				'topic': topic,
-				'topic_id': topic_index,
-				'subtopic_alt_id': subtopic.get('number', '---'),
-				'subtopic_id': subtopic.get('id', '---')
-			}
-		}
+      if capture:
+        subtopics.append(self.construct_subtopic(topic, sub))
 
-	def prYellow(self, text): print('\033[93m {}\033[00m'.format(text))
+      if sub['number'] == end:
+        capture = False
+        break
 
+    return subtopics
+
+  def get_one_subtopic(self, alt_id, topic):
+    topic_index = self.topics_to_id.get(topic, None)
+    if not topic_index:
+      self.prYellow('Error in `get_one_subtopic`: No topic_index for topic: {}, alt_id: {}'.format(topic, alt_id))
+      return {}
+
+    subtopic = {}
+    for sub in self.subtopics['topics'][topic_index - 1]['subtopics']:
+      if sub['number'] == alt_id:
+        subtopic = sub
+        break
+    return self.construct_subtopic(topic, subtopic)
+
+  def construct_subtopic(self, topic: str, subtopic: dict) -> dict:
+    # topic_index = self.topics_to_id.get(topic, None)
+    if not subtopic.get('subtopic', None):
+      return {}
+
+    return {
+      'name': subtopic.get('subtopic', '---'),
+      'subtopic_id': subtopic.get('id', '---'),
+      # 'topic': topic,
+      # 'topic_id': topic_index,
+      # 'subtopic_alt_id': subtopic.get('number', '---'),
+    }
+
+  def prYellow(self, text): print('\033[93m {}\033[00m'.format(text))
 
 
 def extract_passage(old_path: str, new_path: str) -> None:
@@ -284,39 +271,39 @@ def add_subs_to_tops(json_input='subtopics_nested.json', csv_input='topic.csv', 
   outputFile.close()
 
 def focus_refs_csv(csv_input='refs.csv', csv_output='refs2.csv'):
-	"""swaps long page range references for narrower ranges in notes where applicable"""
-	inputPath = os.path.join('..', 'data', 'csv', csv_input)
-	outputPath = os.path.join('..', 'data', 'csv', csv_output)
-	output_file = open(outputPath, 'w')
+  """swaps long page range references for narrower ranges in notes where applicable"""
+  inputPath = os.path.join('..', 'data', 'csv', csv_input)
+  outputPath = os.path.join('..', 'data', 'csv', csv_output)
+  output_file = open(outputPath, 'w')
 
-	with open(inputPath, 'r') as input_file:
-		refwriter = csv.writer(output_file, delimiter=',')
+  with open(inputPath, 'r') as input_file:
+    refwriter = csv.writer(output_file, delimiter=',')
 
-		for i, row in enumerate(csv.reader(input_file)):
-			ref_id = i
-			notes = row[9]
+    for i, row in enumerate(csv.reader(input_file)):
+      ref_id = i
+      notes = row[9]
 
-			if notes and notes.find('esp') != -1:
-				v = row[6]
-				book = None
-				new_notes = 'passim {}-{}'.format(row[7], row[8])  # page_start, page_end
-				if int(v) < 3:
-					parsed = parse_scripture(row[7])
-					if len(parsed):
-						book = parsed[0]
-						new_notes = 'passim {}'.format(row[7])  # <book> <chapter(s)>
+      if notes and notes.find('esp') != -1:
+        v = row[6]
+        book = None
+        new_notes = 'passim {}-{}'.format(row[7], row[8])  # page_start, page_end
+        if int(v) < 3:
+          parsed = parse_scripture(row[7])
+          if len(parsed):
+            book = parsed[0]
+            new_notes = 'passim {}'.format(row[7])  # <book> <chapter(s)>
 
-				for new_ref in parse_ref_note(notes, book):
-					s = new_ref.get('start', '')
-					e = new_ref.get('end', '')
-					new_row = [ref_id, *row[1:7], s, e, new_notes]
-					print(new_row)
-					refwriter.writerow(new_row)
-			else:
-				refwriter.writerow([ref_id, *row[1:]])
+        for new_ref in parse_ref_note(notes, book):
+          s = new_ref.get('start', '')
+          e = new_ref.get('end', '')
+          new_row = [ref_id, *row[1:7], s, e, new_notes]
+          print(new_row)
+          refwriter.writerow(new_row)
+      else:
+        refwriter.writerow([ref_id, *row[1:]])
 
-	output_file.close()
-	return
+  output_file.close()
+  return
 
 def import_cath_bible_summaries(input_txt="apocrypha.txt", log_csv='errors.csv'):
   input_dir = os.path.join('..', 'data', 'summary')
@@ -776,10 +763,10 @@ def print_topics(filename, filename2):
   topics = topic_list.keys()
   for topic in topics:
     print(topic)
-    # subtopics = topic_list[topic].keys()
-    # for subtopic in subtopics:
-      # print '\t'
-      # print topic_list[topic][subtopic].description
+    subtopics = topic_list[topic].keys()
+    for subtopic in subtopics:
+      print ('\t')
+      print (topic_list[topic][subtopic].description)
 
 def make_json():
   file = open('../data/subtopics.txt', 'r')
@@ -849,7 +836,7 @@ def file_size(file_path):
     file_info = os.stat(file_path)
     return file_info.st_size
 
-def listFileSize(directory=data):
+def listFileSize(directory='../data/output'):
   o = path.Path(directory)
   for d in o.dirs():
     for f in d.files():
@@ -862,6 +849,14 @@ def listFileSize(directory=data):
   print(convert_bytes(cumm))
 
 def main():
+  a = Suggestions()
+  data = a.construct_suggestions()
+  # with open('../data/json/suggestions_pretty.json', 'w') as writeFile:
+  #   json.dump(data, writeFile, indent=4, sort_keys=True)
+
+  # with open('../client/src/data/suggestions.json', 'w') as writeFile:
+  #   json.dump(data, writeFile)
+
   return
 
 if __name__ == '__main__':
