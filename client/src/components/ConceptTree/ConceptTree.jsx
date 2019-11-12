@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import Tree from 'react-d3-tree';
 import NodeLabel from 'components/NodeLabel'
 import useWindowDimensions from 'hooks/useWindowDimensions'
+import topics from 'data/topics.json'
 
 import './ConceptTree.scss'
 
@@ -11,27 +12,49 @@ const ConceptTree = (props) => {
   const _pathwidth = 250
   const { _baseX, _baseY } = positionSVG()
 
-  const [selected, setSelected] = useState({})
+  const [selected, setSelected] = useState()
   const [translate, setTranslate] = useState({ x: _baseX, y: _baseY })
 
   function handleClick (nodeData, evt) {
-    const { _collapsed, depth, meta, children } = nodeData
-    if (depth === 1) {
-      if (_collapsed) setTranslate({ x: _baseX, y: _baseY})
-      if (!_collapsed) setTranslate({ x: _baseX - _pathwidth, y: _baseY})
-    }
+    const { depth, subtopic_id } = nodeData
+    if (depth === 0) handleDepth0(nodeData)
+    if (depth === 1) handleDepth1(nodeData)
     if (depth === 2) {
-      if (!meta.subtopic_id) return
-      handleSelect(nodeData)
+      if (!subtopic_id) return
+      return handleSelect(nodeData)
     }
   }
 
-  // TODO: include topic_id as well
-  function handleSelect(nodeData) {
-    const { name: subtopic, parent, meta } = nodeData
-    const { subtopic_id } = meta
-    const { name: topic } = parent
-    setSelected({ subtopic_id, subtopic, topic })
+  function handleDepth0(nodeData) {
+    const { _collapsed, _children } = nodeData
+    if (_collapsed) setTranslate({ x: _baseX + _pathwidth, y: _baseY })
+    if (!_collapsed && _children) setTranslate({ x: _baseX - _pathwidth, y: _baseY })
+  }
+
+  function handleDepth1(nodeData) {
+    const { _collapsed, _children, name } = nodeData
+    if (!_children && topics[name]) {
+      return handleSelect(nodeData, true)
+    }
+    if (_collapsed) setTranslate({ x: _baseX, y: _baseY })
+    if (!_collapsed && _children) setTranslate({ x: _baseX - _pathwidth, y: _baseY })
+  }
+
+  function handleSelect(nodeData, isTopic=false) {
+    if (isTopic) {
+      setSelected({
+        topic: nodeData.name,
+        topic_id: topics[nodeData.name]
+      })
+      return
+    }
+    console.log(nodeData)
+    setSelected({
+      subtopic_id: nodeData.subtopic_id,
+      subtopic: nodeData.name,
+      topic_id: topics[nodeData.parent.name],
+      topic: nodeData.parent.name
+    })
   }
 
   // TODO: modify nodeSize, translation, or zoom depending on number of topic nodes, number / positionq of leaf nodes
@@ -43,7 +66,6 @@ const ConceptTree = (props) => {
   }
 
   const nodeSize = { x: _pathwidth, y: props.data.children.length > 3 ? 55 : 150 }
-
   return (
     <div className='tree-container'>
       <Tree
@@ -61,8 +83,8 @@ const ConceptTree = (props) => {
       />
       {selected && <Redirect
         to={{
-          pathname: "/references",
-          search: `?sub=${selected.subtopic_id}`,
+          pathname: selected.subtopic_id ? "/references" : "/subtopics",
+          search: selected.subtopic_id ? `?sub=${selected.subtopic_id}` : `?top=${selected.topic_id}`,
           state: { ...selected }
         }}
     />}
