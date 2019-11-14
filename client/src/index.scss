@@ -67,18 +67,9 @@ p {
   width: fit-content;
   margin: 0 10px;
 }
+
 .clickable { cursor: pointer; }
 
-.indent-1 { text-indent: 0; }
-.indent-2 { text-indent: 2em; }
-.indent-3 { text-indent: 4em; }
-.indent-4 { text-indent: 6em; }
-
-sup {
-  margin: 0 5px;
-  text-decoration: underline;
-  color: blue;
-}
 
 $thought-provoking-background-1: rgb(236,208,120); // #ECD078
 $thought-provoking-background-2: rgb(217,91,67);   // #D95B43

@@ -1,32 +1,34 @@
-import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import React, { Suspense, lazy } from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
 import * as serviceWorker from './serviceWorker';
 
-// const ErrorBoundary = import('./components/ErrorBoundary');
-const Landing = lazy(() => import('./routes/Landing'));
-const Topics = lazy(() => import('./routes/Topics'));
-const Subtopics = lazy(() => import('./routes/Subtopics'));
-const References = lazy(() => import('./routes/References'));
-const Text = lazy(() => import('./routes/Text'));
+import Container from 'components/Container';
+import Home from './routes/Home';
+import References from './routes/References';
+import Subtopics from './routes/Subtopics';
+import Text from './routes/Text';
+import Topics from './routes/Topics';
+
+const App = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Route exact path="/topics" component={Topics} />
+        <Route exact path="/subtopics" component={Subtopics} />
+        <Route exact path="/references" component={References} />
+        <Route exact path="/excerpt" component={Text} />
+        <Redirect to='/' />
+      </Switch>
+    </Suspense>
+  )
+}
 
 
 ReactDOM.render(
-  <Router>
-    <Suspense fallback={<div>Loading...</div>}>
-      <Switch>
-        {/* <ErrorBoundary> */}
-          <Route exact path="/" component={Landing} />
-          <Route exact path="/topics" component={Topics} />
-          <Route exact path="/subtopics" component={Subtopics} />
-          <Route exact path="/references" component={References} />
-          <Route exact path="/excerpt" component={Text} />
-          <Redirect to='/'/>
-        {/* </ErrorBoundary> */}
-      </Switch>
-    </Suspense>
-  </Router>,
+  Container(App),
   document.getElementById('root')
 );
 
