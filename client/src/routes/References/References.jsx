@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import Breadcrumb from 'components/Breadcrumb'
 import './References.scss';
 
 const axios = require('axios');
@@ -31,7 +33,9 @@ function References(props) {
   }
 
   return (
-    <div>
+    <div className="reference--container">
+      <Breadcrumb />
+      <h1 className="reference-title">Excerpts</h1>
       <ul className="reference-list">
         {references.map(ref =>
           <div key={ref.id} className="reference-list-item">
@@ -54,4 +58,4 @@ function References(props) {
   )
 }
 
-export default References;
+export default withRouter(References);

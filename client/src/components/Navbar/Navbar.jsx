@@ -9,11 +9,11 @@ const Navbar = () => (
       <Logo />
     </div>
     <div className="nav-links">
-      <NavLink to="/">HOME</NavLink>
-      <NavLink to="/topics">TOPICS</NavLink>
-      <NavLink to="/search">SEARCH</NavLink>
-      <NavLink to="/about">ABOUT</NavLink>
-      <NavLink to="/contact">CONTACT</NavLink>
+      <NavLink to="/">home</NavLink>
+      <NavLink to="/topics">topics</NavLink>
+      <NavLink to="/search">search</NavLink>
+      <NavLink to="/about">about</NavLink>
+      <NavLink to="/contact">contact</NavLink>
     </div>
   </aside>
 )

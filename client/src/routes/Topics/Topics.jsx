@@ -1,5 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
+import { withRouter } from "react-router";
+import Breadcrumb from 'components/Breadcrumb'
+
 import './Topics.scss'
 
 const axios = require('axios');
@@ -24,8 +27,9 @@ function Topics() {
 
   console.log(selected)
   return (
-    <div>
-      <ol className='boxes-container'>
+    <div className="topics--container">
+      <Breadcrumb />
+      <ol className='topic-boxes-container'>
         {topics.map(topic =>
           <li
             key={topic.id}
@@ -47,4 +51,4 @@ function Topics() {
   )
 }
 
-export default Topics;
+export default withRouter(Topics);

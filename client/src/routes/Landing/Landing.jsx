@@ -6,7 +6,7 @@ import './Landing.scss'
 import Autocomplete from 'components/Autocomplete'
 import ConceptTree from 'components/ConceptTree'
 
-import Logo from 'icons';
+// import Logo from 'icons/Logo';
 import suggestions from 'data/suggestions.json';
 import template from 'data/template.json'
 
@@ -28,7 +28,7 @@ function Landing() {
             handleSelect={handleSelect}
           />
         </div>
-        <Logo className='landing-logo'/>
+        {/* <Logo className='landing-logo'/> */}
       </header>
       <section className='landing-fold'>
         <ConceptTree data={data} />

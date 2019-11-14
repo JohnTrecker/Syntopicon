@@ -1,46 +1,44 @@
 @import '../../index.scss';
 
-.boxes-container {
-  display: flex;
-  box-sizing: border-box;
-  flex-direction: row;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.topic-box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
-  width: 200px;
-  height: 150px;
-  margin: 30px;
-  text-align: center;
-}
+.topics--container {
+  width: 80vw;
 
-.topic-box:nth-child(5n + 1) {
-  background: $giant-goldfish-background-1;
-  color: black;
-  // border: 1px solid red;
-}
-.topic-box:nth-child(5n + 2) {
-  background: $giant-goldfish-background-2;
-  color: black;
-  // border: 1px solid red;
-}
-.topic-box:nth-child(5n + 3) {
-  background: $giant-goldfish-background-3;
-  color: black;
-  // border: 1px solid red;
-}
-.topic-box:nth-child(5n + 4) {
-  background: $giant-goldfish-background-4;
-  color: black;
-  // border: 1px solid red;
-}
-.topic-box:nth-child(5n + 5) {
-  background: $giant-goldfish-background-5;
-  color: black;
-  // border: 1px solid red;
-}
+  .topic-boxes-container {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .topic-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    width: 200px;
+    height: 150px;
+    margin: 30px;
+    text-align: center;
 
+    &:nth-child(5n + 1) {
+      background: $giant-goldfish-background-1;
+      color: black;
+    }
+    &:nth-child(5n + 2) {
+      background: $giant-goldfish-background-2;
+      color: black;
+    }
+    &:nth-child(5n + 3) {
+      background: $giant-goldfish-background-3;
+      color: black;
+    }
+    &:nth-child(5n + 4) {
+      background: $giant-goldfish-background-4;
+      color: black;
+    }
+    &:nth-child(5n + 5) {
+      background: $giant-goldfish-background-5;
+      color: black;
+    }
+  }
+}

@@ -1,6 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
+import { withRouter } from 'react-router';
+import Breadcrumb from 'components/Breadcrumb'
+import './Subtopics.scss'
+
 const axios = require('axios');
+
 
 function Subtopics(props) {
   const [subtopics, setSubtopics] = useState([])
@@ -9,6 +14,7 @@ function Subtopics(props) {
   useEffect(fetchSubtopics, [])
 
   function fetchSubtopics() {
+    if (!props.location || !props.location.state || !props.location.state.topic_id) return
     const { topic_id: id } = props.location.state;
     axios.get(`http://localhost:8888/v1/topics/${id}`)
       .then(res => setSubtopics(res.data.data.subtopics))
@@ -22,10 +28,10 @@ function Subtopics(props) {
 
   function generateTaxonomy(subtopics) {
     return subtopics.map(subtopic => (
-      <ol>
+      <ol className="subtopic-tree">
         <li
           key={subtopic.id}
-          className={`indent-${subtopic.number.split('.').length}`}
+          className={`subtopics-list-item indent-${subtopic.number.split('.').length}`}
         >
           <p
             className='clickable'
@@ -41,7 +47,8 @@ function Subtopics(props) {
   }
 
   return (
-    <div>
+    <div className="subtopics--container">
+      <Breadcrumb />
       {generateTaxonomy(subtopics)}
       {selected && <Redirect
         to={{
@@ -54,4 +61,4 @@ function Subtopics(props) {
   )
 }
 
-export default Subtopics;
+export default withRouter(Subtopics);

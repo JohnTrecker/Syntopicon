@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
+import { withRouter } from "react-router";
+import Breadcrumb from 'components/Breadcrumb'
 const axios = require('axios');
 
 function Text(props) {
@@ -46,7 +48,8 @@ function Text(props) {
   }
 
   return (
-    <div>
+    <div className="text--container">
+      <Breadcrumb />
       <p>{getText()}</p>
       <br/>
       <br/>
@@ -55,4 +58,4 @@ function Text(props) {
   )
 }
 
-export default Text;
+export default withRouter(Text);
