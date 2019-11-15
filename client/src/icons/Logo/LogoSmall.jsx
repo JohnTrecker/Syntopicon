@@ -1,20 +1,21 @@
 import React from 'react';
 
 const LogoSmall = () => (
-  <svg width="580" height="400" xmlns="http://www.w3.org/2000/svg">
+  <svg width="53" height="53" xmlns="http://www.w3.org/2000/svg">
     <g>
       <title>background</title>
-      <rect fill="none" id="canvas_background" height="402" width="582" y="-1" x="-1" />
-      <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
-        <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%" />
+      <rect x="-1" y="-1" width="55" height="55" id="canvas_background" fill="none" />
+      <g id="canvasGrid" display="none">
+        <rect id="svg_1" width="100%" height="100%" x="0" y="0" strokeWidth="0" fill="url(#gridpattern)" />
       </g>
     </g>
+
     <g>
-      <title>Layer 1</title>
-      <ellipse stroke="#fff" ry="31.884615" rx="31.884615" id="svg_2" cy="34.884615" cx="290.000002" stroke-width="1.5" fill="#000" />
-      <line stroke="#fff" stroke-linecap="null" stroke-linejoin="null" id="svg_7" y2="50.966631" x2="299.230764" y1="17.076926" x1="299.230764" stroke-width="7" fill="none" />
-      <line stroke="#fff" transform="rotate(-25 290.21118164062506,33.698162078857415) " stroke-linecap="null" stroke-linejoin="null" id="svg_15" y2="33.698162" x2="323.324615" y1="33.698162" x1="257.097737" fill-opacity="null" stroke-opacity="null" stroke-width="2" fill="none" />
-      <line stroke="#fff" stroke-linecap="null" stroke-linejoin="null" id="svg_17" y2="50.966631" x2="280.769225" y1="17.076926" x1="280.769225" stroke-width="7" fill="none" />
+      <title>symbol</title>
+      <ellipse stroke="#000000" ry="25.486723" rx="25.486723" id="svg_2" cy="26.580195" cx="26.411501" strokeWidth="1.5" fill="#000000" />
+      <rect stroke="#ffffff" id="svg_7" height="22.271879" width="1.861731" y="15.364061" x="33.170863" strokeWidth="1.7" fill="#ffffff" />
+      <rect stroke="#ffffff" id="svg_8" height="22.09746" width="1.861731" y="15.45127" x="18.045887" strokeWidth="1.7" fill="#ffffff" />
+      <rect stroke="#ffffff" transform="rotate(-25 26.342729568481435,26.385835647583) " id="svg_152" height="0.125" width="51.375354" y="26.323337" x="0.655053" fillOpacity="null" strokeWidth="1.2" fill="#ffffff" />
     </g>
   </svg>
 );
