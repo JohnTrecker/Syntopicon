@@ -4,7 +4,7 @@ import { withRouter } from "react-router";
 import Breadcrumb from 'components/Breadcrumb'
 
 import './Topics.scss'
-
+import variables from 'styles/variables/_images.scss'
 const axios = require('axios');
 
 
@@ -25,20 +25,28 @@ function Topics() {
     setSelected({ topic_id, topic })
   }
 
-  console.log(selected)
+  function setImage({name}){
+    const imageUrl = variables[name.toLowerCase().replace(/\s/g, '-')]
+    if (imageUrl) console.log(imageUrl)
+    return imageUrl
+      ? { 'backgroundImage': `url(${imageUrl})` }
+      : {}
+  }
+
   return (
     <div className="topics--container">
       <Breadcrumb />
       <ol className='topic-boxes-container'>
-        {topics.map(topic =>
+        {topics.map(topic => (
           <li
             key={topic.id}
             onClick={() => handleSelect(topic)}
             className="topic-box clickable"
+            style={setImage(topic)}
           >
             <p>{topic.name}</p>
           </li>
-        )}
+        ))}
       </ol>
       {selected && <Redirect
         to={{

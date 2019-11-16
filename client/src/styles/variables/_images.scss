@@ -1,0 +1,75 @@
+$full: '&fm=jpg&q=80';
+$regular: '&fm=jpg&fit=crop&w=1080&q=80&fit=max';
+$small: "&fm=jpg&w=400&fit=max";
+$thumb: '&fm=jpg&w=200&fit=max';
+
+
+$domain: 'https://images.unsplash.com/';
+$meta: '?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9';
+
+$angel: 'photo-1554714915-9ee8b3bf57db';
+$animal: 'photo-1503431128871-cd250803fa41';
+$aristocracy: 'photo-1571571854913-a6d8b59377e0';
+$art: 'photo-1545989253-02cc26577f88';
+$astronomy-and-cosmology: 'photo-1543722530-d2c3201371e7';
+$beauty: 'photo-1500964757637-c85e8a162699';
+$being: 'photo-1541265313101-7043fb302244';
+$cause: 'photo-1512138664757-360e0aad5132';
+$chance: 'photo-1568743966689-d37c04538535';
+$change: 'photo-1459478309853-2c33a60058e7';
+$citizen: 'photo-1566663972955-25cacaa61e38';
+$logic: 'photo-1509228468518-180dd4864904';
+$constitution: 'photo-1506886009355-7f3af05dd5d2';
+$courage: 'photo-1495602787267-96ab76127c2a';
+$custom-and-convention: 'photo-1519475889208-0968e5438f7d';
+$definition: 'photo-1456081101716-74e616ab23d8';
+$democracy: 'photo-1541543969587-06bf065f8784';
+$desire: 'photo-1511028897949-27b3f9f7924d';
+$dialectic: '';
+$duty: 'photo-1498898822751-a786e6e70dbd';
+$education: 'photo-1488254491307-10ca8fa174c8';
+$element: 'photo-1524999454668-adebce70bea9';
+$emotion: 'photo-1523803326055-9729b9e02e5a';
+$eternity: 'photo-1442323794357-25b2ec110967';
+$evolution: '';
+$experience: 'photo-1529564269951-ab1c08249552';
+$family: 'photo-1438962136829-452260720431';
+$fate: 'photo-1565492206137-0797f1ca6dc6';
+
+$form: 'photo-1523730205978-59fd1b2965e3';
+$god: 'photo-1520187044487-b2efb58f0cba'; // photo-1500835176302-48dbd01f6437; photo-1470859685138-71dd60ed39b1
+
+@function url($resource, $size: $thumb) {
+  @return $domain + $resource + $meta + $size
+}
+
+:export {
+  angel: url($angel);
+  animal: url($animal);
+  aristocracy: url($aristocracy);
+  art: url($art);
+  astronomy-and-cosmology: url($astronomy-and-cosmology);
+  beauty: url($beauty);
+  being: url($being);
+  cause: url($cause);
+  chance: url($chance);
+  change: url($change);
+  citizen: url($citizen);
+  logic: url($logic);
+  constitution: url($constitution);
+  courage: url($courage);
+  custom-and-convention: url($custom-and-convention);
+  definition: url($definition);
+  democracy: url($democracy);
+  desire: url($desire);
+  dialectic: url($dialectic);
+  duty: url($duty);
+  education: url($education);
+  element: url($element);
+  emotion: url($emotion);
+  eternity: url($eternity);
+  evolution: url($evolution);
+  experience: url($experience);
+  family: url($family);
+  fate: url($fate);
+}

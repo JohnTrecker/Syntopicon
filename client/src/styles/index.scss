@@ -1,0 +1,30 @@
+@import './reset';
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: -apple-system, Futura, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+span {
+  display: flex;
+}
+
+li {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  width: auto;
+}
+
+p {
+  width: fit-content;
+  margin: 0 10px;
+}
+
+.clickable { cursor: pointer; }
+

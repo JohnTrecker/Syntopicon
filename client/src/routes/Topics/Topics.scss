@@ -1,4 +1,4 @@
-@import '../../index.scss';
+@import 'styles/variables/_themes';
 
 .topics--container {
   width: 80vw;
@@ -11,6 +11,9 @@
     flex-wrap: wrap;
   }
   .topic-box {
+    color: #FFF;
+    font-size: 24px;
+    position: inherit;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,26 +22,30 @@
     height: 150px;
     margin: 30px;
     text-align: center;
+    transition: all 1s ease-out 0s;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: center;
+
+    &.initial {
+      margin-right: 500px;
+    }
 
     &:nth-child(5n + 1) {
-      background: $giant-goldfish-background-1;
-      color: black;
+      background-color: $main-background-1;
     }
     &:nth-child(5n + 2) {
-      background: $giant-goldfish-background-2;
-      color: black;
+      background-color: $main-background-2;
     }
     &:nth-child(5n + 3) {
-      background: $giant-goldfish-background-3;
-      color: black;
+      background-color: $main-background-3;
     }
     &:nth-child(5n + 4) {
-      background: $giant-goldfish-background-4;
-      color: black;
+      background-color: $main-background-4;
     }
     &:nth-child(5n + 5) {
-      background: $giant-goldfish-background-5;
-      color: black;
+      background-color: $main-background-5;
     }
   }
 }
