@@ -5,18 +5,18 @@ import { useTopic } from 'hooks/useTopicState'
 
 import './Breadcrumb.scss'
 
-const routes = {
-  BASE: '/',
-  TOPICS: '/topics',
-  SUBTOPICS: '/subtopics',
-  REFERENCES: '/references',
-  EXCERPT: '/excerpt',
-}
-
 
 const Breadcrumbs = () => {
   const [state, dispatch] = useTopic()
   const {topic, subtopic, reference } = state
+
+  const routes = {
+    BASE: '/',
+    TOPICS: '/topics',
+    SUBTOPICS: '/subtopics',
+    REFERENCES: '/references',
+    EXCERPT: '/excerpt',
+  }
 
   const breadcrumbRoutes = [
     {
@@ -39,7 +39,7 @@ const Breadcrumbs = () => {
     },
     {
       path: routes.REFERENCES,
-      targetPath: routes.BASE,
+      targetPath: routes.REFERENCES,
       breadcrumb: reference.name,
       id: reference.id
     }
