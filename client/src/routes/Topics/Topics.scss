@@ -1,7 +1,10 @@
 @import 'styles/variables/_themes';
+@import 'styles/variables/_layout';
 
 .topics--container {
-  width: 80vw;
+  position: $content-container-position;
+  top: $content-container-top;
+  width: $content-container-width;
 
   .topic-boxes-container {
     display: flex;

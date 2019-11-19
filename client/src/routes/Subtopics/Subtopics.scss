@@ -1,5 +1,9 @@
+@import 'styles/variables/_layout';
+
 .subtopics--container {
-  width: 80vw;
+  position: $content-container-position;
+  top: $content-container-top;
+  width: $content-container-width;
   height: 100vh;
   margin: 30px;
 

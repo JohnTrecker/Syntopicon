@@ -2,7 +2,9 @@ import React, {useState, useEffect} from 'react';
 import { withRouter } from "react-router";
 import { useTopicState } from 'hooks/useTopicState'
 import Breadcrumb from 'components/Breadcrumb'
+import './Text.scss'
 const axios = require('axios');
+
 
 function Text(props) {
   const [excerpt, setText] = useState(null)
@@ -52,7 +54,7 @@ function Text(props) {
   return (
     <div className="text--container">
       <Breadcrumb />
-      <p>{getText()}</p>
+      <p className="text-block">{getText()}</p>
       <br/>
       <br/>
       <p>{getAttribution()}</p>
