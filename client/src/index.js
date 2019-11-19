@@ -11,6 +11,7 @@ import References from './routes/References';
 import Subtopics from './routes/Subtopics';
 import Text from './routes/Text';
 import Topics from './routes/Topics';
+import Search from './routes/Search';
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route exact path="/subtopics" component={Subtopics} />
         <Route exact path="/references" component={References} />
         <Route exact path="/excerpt" component={Text} />
+        <Route exact path="/search" component={Search} />
         <Redirect to='/' />
       </Switch>
     </Suspense>
