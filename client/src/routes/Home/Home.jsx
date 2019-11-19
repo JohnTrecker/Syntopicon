@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import Section from './components/Section';
+import React from 'react';
+import Panel from './components/Panel';
 import './Home.scss'
 
 function Home() {
   return (
     <div className="home--container">
-      <Section type="section-topics" title="Peruse" href="/topics" />
-      <Section type="section-search" title="Search" href="/search" />
-      <Section type="section-follow" title="Follow" href="/account" />
+      <Panel type="panel-topics" title="Peruse" href="/topics" />
+      <Panel type="panel-search" title="Search" href="/search" />
+      <Panel type="panel-follow" title="Follow" href="/account" />
     </div>
   );
 }

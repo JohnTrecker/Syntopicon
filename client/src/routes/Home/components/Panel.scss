@@ -1,4 +1,4 @@
-.section {
+.panel {
   position: relative;
   height: 97%;
   width: 33.33%;
@@ -72,13 +72,13 @@
       background-color: rgba(0, 0, 0, 0.5);
     }
 
-    .section--cta {
+    .panel--cta {
       background: rgba(0,0,0,0.6);
       bottom: 55%;
       font-size: 35px;
     }
 
-    .section--title {
+    .panel--title {
       color: #FFF;
 
       &-overlay {
