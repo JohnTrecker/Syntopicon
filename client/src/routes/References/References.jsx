@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import { useTopic } from 'hooks/useTopicState';
 import Breadcrumb from 'components/Breadcrumb'
 import './References.scss';
 
@@ -9,33 +10,39 @@ const axios = require('axios');
 
 function References(props) {
   const [references, setReferences] = useState([])
-  const [selected, setSelected] = useState('')
+  const [state, dispatch] = useTopic()
 
   useEffect(fetchReferences, [])
 
   function fetchReferences() {
-    const { subtopic_id: id } = props.location.state;
+    const { id } = state.subtopic;
+    if (!id) return
     axios.get(`http://localhost:8888/v1/subtopics/${id}/references`)
       .then(res => setReferences(res.data.data))
       .catch(err => console.log(err))
   }
 
   function handleSelect(selection) {
-    const { id: ref_id, title: ref } = selection
-    setSelected({ref_id, ref})
+    const { id, title: name } = selection
+    const payload = { reference: { id, name } }
+    dispatch({ type: 'UPDATE_TOPIC', payload })
   }
 
+  function getPages(s, e){
+    return e
+      ? `${s} - ${e}`
+      : s
+  }
   function getAttribution(ref){
     const { author, title, page_start, page_end } = ref
     return author === 'Bible'
       ? `${page_start} (${title})`
-      : `${author} (${title})`
+      : `${author} (${title}, ${getPages(page_start, page_end)})`
   }
 
   return (
     <div className="reference--container">
       <Breadcrumb />
-      <h1 className="reference-title">Excerpts</h1>
       <ul className="reference-list">
         {references.map(ref =>
           <div key={ref.id} className="reference-list-item">
@@ -47,11 +54,10 @@ function References(props) {
           </div>
         )}
       </ul>
-      {selected && <Redirect
+      {state.reference.id && <Redirect
         to={{
           pathname: "/excerpt",
-          search: `?refs=${selected.ref_id}`,
-          state: { ...props.location.state, ...selected }
+          search: `?refs=${state.reference.id}`,
         }}
       />}
     </div>

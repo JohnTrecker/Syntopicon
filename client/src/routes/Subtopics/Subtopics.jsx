@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import { useTopic } from 'hooks/useTopicState';
 import Breadcrumb from 'components/Breadcrumb'
 import './Subtopics.scss'
 
@@ -9,26 +10,27 @@ const axios = require('axios');
 
 function Subtopics(props) {
   const [subtopics, setSubtopics] = useState([])
-  const [selected, setSelected] = useState('')
+  const [state, dispatch] = useTopic()
 
   useEffect(fetchSubtopics, [])
 
   function fetchSubtopics() {
-    if (!props.location || !props.location.state || !props.location.state.topic_id) return
-    const { topic_id: id } = props.location.state;
+    const { id } = state.topic;
+    if (!id) return
     axios.get(`http://localhost:8888/v1/topics/${id}`)
       .then(res => setSubtopics(res.data.data.subtopics))
       .catch(err => console.log(err))
   }
 
   function handleSelect(selected) {
-    const { id: subtopic_id, subtopic } = selected
-    setSelected({subtopic_id, subtopic})
+    const { id, subtopic: name } = selected
+    const payload = { subtopic: {id, name} }
+    dispatch({ type: 'UPDATE_TOPIC', payload })
   }
 
   function generateTaxonomy(subtopics) {
     return subtopics.map(subtopic => (
-      <ol className="subtopic-tree">
+      <ol className="subtopic-tree" key={subtopic.number}>
         <li
           key={subtopic.id}
           className={`subtopics-list-item indent-${subtopic.number.split('.').length}`}
@@ -50,11 +52,10 @@ function Subtopics(props) {
     <div className="subtopics--container">
       <Breadcrumb />
       {generateTaxonomy(subtopics)}
-      {selected && <Redirect
+      {state.subtopic.id && <Redirect
         to={{
           pathname: "/references",
-          search: `?sub=${selected.subtopic_id}`,
-          state: { ...props.location.state, ...selected }
+          search: `?sub=${state.subtopic.id}`,
         }}
       />}
     </div>

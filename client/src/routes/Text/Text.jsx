@@ -1,16 +1,18 @@
 import React, {useState, useEffect} from 'react';
-import { Redirect } from 'react-router-dom';
 import { withRouter } from "react-router";
+import { useTopicState } from 'hooks/useTopicState'
 import Breadcrumb from 'components/Breadcrumb'
 const axios = require('axios');
 
 function Text(props) {
   const [excerpt, setText] = useState(null)
+  const state = useTopicState()
 
   useEffect(fetchText, [])
 
   function fetchText() {
-    const { ref_id: id } = props.location.state;
+    const { id } = state.reference;
+    if (!id) return
     axios.get(`http://localhost:8888/v1/references/${id}`)
       .then(res => setText(res.data.data))
       .catch(err => console.log(err))

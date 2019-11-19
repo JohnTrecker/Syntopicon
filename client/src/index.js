@@ -1,5 +1,5 @@
 import { Redirect, Route, Switch } from 'react-router-dom';
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import 'styles/index.scss';
 import * as serviceWorker from './serviceWorker';

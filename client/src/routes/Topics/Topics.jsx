@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
-import { withRouter } from "react-router";
-import Breadcrumb from 'components/Breadcrumb'
+import { withRouter } from 'react-router';
+import { useTopic } from 'hooks/useTopicState';
 
 import './Topics.scss'
 import variables from 'styles/variables/_images.scss'
@@ -10,8 +10,7 @@ const axios = require('axios');
 
 function Topics() {
   const [topics, setTopics] = useState([])
-  const [selected, setSelected] = useState('')
-
+  const [state, dispatch] = useTopic()
   useEffect(fetchTopics, [])
 
   function fetchTopics() {
@@ -21,8 +20,9 @@ function Topics() {
   }
 
   function handleSelect(selected) {
-    const { id: topic_id, name: topic } = selected
-    setSelected({ topic_id, topic })
+    const { id, name } = selected
+    const payload = { topic: { id, name} }
+    dispatch({type: 'UPDATE_TOPIC', payload})
   }
 
   function setImage({name}){
@@ -35,7 +35,6 @@ function Topics() {
 
   return (
     <div className="topics--container">
-      <Breadcrumb />
       <ol className='topic-boxes-container'>
         {topics.map(topic => (
           <li
@@ -48,11 +47,10 @@ function Topics() {
           </li>
         ))}
       </ol>
-      {selected && <Redirect
+      {state.topic.id && <Redirect
         to={{
           pathname: "/subtopics",
-          search: `?topic=${selected.topic_id}`,
-          state: { ...selected }
+          search: `?topic=${state.topic.id}`,
         }}
       />}
     </div>
