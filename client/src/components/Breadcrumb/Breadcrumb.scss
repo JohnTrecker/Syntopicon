@@ -1,0 +1,45 @@
+@import 'styles/variables/_layout';
+
+.breadcrumbs {
+  position: fixed;
+  height: 50px;
+  top: 0;
+  left: $nav-container-width;
+  right: 0;
+  z-index: 3;
+
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  background: rgba(0, 0, 0, 0.7);
+  padding: 0;
+
+  &--nav {
+    color: white; // override anchor tag text color
+    text-decoration: none;
+    line-height: 3em;
+    height: 100%;
+    width: fit-content;
+    min-width: 100px;
+    text-align: center;
+    padding: 0 10px;
+    transition: background 0.3s linear 0s;
+
+
+    &:hover {
+      background: black;
+      cursor: pointer;
+    }
+  }
+
+  .selected {
+    text-decoration: none;
+    &:hover {
+      cursor: text;
+      text-decoration: none;
+    }
+  }
+
+}

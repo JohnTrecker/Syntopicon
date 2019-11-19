@@ -35,9 +35,10 @@ $evolution: '';
 $experience: 'photo-1529564269951-ab1c08249552';
 $family: 'photo-1438962136829-452260720431';
 $fate: 'photo-1565492206137-0797f1ca6dc6';
-
 $form: 'photo-1523730205978-59fd1b2965e3';
-$god: 'photo-1520187044487-b2efb58f0cba'; // photo-1500835176302-48dbd01f6437; photo-1470859685138-71dd60ed39b1
+$god: 'photo-1470859685138-71dd60ed39b1'; // photo-1520187044487-b2efb58f0cba; photo-1500835176302-48dbd01f6437
+
+$good-and-evil: '';
 
 @function url($resource, $size: $thumb) {
   @return $domain + $resource + $meta + $size
@@ -72,4 +73,6 @@ $god: 'photo-1520187044487-b2efb58f0cba'; // photo-1500835176302-48dbd01f6437; p
   experience: url($experience);
   family: url($family);
   fate: url($fate);
+  form: url($form);
+  god: url($god);
 }
