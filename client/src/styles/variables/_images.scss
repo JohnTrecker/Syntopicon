@@ -1,12 +1,19 @@
+// helper
+@function build-url($resource, $size: $thumb) {
+  @return $domain + $resource + $meta + $size
+};
+
+// sizes
 $full: '&fm=jpg&q=80';
 $regular: '&fm=jpg&fit=crop&w=1080&q=80&fit=max';
-$small: "&fm=jpg&w=400&fit=max";
+$small: '&fm=jpg&w=400&fit=max';
 $thumb: '&fm=jpg&w=200&fit=max';
 
-
+// constants
 $domain: 'https://images.unsplash.com/';
 $meta: '?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9';
 
+// topics
 $angel: 'photo-1554714915-9ee8b3bf57db';
 $animal: 'photo-1503431128871-cd250803fa41';
 $aristocracy: 'photo-1571571854913-a6d8b59377e0';
@@ -37,72 +44,72 @@ $family: 'photo-1438962136829-452260720431';
 $fate: 'photo-1565492206137-0797f1ca6dc6';
 $form: 'photo-1523730205978-59fd1b2965e3';
 $god: 'photo-1470859685138-71dd60ed39b1'; // photo-1520187044487-b2efb58f0cba; photo-1500835176302-48dbd01f6437
-
 $good-and-evil: '';
 
-@function url($resource, $size: $thumb) {
-  @return $domain + $resource + $meta + $size
-}
+// routes
+$search: 'photo-1485847791529-09ed2263da0b';
+$search-big: build-url($search, $full);
 
+// dynamic react classNames
 :export {
-  angel: url($angel);
-  animal: url($animal);
-  aristocracy: url($aristocracy);
-  art: url($art);
-  astronomy-and-cosmology: url($astronomy-and-cosmology);
-  beauty: url($beauty);
-  being: url($being);
-  cause: url($cause);
-  chance: url($chance);
-  change: url($change);
-  citizen: url($citizen);
-  logic: url($logic);
-  constitution: url($constitution);
-  courage: url($courage);
-  custom-and-convention: url($custom-and-convention);
-  definition: url($definition);
-  democracy: url($democracy);
-  desire: url($desire);
-  dialectic: url($dialectic);
-  duty: url($duty);
-  education: url($education);
-  element: url($element);
-  emotion: url($emotion);
-  eternity: url($eternity);
-  evolution: url($evolution);
-  experience: url($experience);
-  family: url($family);
-  fate: url($fate);
-  form: url($form);
-  god: url($god);
-  angel-big: url($angel, $full);
-  animal-big: url($animal, $full);
-  aristocracy-big: url($aristocracy, $full);
-  art-big: url($art, $full);
-  astronomy-big-and-cosmology: url($astronomy-and-cosmology, $full);
-  beauty-big: url($beauty, $full);
-  being-big: url($being, $full);
-  cause-big: url($cause, $full);
-  chance-big: url($chance, $full);
-  change-big: url($change, $full);
-  citizen-big: url($citizen, $full);
-  logic-big: url($logic, $full);
-  constitution-big: url($constitution, $full);
-  courage-big: url($courage, $full);
-  custom-big-and-convention: url($custom-and-convention, $full);
-  definition-big: url($definition, $full);
-  democracy-big: url($democracy, $full);
-  desire-big: url($desire, $full);
-  dialectic-big: url($dialectic, $full);
-  duty-big: url($duty, $full);
-  education-big: url($education, $full);
-  element-big: url($element, $full);
-  emotion-big: url($emotion, $full);
-  eternity-big: url($eternity, $full);
-  evolution-big: url($evolution, $full);
-  experience-big: url($experience, $full);
-  family-big: url($family, $full);
-  fate-big: url($fate, $full);
-  form-big: url($form, $full);
-  god-big: url($god, $full);
+  angel: build-url($angel);
+  animal: build-url($animal);
+  aristocracy: build-url($aristocracy);
+  art: build-url($art);
+  astronomy-and-cosmology: build-url($astronomy-and-cosmology);
+  beauty: build-url($beauty);
+  being: build-url($being);
+  cause: build-url($cause);
+  chance: build-url($chance);
+  change: build-url($change);
+  citizen: build-url($citizen);
+  logic: build-url($logic);
+  constitution: build-url($constitution);
+  courage: build-url($courage);
+  custom-and-convention: build-url($custom-and-convention);
+  definition: build-url($definition);
+  democracy: build-url($democracy);
+  desire: build-url($desire);
+  dialectic: build-url($dialectic);
+  duty: build-url($duty);
+  education: build-url($education);
+  element: build-url($element);
+  emotion: build-url($emotion);
+  eternity: build-url($eternity);
+  evolution: build-url($evolution);
+  experience: build-url($experience);
+  family: build-url($family);
+  fate: build-url($fate);
+  form: build-url($form);
+  god: build-url($god);
+  angel-big: build-url($angel, $regular);
+  animal-big: build-url($animal, $regular);
+  aristocracy-big: build-url($aristocracy, $regular);
+  art-big: build-url($art, $regular);
+  astronomy-big-and-cosmology: build-url($astronomy-and-cosmology, $regular);
+  beauty-big: build-url($beauty, $regular);
+  being-big: build-url($being, $regular);
+  cause-big: build-url($cause, $regular);
+  chance-big: build-url($chance, $regular);
+  change-big: build-url($change, $regular);
+  citizen-big: build-url($citizen, $regular);
+  logic-big: build-url($logic, $regular);
+  constitution-big: build-url($constitution, $regular);
+  courage-big: build-url($courage, $regular);
+  custom-big-and-convention: build-url($custom-and-convention, $regular);
+  definition-big: build-url($definition, $regular);
+  democracy-big: build-url($democracy, $regular);
+  desire-big: build-url($desire, $regular);
+  dialectic-big: build-url($dialectic, $regular);
+  duty-big: build-url($duty, $regular);
+  education-big: build-url($education, $regular);
+  element-big: build-url($element, $regular);
+  emotion-big: build-url($emotion, $regular);
+  eternity-big: build-url($eternity, $regular);
+  evolution-big: build-url($evolution, $regular);
+  experience-big: build-url($experience, $regular);
+  family-big: build-url($family, $regular);
+  fate-big: build-url($fate, $regular);
+  form-big: build-url($form, $regular);
+  god-big: build-url($god, $regular);
 }
