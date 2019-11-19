@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router-dom";
 import Tree from 'react-d3-tree';
 import NodeLabel from 'components/NodeLabel'
@@ -14,6 +14,14 @@ const ConceptTree = (props) => {
 
   const [selected, setSelected] = useState()
   const [translate, setTranslate] = useState({ x: _baseX, y: _baseY })
+
+  // TODO: modify nodeSize, translation, or zoom depending on number of topic nodes, number / positionq of leaf nodes
+  function positionSVG() {
+    let _baseY = height / 3
+    let _baseX = width / 3 - _pathwidth
+
+    return { _baseX, _baseY }
+  }
 
   function handleClick (nodeData, evt) {
     const { depth, subtopic_id } = nodeData
@@ -48,21 +56,12 @@ const ConceptTree = (props) => {
       })
       return
     }
-    console.log(nodeData)
     setSelected({
       subtopic_id: nodeData.subtopic_id,
       subtopic: nodeData.name,
       topic_id: topics[nodeData.parent.name],
       topic: nodeData.parent.name
     })
-  }
-
-  // TODO: modify nodeSize, translation, or zoom depending on number of topic nodes, number / positionq of leaf nodes
-  function positionSVG() {
-    let _baseY = height / 4
-    let _baseX = width / 2 - _pathwidth
-
-    return {_baseX , _baseY}
   }
 
   const nodeSize = { x: _pathwidth, y: props.data.children.length > 3 ? 55 : 150 }

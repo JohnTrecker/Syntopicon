@@ -1,5 +1,4 @@
-import React, { Fragment, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 import './Autocomplete.scss'
 
 const Autocomplete = (props) => {
@@ -84,13 +83,13 @@ const Autocomplete = (props) => {
         // Cf. Note on select size = 1 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes
         const visibleOptions = n > 5 ? 5 : n === 1 ? 2 : n
         suggestionsListComponent = (
-          <select className="header-select" name="suggestions" size={visibleOptions}>
+          <select className="autocomplete-select" name="suggestions" size={visibleOptions}>
             {filteredSuggestions.map((suggestion, index) => {
-              let className = "header-option";
+              let className = "autocomplete-option";
               let selected = false
 
               if (index === activeSuggestion) {
-                className = "header-option active";
+                className = "autocomplete-option active";
                 selected = true
               }
 
@@ -120,10 +119,10 @@ const Autocomplete = (props) => {
   }
 
   return (
-    <Fragment>
+    <div className="autocomplete--container">
       <input
         type="text"
-        className="landing-input"
+        className="autocomplete-input"
         onChange={onChange}
         onKeyDown={onKeyDown}
         value={state.userInput}
@@ -131,7 +130,7 @@ const Autocomplete = (props) => {
         autoFocus
       />
       {suggestionsListComponent()}
-    </Fragment>
+    </div>
   );
 }
 
