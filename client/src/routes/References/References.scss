@@ -2,40 +2,48 @@
 
 .reference--container {
     position: $content-container-position;
-    top: $content-container-top;
     width: $content-container-width;
+    display: flex;
 
-  .reference-title {
-    position: absolute;
-    font-size: x-large;
-  }
-  .reference-list {
+  .list--container {
 
-    position: absolute;
-    top: 15vh;
-    height: 85vh;
-    width: 100vw;
+    .reference-title {
+      position: absolute;
+      font-size: x-large;
+    }
 
-    &-item {
-      width: inherit;
-      height: auto;
-      min-height: 2em;
-      border: 1px solid black;
-      margin: 35px 15px;
-      padding: 25px;
+    .reference-list {
+      position: absolute;
+      top: 2vh;
+      height: 100%;
+      width: auto;
+      overflow: auto;
 
-      .attribution {
-        position: relative;
-        top: 39px;
-        left: 10%;
-        width: fit-content;
-        padding: 5px;
-        border: 1px solid grey;
-        background: white;
+      &-item {
+        width: inherit;
+        height: auto;
+        min-height: 2em;
+        border: 1px solid black;
+        margin: 35px 15px;
+        padding: 25px;
 
-        .p-link {
-          text-decoration: underline;
-          color: blue;
+        .quote {
+          line-height: 1.5em;
+        }
+
+        .attribution {
+          position: relative;
+          top: 39px;
+          left: 10%;
+          width: fit-content;
+          padding: 5px;
+          border: 1px solid grey;
+          background: white;
+
+          .p-link {
+            text-decoration: underline;
+            color: blue;
+          }
         }
       }
     }

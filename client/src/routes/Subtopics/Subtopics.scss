@@ -2,24 +2,15 @@
 
 .subtopics--container {
   position: $content-container-position;
-  top: $content-container-top;
   width: $content-container-width;
   height: 100vh;
-  margin: 30px;
+  display: flex;
 
-  .subtopic-tree {
-    margin: 15px;
-
-    .indent-1 { text-indent: 0; }
-    .indent-2 { text-indent: 2em; }
-    .indent-3 { text-indent: 4em; }
-    .indent-4 { text-indent: 6em; }
-
-    sup {
-      margin: 0 5px;
-      text-decoration: underline;
-      color: blue;
-    }
+  .taxonomy--container {
+    position: relative;
+    top: 5vh;
+    width: 45vw;
+    height: 95%;
+    overflow: auto;
   }
 }
-

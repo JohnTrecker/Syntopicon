@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { useTopic } from 'hooks/useTopicState';
 import Breadcrumb from 'components/Breadcrumb'
+import Image from 'components/Image'
 import './References.scss';
 
 const axios = require('axios');
@@ -43,17 +44,20 @@ function References(props) {
   return (
     <div className="reference--container">
       <Breadcrumb />
-      <ul className="reference-list">
-        {references.map(ref =>
-          <div key={ref.id} className="reference-list-item">
-            <q className="quote">{ref.summary}</q>
-            <span className="attribution">
-              {getAttribution(ref)}
-              <p className="p-link clickable" onClick={() => handleSelect(ref)}>More</p>
-            </span>
-          </div>
-        )}
-      </ul>
+      <Image name={state.topic.name} />
+      <div className="list--container">
+        <ul className="reference-list">
+          {references.map(ref =>
+            <div key={ref.id} className="reference-list-item">
+              <q className="quote">{ref.summary}</q>
+              <span className="attribution">
+                {getAttribution(ref)}
+                <p className="p-link clickable" onClick={() => handleSelect(ref)}>More</p>
+              </span>
+            </div>
+          )}
+        </ul>
+      </div>
       {state.reference.id && <Redirect
         to={{
           pathname: "/excerpt",
