@@ -15,14 +15,14 @@
   }
   .topic-box {
     color: #FFF;
-    font-size: 24px;
+    font-size: 2em;
     position: inherit;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-end;
+    align-items: flex-start;
     border: 1px solid black;
-    width: 200px;
-    height: 150px;
+    width: 300px;
+    height: 225px;
     margin: 30px;
     text-align: center;
     transition: all 1s ease-out 0s;
@@ -30,6 +30,14 @@
     background-repeat: no-repeat;
     background-size: cover;
     background-position-x: center;
+
+    .topic-label {
+      width: fit-content;
+      margin: 10px;
+      padding: 5px;
+      background: rgba(0,0,0,.4);
+      box-sizing: border-box;
+    }
 
     &.initial {
       margin-right: 500px;

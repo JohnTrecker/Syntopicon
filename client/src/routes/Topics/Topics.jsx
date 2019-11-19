@@ -43,7 +43,7 @@ function Topics() {
             className="topic-box clickable"
             style={setImage(topic)}
           >
-            <p>{topic.name}</p>
+            <p className="topic-label">{topic.name}</p>
           </li>
         ))}
       </ol>
