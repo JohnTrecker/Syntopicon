@@ -1,22 +1,14 @@
 import React from "react";
 import { matchPath, withRouter } from 'react-router';
-import { NavLink } from 'react-router-dom';
 import { useTopic } from 'hooks/useTopicState'
-
+import { Text, Link } from './components'
+import routes from 'constants/routes'
 import './Breadcrumb.scss'
 
 
 const Breadcrumbs = () => {
   const [state, dispatch] = useTopic()
   const {topic, subtopic, reference } = state
-
-  const routes = {
-    BASE: '/',
-    TOPICS: '/topics',
-    SUBTOPICS: '/subtopics',
-    REFERENCES: '/references',
-    EXCERPT: '/excerpt',
-  }
 
   const breadcrumbRoutes = [
     {
@@ -46,7 +38,6 @@ const Breadcrumbs = () => {
   ];
 
   function handleClick(path, targetPath) {
-    console.log(path, targetPath)
     switch (path) {
       case '/' : {
         dispatch({ type: 'UPDATE_TOPIC', payload: { topic: {}, subtopic: {}, reference: {} } })
@@ -70,18 +61,11 @@ const Breadcrumbs = () => {
     <div className="breadcrumbs">
       {breadcrumbRoutes
         .filter(({id, path}) => id ? true : matchPath(path) ? true : false )
-        .map(({path, targetPath, breadcrumb, id}, i, breadcrumbs) => (
-          <NavLink
-            key={path}
-            onClick={() => handleClick(path)}
-            className={i === breadcrumbs.length - 1
-              ? 'breadcrumbs--nav selected'
-              : 'breadcrumbs--nav'}
-            to={targetPath}
-          >
-            {breadcrumb}
-          </NavLink>
-      ))}
+        .map((route, i, breadcrumbs) => {
+          return i === breadcrumbs.length - 1
+            ? <Text data={route}/>
+            : <Link data={route} handleClick={handleClick}/>
+      })}
     </div>
   );
 }

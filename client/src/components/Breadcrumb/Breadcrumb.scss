@@ -26,7 +26,7 @@
     text-align: center;
     padding: 0 10px;
     transition: background 0.3s linear 0s;
-
+    overflow: hidden;
 
     &:hover {
       background: black;
@@ -35,10 +35,10 @@
   }
 
   .selected {
-    text-decoration: none;
+    margin: 0;
     &:hover {
       cursor: text;
-      text-decoration: none;
+      background: none;
     }
   }
 
