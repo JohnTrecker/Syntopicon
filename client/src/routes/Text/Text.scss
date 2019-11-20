@@ -4,6 +4,8 @@
   position: $content-container-position;
   top: $content-container-top;
   width: $content-container-width;
+  overflow: auto;
+  padding: 3em 2em;
 
   .text-block {
     line-height: 3em;

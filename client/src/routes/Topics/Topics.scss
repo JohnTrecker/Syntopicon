@@ -5,6 +5,7 @@
   position: $content-container-position;
   top: $content-container-top;
   width: $content-container-width;
+  overflow: auto;
 
   .topic-boxes-container {
     display: flex;
