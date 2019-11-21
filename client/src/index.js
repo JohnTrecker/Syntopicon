@@ -3,6 +3,7 @@ import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom';
 import 'styles/index.scss';
 import * as serviceWorker from './serviceWorker';
+import routes from 'constants/routes';
 
 import Container from 'components/Container';
 import Home from './routes/Home';
@@ -17,13 +18,13 @@ const App = () => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/about" component={About} />
-        <Route exact path="/topics" component={Topics} />
-        <Route exact path="/subtopics" component={Subtopics} />
-        <Route exact path="/references" component={References} />
-        <Route exact path="/excerpt" component={Text} />
-        <Route exact path="/search" component={Search} />
+        <Route exact path={routes.BASE} component={Home} />
+        <Route exact path={routes.ABOUT} component={About} />
+        <Route exact path={routes.TOPICS} component={Topics} />
+        <Route exact path={routes.SUBTOPICS} component={Subtopics} />
+        <Route exact path={routes.REFERENCES} component={References} />
+        <Route exact path={routes.EXCERPT} component={Text} />
+        <Route exact path={routes.SEARCH} component={Search} />
         <Redirect to='/' />
       </Switch>
     </Suspense>
