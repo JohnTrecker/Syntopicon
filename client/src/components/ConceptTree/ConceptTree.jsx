@@ -3,6 +3,7 @@ import { Redirect } from "react-router-dom";
 import Tree from 'react-d3-tree';
 import NodeLabel from 'components/NodeLabel'
 import useWindowDimensions from 'hooks/useWindowDimensions'
+import { useTopic } from 'hooks/useTopicState'
 import topics from 'data/topics.json'
 
 import './ConceptTree.scss'
@@ -12,8 +13,8 @@ const ConceptTree = (props) => {
   const _pathwidth = 250
   const { _baseX, _baseY } = positionSVG()
 
-  const [selected, setSelected] = useState()
   const [translate, setTranslate] = useState({ x: _baseX, y: _baseY })
+  const [state, dispatch] = useTopic()
 
   // TODO: modify nodeSize, translation, or zoom depending on number of topic nodes, number / positionq of leaf nodes
   function positionSVG() {
@@ -50,18 +51,22 @@ const ConceptTree = (props) => {
 
   function handleSelect(nodeData, isTopic=false) {
     if (isTopic) {
-      setSelected({
-        topic: nodeData.name,
-        topic_id: topics[nodeData.name]
-      })
+      const id = topics[nodeData.name]
+      const name = nodeData.name
+      const payload = { topic: { id, name } }
+
+      dispatch({ type: 'UPDATE_TOPIC', payload })
       return
     }
-    setSelected({
-      subtopic_id: nodeData.subtopic_id,
-      subtopic: nodeData.name,
-      topic_id: topics[nodeData.parent.name],
-      topic: nodeData.parent.name
-    })
+
+    const { subtopic_id: id, name, parent } = nodeData
+    const payload = {
+      subtopic: { id, name },
+      topic: { id: topics[parent.name], name: parent.name },
+    }
+
+    dispatch({ type: 'UPDATE_TOPIC', payload })
+    return
   }
 
   const nodeSize = { x: _pathwidth, y: props.data.children.length > 3 ? 55 : 150 }
@@ -80,11 +85,10 @@ const ConceptTree = (props) => {
         shouldCollapseNeighborNodes
         useCollapseData
       />
-      {selected && <Redirect
+      {state.topic.id && <Redirect
         to={{
-          pathname: selected.subtopic_id ? "/references" : "/subtopics",
-          search: selected.subtopic_id ? `?sub=${selected.subtopic_id}` : `?top=${selected.topic_id}`,
-          state: { ...selected }
+          pathname: state.subtopic.id ? "/references" : "/subtopics",
+          search: state.subtopic.id ? `?sub=${state.subtopic.id}` : `?top=${state.topic.id}`,
         }}
     />}
     </div>

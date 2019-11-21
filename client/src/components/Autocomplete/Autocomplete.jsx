@@ -18,7 +18,6 @@ const Autocomplete = (props) => {
   const renderSelectionTree = (input=null) => {
     const { activeSuggestion, filteredSuggestions } = state;
     const selection = input || filteredSuggestions[activeSuggestion]
-    console.log('SELECTION in renderSelectionTree: ', selection)
     if (selection) props.handleSelect(selection)
   }
 
