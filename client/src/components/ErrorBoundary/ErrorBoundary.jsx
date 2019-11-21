@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
 class ErrorBoundary extends Component {
@@ -6,10 +7,6 @@ class ErrorBoundary extends Component {
     super(props);
     this.state = { hasError: false };
   }
-
-  // static getDerivedStateFromError(error) {
-  //   return { hasError: true };
-  // }
 
   componentDidCatch(error, errorInfo) {
     this.setState({ hasError: true })
@@ -29,6 +26,10 @@ class ErrorBoundary extends Component {
 
     return this.props.children;
   }
+}
+
+ErrorBoundary.propTypes = {
+  children: PropTypes.element
 }
 
 export default ErrorBoundary;

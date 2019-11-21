@@ -15,4 +15,10 @@ const MagnifyingGlass = (props) => (
   </svg>
 );
 
+MagnifyingGlass.propTypes = {
+  width: PropTypes.string,
+  height: PropTypes.string,
+  fill: PropTypes.string,
+}
+
 export default MagnifyingGlass;

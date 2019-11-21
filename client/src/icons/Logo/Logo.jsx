@@ -1,6 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
-const Logo = () => (
+
+const Logo = ({width, height, fill}) => (
   <svg width="100%" viewBox="91 0 400 402" >
     <g>
       <title>background</title>
@@ -19,5 +21,11 @@ const Logo = () => (
     </g>
   </svg >
 );
+
+Logo.propTypes = {
+  width: PropTypes.string,
+  height: PropTypes.string,
+  fill: PropTypes.string
+}
 
 export default Logo;

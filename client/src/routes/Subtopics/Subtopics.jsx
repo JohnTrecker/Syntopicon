@@ -6,10 +6,10 @@ import Breadcrumb from 'components/Breadcrumb'
 import Image from 'components/Image'
 import Taxonomy from './components/Taxonomy'
 import './Subtopics.scss'
-
 const axios = require('axios');
 
-const Subtopics = (props) => {
+
+const Subtopics = () => {
   const [subtopics, setSubtopics] = useState([])
   const [state, dispatch] = useTopic()
 

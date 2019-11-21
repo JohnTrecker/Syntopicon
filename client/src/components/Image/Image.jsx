@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import variables from 'styles/variables/_images.scss'
 import './Image.scss'
 
@@ -16,6 +17,10 @@ const Image = ({name}) => {
   return (
     <div className="image--container" style={setImage()}></div>
   )
+}
+
+Image.propTypes = {
+  name: PropTypes.string
 }
 
 export default Image;

@@ -6,7 +6,7 @@ import './Text.scss'
 const axios = require('axios');
 
 
-function Text(props) {
+function Text() {
   const [excerpt, setText] = useState(null)
   const state = useTopicState()
 
@@ -22,7 +22,7 @@ function Text(props) {
 
   function getAttribution(){
     if (!excerpt) return ''
-    const { text, page_start, page_end, author, title } = excerpt
+    const { page_start, page_end, author, title } = excerpt
     const pages = page_end ? `${page_start}-${page_end}` : page_start
     return `${title}, ${author} (${pages})`
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom';
 
 
@@ -14,6 +15,15 @@ const Link = ({ data, handleClick }) => {
       {breadcrumb}
     </NavLink>
   )
+}
+
+Link.propTypes = {
+  data: PropTypes.shape({
+    path: PropTypes.string,
+    targetPath: PropTypes.string,
+    breadcrumb: PropTypes.string
+  }),
+  handleClick: PropTypes.func
 }
 
 export default Link;

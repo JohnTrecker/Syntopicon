@@ -1,9 +1,11 @@
 const routes = {
   BASE: '/',
-  TOPICS: '/topics',
-  SUBTOPICS: '/subtopics',
-  REFERENCES: '/references',
+  ABOUT: '/about',
   EXCERPT: '/excerpt',
+  REFERENCES: '/references',
+  SEARCH: '/search',
+  SUBTOPICS: '/subtopics',
+  TOPICS: '/topics',
 }
 
 export default routes;

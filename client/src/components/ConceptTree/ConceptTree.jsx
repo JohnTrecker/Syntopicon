@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import { Redirect } from "react-router-dom";
 import Tree from 'react-d3-tree';
 import NodeLabel from 'components/NodeLabel'
@@ -93,6 +94,16 @@ const ConceptTree = (props) => {
     />}
     </div>
   )
+}
+
+ConceptTree.propTypes = {
+  data: PropTypes.shape({
+    name: PropTypes.string,
+    children: PropTypes.arrayOf(PropTypes.shape({
+      name: PropTypes.string,
+      children: PropTypes.array
+    })),
+  })
 }
 
 export default ConceptTree;

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import './Autocomplete.scss'
 import MagnifyingGlass from "icons/MagnifyingGlass";
 
@@ -136,6 +137,11 @@ const Autocomplete = (props) => {
       {suggestionsListComponent()}
     </div>
   );
+}
+
+Autocomplete.propTypes = {
+  suggestions: PropTypes.arrayOf(PropTypes.string).isRequired,
+  handleSelect: PropTypes.string,
 }
 
 export default Autocomplete;

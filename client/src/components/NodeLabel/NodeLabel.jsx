@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import './NodeLabel.scss'
 
 
@@ -9,6 +10,13 @@ const NodeLabel = (props) => {
       <p>{nodeData.name}</p>
     </div>
   )
+}
+
+NodeLabel.propTypes = {
+  className: PropTypes.string,
+  nodeData: PropTypes.shape({
+    name: PropTypes.string
+  })
 }
 
 export default {

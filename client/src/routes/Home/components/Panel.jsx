@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { NavLink } from 'react-router-dom'
 import './Panel.scss'
 
@@ -12,5 +13,11 @@ const Panel = (props) => (
     </NavLink>
   </section>
 );
+
+Panel.propTypes = {
+  type: PropTypes.string,
+  title: PropTypes.string,
+  href: PropTypes.string,
+}
 
 export default Panel;

@@ -5,11 +5,10 @@ import { useTopic } from 'hooks/useTopicState';
 import Breadcrumb from 'components/Breadcrumb'
 import Image from 'components/Image'
 import './References.scss';
-
 const axios = require('axios');
 
 
-function References(props) {
+function References() {
   const [references, setReferences] = useState([])
   const [state, dispatch] = useTopic()
 

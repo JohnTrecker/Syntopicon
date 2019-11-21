@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import './Taxonomy.scss'
 
 
@@ -26,5 +27,14 @@ const Taxonomy = ({ handleSelect, subtopics }) => (
     </ol>
   ))
 )
+
+Taxonomy.propTypes = {
+  handleSelect: PropTypes.func,
+  subtopics: PropTypes.arrayOf(PropTypes.shape({
+    number: PropTypes.string,
+    id: PropTypes.number,
+    subtopic: PropTypes.string,
+  }))
+}
 
 export default Taxonomy;
