@@ -4,8 +4,9 @@
 
   .nodeBase {
     .tree-node-text {
-      max-width: 200px;
+      width: auto;
       width: fit-content;
+      max-width: 45vw;
     }
   }
 

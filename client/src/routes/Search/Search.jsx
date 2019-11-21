@@ -12,16 +12,12 @@ const Search = () => {
 
   return (
       <section className='search--container'>
-        <div className='selection-container'>
-          <Autocomplete
-            autofocus
-            suggestions={Object.keys(suggestions)}
-            handleSelect={handleSelect}
-          />
-        </div>
-        <section className='concept-tree-container'>
-          <ConceptTree data={data} />
-        </section>
+        <Autocomplete
+          autofocus
+          suggestions={Object.keys(suggestions)}
+          handleSelect={handleSelect}
+        />
+        <ConceptTree data={data} />
       </section>
   )
 }

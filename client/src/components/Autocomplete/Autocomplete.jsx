@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import './Autocomplete.scss'
+import MagnifyingGlass from "icons/MagnifyingGlass";
 
 const Autocomplete = (props) => {
   const [state, setState] = useState({
@@ -81,7 +82,7 @@ const Autocomplete = (props) => {
     if (showSuggestions && userInput) {
       if (n) {
         // Cf. Note on select size = 1 https://developer.mozilla.org/en-US/docs/Web/HTML/Element/select#Attributes
-        const visibleOptions = n > 5 ? 5 : n === 1 ? 2 : n
+        const visibleOptions = 2 //n > 5 ? 5 : n === 1 ? 2 : n
         suggestionsListComponent = (
           <select className="autocomplete-select" name="suggestions" size={visibleOptions}>
             {filteredSuggestions.map((suggestion, index) => {
@@ -120,11 +121,13 @@ const Autocomplete = (props) => {
 
   return (
     <div className="autocomplete--container">
+      <MagnifyingGlass width="15px" height="15px" fill="#F5F5F5" />
       <input
         type="text"
         className="autocomplete-input"
         onChange={onChange}
         onKeyDown={onKeyDown}
+        placeholder="Search by topic"
         value={state.userInput}
         tabIndex={1}
         autoFocus
