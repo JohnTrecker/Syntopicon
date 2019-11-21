@@ -15,10 +15,11 @@ const Autocomplete = (props) => {
       suggestion.toLowerCase().indexOf(userInput.toLowerCase()) > -1
   );
 
-  const renderSelectionTree = () => {
+  const renderSelectionTree = (input=null) => {
     const { activeSuggestion, filteredSuggestions } = state;
-    const selection = filteredSuggestions[activeSuggestion]
-    if (selection) props.handleSelect(filteredSuggestions[activeSuggestion])
+    const selection = input || filteredSuggestions[activeSuggestion]
+    console.log('SELECTION in renderSelectionTree: ', selection)
+    if (selection) props.handleSelect(selection)
   }
 
   const onChange = e => {
@@ -34,13 +35,14 @@ const Autocomplete = (props) => {
   };
 
   const onClick = e => {
-    renderSelectionTree()
+    const input = e.currentTarget.innerText
     setState({
-      activeSuggestion: 0,
+      activeSuggestion: state.filteredSuggestions.findIndex((s) => s === input),
       filteredSuggestions: [],
       showSuggestions: false,
-      userInput: e.currentTarget.innerText
+      userInput: input
     });
+    renderSelectionTree(input)
   };
 
   const onKeyDown = e => {
