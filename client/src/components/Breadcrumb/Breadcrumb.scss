@@ -26,7 +26,10 @@
     text-align: center;
     padding: 0 10px;
     transition: background 0.3s linear 0s;
+
     overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 
     &:hover {
       background: black;
