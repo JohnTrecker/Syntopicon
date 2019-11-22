@@ -1,12 +1,11 @@
 @import 'styles/variables/_layout.scss';
-@import 'styles/variables/_images.scss';
 
 .search--container {
   width: $content-container-width;
   height: $content-container-height;
   position: $content-container-position;
 
-  background: url($search-big);
+  background: url("./images/search.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center right;
