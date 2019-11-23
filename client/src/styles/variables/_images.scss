@@ -1,5 +1,5 @@
 // helper
-@function build-url($resource, $size: $thumb) {
+@function build-url($resource, $size: $small) {
   @return $domain + $resource + $meta + $size
 };
 
@@ -15,36 +15,107 @@ $meta: '?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9';
 
 // topics
 $angel: 'photo-1554714915-9ee8b3bf57db';
-$animal: 'photo-1503431128871-cd250803fa41';
+$animal: 'photo-1503431128871-cd250803fa41'; // photo-1529933037705-0d537317ae7b // Andrew Umanskey, @angur
 $aristocracy: 'photo-1571571854913-a6d8b59377e0';
-$art: 'photo-1545989253-02cc26577f88';
+$art: 'photo-1557033051-1d426c3a4d42'; // photo-1573871669414-010dbf73ca84 // Hal Gatewood, @halgatewood
 $astronomy-and-cosmology: 'photo-1543722530-d2c3201371e7';
 $beauty: 'photo-1500964757637-c85e8a162699';
 $being: 'photo-1541265313101-7043fb302244';
-$cause: 'photo-1512138664757-360e0aad5132';
+$cause: 'photo-1553363512-a89efdf7d6de';//'photo-1512138664757-360e0aad5132';
 $chance: 'photo-1568743966689-d37c04538535';
-$change: 'photo-1459478309853-2c33a60058e7';
+$change: 'photo-1573650757643-b0cda407d7c1'; // Liubov Ilchuk, @liubovilchuk
 $citizen: 'photo-1566663972955-25cacaa61e38';
-$logic: 'photo-1509228468518-180dd4864904';
+$logic: 'photo-1524086496832-aa348741b7b9';// photo-1509228468518-180dd4864904;
 $constitution: 'photo-1506886009355-7f3af05dd5d2';
 $courage: 'photo-1495602787267-96ab76127c2a';
-$custom-and-convention: 'photo-1519475889208-0968e5438f7d';
+$custom-and-convention: 'photo-1567539549213-cc1697632146'; // photo-1563971955910-766f995d78fd // Allie Smith, @creativegangsters
 $definition: 'photo-1456081101716-74e616ab23d8';
 $democracy: 'photo-1541543969587-06bf065f8784';
 $desire: 'photo-1511028897949-27b3f9f7924d';
-$dialectic: '';
+$dialectic: 'photo-1496902526517-c0f2cb8fdb6a'; // Nik MacMillan (@nikarthur)
 $duty: 'photo-1498898822751-a786e6e70dbd';
 $education: 'photo-1488254491307-10ca8fa174c8';
 $element: 'photo-1524999454668-adebce70bea9';
 $emotion: 'photo-1523803326055-9729b9e02e5a';
 $eternity: 'photo-1442323794357-25b2ec110967';
-$evolution: '';
+$evolution: 'photo-1574075896246-5ee5018d399d'; // Joshua Fuller, @joshuafuller
 $experience: 'photo-1529564269951-ab1c08249552';
 $family: 'photo-1438962136829-452260720431';
 $fate: 'photo-1565492206137-0797f1ca6dc6';
 $form: 'photo-1523730205978-59fd1b2965e3';
 $god: 'photo-1470859685138-71dd60ed39b1'; // photo-1520187044487-b2efb58f0cba; photo-1500835176302-48dbd01f6437
-$good-and-evil: '';
+$good-and-evil: 'photo-1500835176302-48dbd01f6437';
+$government: 'photo-1532214950507-92ba44a2f6f7';
+$habit: 'photo-1512067053627-3cb65e51a128';
+$happiness: 'photo-1533227268428-f9ed0900fb3b';
+$history: 'photo-1569943514245-df02f62cecf2';
+$honor: 'photo-1529787730-bdcabd22a644';
+$hypothesis: 'photo-1474325874720-4b395be870c4';
+$idea: 'photo-1485546246426-74dc88dec4d9';
+$immortality: 'photo-1567328515139-74160bc483fe'; // photo-1573853403795-8755533bcd87 // Fan Yang , @vindurriel
+$induction: 'photo-1453487021979-5b739b2849f4';
+$infinity: 'photo-1566555383396-e0b73b0c3e9f';
+$judgment: 'photo-1555374018-13a8994ab246';
+$justice: 'photo-1453945619913-79ec89a82c51';
+$knowledge: 'photo-1570280375658-bc8083a218f0'; //
+$labor: 'photo-1517347827035-8b3805dea38f';
+$language: 'photo-1474459321707-0f6fac57151c';
+$law: 'photo-1560780148-d8a687acdc5f'; // DDP, @moino007
+$liberty: 'photo-1492217072584-7ff26c10eb75';
+$life-and-death: 'photo-1501421018470-faf26f6b1bef'; // Jean-Phillipe Delberghe, @jipy32 ... photo-1574434273760-54ce56c94c33 // Jonathan Borba, @jonathanborba
+$love: 'photo-1494451930944-8998635c2123'; // photo-1542338492-41740e01673f
+$man: 'photo-1539640038819-57bb520c7d2d';//photo-1560787313-5dff3307e257
+$mathematics: 'photo-1573736419810-c0aa49e31fa2'; // CLark Van Der Beken, @snaps_by_clark
+$matter: 'photo-1527409335569-f0e5c91fa707';
+$mechanics: 'photo-1472035846169-06348f2377fa'; // photo-1558395932-2231f33572a9 // @plqml
+$medicine: 'photo-1562243061-204550d8a2c9';
+$memory-and-imagination: 'photo-1520516415634-922de22da03d'; // Nathan Dumlao, @nate_dumlao ... 'photo-1521979548744-463128ea80d8';
+$metaphysics: 'photo-1512414584153-b9a3e3484950';
+$mind: 'photo-1502230831726-fe5549140034';
+$monarchy: 'photo-1551058639-e209197aba8b'; // photo-1554295295-2c44cff7508f // Louise Pilgaard, @toft_pilgaard
+$nature: 'photo-1463107971871-fbac9ddb920f';//photo-1485795046599-702122cd1267
+$necessity-and-contingency: 'photo-1462690417829-5b41247f6b0e'; // Christian Joudrey, @cjoudrey
+$oligarchy: 'photo-1543840951-931bdaabb169';// Joel Barwick, @joelbarwick
+$one-and-many: 'photo-1464917423479-6bd9527d469f'; // Priscilla Du Preez, @priscilladupreez
+$opinion: 'photo-1529739121416-921f4dae728e'; // Alvin Balemesa, @ainbal
+$opposition: 'photo-1505958891520-0c2f2950693f'; // Jeremy Bishop, @jeremybishop
+$philosophy: 'photo-1564737141443-04001033cb6c'; // MEAX, @meaxgang ... 'photo-1550016941-7717d5d1a38a'; // Jasper Smith, @jaspersmith
+$physics: 'photo-1492962827063-e5ea0d8c01f5'; // Linus Mimeitz, @linusmimeitz
+$pleasure-and-pain: 'photo-1524088484081-4ca7e08e3e19'; // Luis Galvez, @louiscesar
+$quality: 'photo-1527167598984-8802d8028eea'; // Sharon McCutcheon, @sharonmccutcheon ... photo-1532509561631-587d16b6d29f Markus Spiske, @markusspiske
+$poetry: 'photo-1473186505569-9c61870c11f9'; // Álvaro Serrano, @alvaroserrano
+$principle: 'photo-1511351817482-e0d6127f20bb'; // Mirjo Blicke, @mirkoblicke
+$progress: 'photo-1531228040767-7a99c3ff4489'; // Sweet Ice Cream Photography, @sweeticecreamwedding ...  'photo-1541415203868-7279187bb7bb'; // Annie Spratt, @anniespratt
+$prophecy: 'photo-1481709761765-0876c08d7d26'; // Gareth Harper, @garethharper
+$prudence: 'photo-1477517787936-70ba786643fd'; // Raoul Ortega, @ra_oul
+$punishment: 'photo-1545243894-2028accad3aa'; // Kyryll Ushakov, @ushakov_kyryll
+$quantity: 'photo-1519673504889-344865afc163'; // Simon Basler , @simonbasler
+$reasoning: 'photo-1521866337281-e7207a7159c9'; // Victor G, @victor_g
+$relation: 'photo-1518600942388-37b306a5544b'; // Georgy Rudikov, @rudakov_g ... // photo-1551849515-5a5037b65ac3 // Maskedemann, @maskedemann
+$religion: 'photo-1528568427128-2b4c062ea9c8'; // Blake Campbell, @blakecampbell ... photo-1564576605017-f1d270c33460 // Adrian Dascal, @dascal
+$revolution: 'photo-1525389999255-82bad487f23c'; // Ahmed Zayan, @zayyerrn ... // photo-1553258318-c22356c14808, Markus Spiske , @markusspiske
+$rhetoric: '';
+$same-and-other: 'photo-1525286116112-b59af11adad1'; // Eloise Ambursley, @e_ambursley ... photo-1573342560821-6ac96c880987 // Tim Mossholder, @timmossholder
+$science: 'photo-1507413245164-6160d8298b31'; // Hal Gatewood, @halgatewood
+$sense: 'photo-1569914512821-7005a6786982'; // Julian Dutton, @julian_dutton
+$tyranny-and-despotism: 'photo-1574099951664-6ada1812c3f2'; // Luis Villasmil, @villxsmil
+$sign-and-symbol: 'photo-1561059817-7fc87a9cd2fa'; // Ben Mater, @benjmater ... photo-1551759138-d64d3db619b6, Josh Applegate, @joshapplegate ... // photo-1573231766958-e980d37845a5 // Peter Mode, @petermode
+$sin: 'photo-1543880624-5795fe87a603'; // Matthew T Rader, @matthew_t_rader
+$slavery: 'photo-1528108827304-51446e007137'; // Dirk Spijkers, @dspijkers
+$soul: 'photo-1444069069008-83a57aac43ac'; // Angelina Litvin, @linalitvina ... photo-1561618178-a1635b596bf0 // Start Digital, @startdig
+$space: 'photo-1462331940025-496dfbfc7564'; // NASA, @nasa
+$state: 'photo-1513023001678-6927b70dc4a0'; // Ryan Wallace, @accrualbowtie
+$temperance: 'photo-1509490927285-34bd4d057c88'; //  Nathan Dumlao, @nate_dumlao
+$theology: 'photo-1564540400309-0745c2a66a11'; // Caleb Woods, @caleb_woods
+$time: 'photo-1454793147212-9e7e57e89a4f'; // Henry Be, @henry_be
+$truth: 'photo-1523586797235-580376c5d862'; // Jon Tyson, @jontyson
+$universal-and-particular: 'photo-1574151087830-a9045bb71b8d'; // FOODISM360, @foodism360
+$virtue-and-vice: 'photo-1570639224370-72eba2a0f9c7'; // Kelly Sikkema, @kellysikkema ... photo-1572116618753-98d395f2d48f // Alistair MacRobert, @alistarmacrobert ... 'photo-1562104011-786544a6a166'; // Brian Kyed, @brnkd
+$war-and-peace: 'photo-1526818614391-390bc085968b'; // Thomas Q, @thomasq
+$wealth: 'photo-1516238840914-94dfc0c873ae'; // Sharon McCutcheon, @sharonmccutcheon
+$will: 'photo-1517883405152-7067727fcdb3'; // Nathan Dumlao, @nate_dumlao ... 'photo-1472487883843-090fcd92e0c8'; // Saksham Gangwar, @saksham
+$wisdom: 'photo-1544648720-132573cb590d'; // Lorenzo Moschi, @lordesigner
+$world: 'photo-1446776811953-b23d57bd21aa'; // NASA, @nasa
 
 // routes
 $search: 'photo-1485847791529-09ed2263da0b';
@@ -82,11 +153,83 @@ $search-big: build-url($search, $full);
   fate: build-url($fate);
   form: build-url($form);
   god: build-url($god);
+  good-and-evil: build-url($good-and-evil);
+  government: build-url($government);
+  habit: build-url($habit);
+  happiness: build-url($happiness);
+  history: build-url($history);
+  honor: build-url($honor);
+  hypothesis: build-url($hypothesis);
+  idea: build-url($idea);
+  immortality: build-url($immortality);
+  induction: build-url($induction);
+  infinity: build-url($infinity);
+  judgment: build-url($judgment);
+  justice: build-url($justice);
+  knowledge: build-url($knowledge);
+  labor: build-url($labor);
+  language: build-url($language);
+  law: build-url($law);
+  liberty: build-url($liberty);
+  life-and-death: build-url($life-and-death);
+  love: build-url($love);
+  man: build-url($man);
+  mathematics: build-url($mathematics);
+  matter: build-url($matter);
+  mechanics: build-url($mechanics);
+  medicine: build-url($medicine);
+  memory-and-imagination: build-url($memory-and-imagination);
+  metaphysics: build-url($metaphysics);
+  mind: build-url($mind);
+  monarchy: build-url($monarchy);
+  nature: build-url($nature);
+  necessity-and-contingency: build-url($necessity-and-contingency);
+  oligarchy: build-url($oligarchy);
+  one-and-many: build-url($one-and-many);
+  opinion: build-url($opinion);
+  opposition: build-url($opposition);
+  philosophy: build-url($philosophy);
+  physics: build-url($physics);
+  pleasure-and-pain: build-url($pleasure-and-pain);
+  quality: build-url($quality);
+  poetry: build-url($poetry);
+  principle: build-url($principle);
+  progress: build-url($progress);
+  prophecy: build-url($prophecy);
+  prudence: build-url($prudence);
+  punishment: build-url($punishment);
+  quantity: build-url($quantity);
+  reasoning: build-url($reasoning);
+  relation: build-url($relation);
+  religion: build-url($religion);
+  revolution: build-url($revolution);
+  rhetoric: build-url($rhetoric);
+  same-and-other: build-url($same-and-other);
+  science: build-url($science);
+  sense: build-url($sense);
+  tyranny-and-despotism: build-url($tyranny-and-despotism);
+  sign-and-symbol: build-url($sign-and-symbol);
+  sin: build-url($sin);
+  slavery: build-url($slavery);
+  soul: build-url($soul);
+  space: build-url($space);
+  state: build-url($state);
+  temperance: build-url($temperance);
+  theology: build-url($theology);
+  time: build-url($time);
+  truth: build-url($truth);
+  universal-and-particular: build-url($universal-and-particular);
+  virtue-and-vice: build-url($virtue-and-vice);
+  war-and-peace: build-url($war-and-peace);
+  wealth: build-url($wealth);
+  will: build-url($will);
+  wisdom: build-url($wisdom);
+  world: build-url($world);
   angel-big: build-url($angel, $regular);
   animal-big: build-url($animal, $regular);
   aristocracy-big: build-url($aristocracy, $regular);
   art-big: build-url($art, $regular);
-  astronomy-big-and-cosmology: build-url($astronomy-and-cosmology, $regular);
+  astronomy-and-cosmology-big: build-url($astronomy-and-cosmology, $regular);
   beauty-big: build-url($beauty, $regular);
   being-big: build-url($being, $regular);
   cause-big: build-url($cause, $regular);
@@ -96,7 +239,7 @@ $search-big: build-url($search, $full);
   logic-big: build-url($logic, $regular);
   constitution-big: build-url($constitution, $regular);
   courage-big: build-url($courage, $regular);
-  custom-big-and-convention: build-url($custom-and-convention, $regular);
+  custom-and-convention-big: build-url($custom-and-convention, $regular);
   definition-big: build-url($definition, $regular);
   democracy-big: build-url($democracy, $regular);
   desire-big: build-url($desire, $regular);
@@ -112,4 +255,76 @@ $search-big: build-url($search, $full);
   fate-big: build-url($fate, $regular);
   form-big: build-url($form, $regular);
   god-big: build-url($god, $regular);
+  good-and-evil-big: build-url($good-and-evil, $regular);
+  government-big: build-url($government, $regular);
+  habit-big: build-url($habit, $regular);
+  happiness-big: build-url($happiness, $regular);
+  history-big: build-url($history, $regular);
+  honor-big: build-url($honor, $regular);
+  hypothesis-big: build-url($hypothesis, $regular);
+  idea-big: build-url($idea, $regular);
+  immortality-big: build-url($immortality, $regular);
+  induction-big: build-url($induction, $regular);
+  infinity-big: build-url($infinity, $regular);
+  judgment-big: build-url($judgment, $regular);
+  justice-big: build-url($justice, $regular);
+  knowledge-big: build-url($knowledge, $regular);
+  labor-big: build-url($labor, $regular);
+  language-big: build-url($language, $regular);
+  law-big: build-url($law, $regular);
+  liberty-big: build-url($liberty, $regular);
+  life-and-death-big: build-url($life-and-death, $regular);
+  love-big: build-url($love, $regular);
+  man-big: build-url($man, $regular);
+  mathematics-big: build-url($mathematics, $regular);
+  matter-big: build-url($matter, $regular);
+  mechanics-big: build-url($mechanics, $regular);
+  medicine-big: build-url($medicine, $regular);
+  memory-and-imagination-big: build-url($memory-and-imagination, $regular);
+  metaphysics-big: build-url($metaphysics, $regular);
+  mind-big: build-url($mind, $regular);
+  monarchy-big: build-url($monarchy, $regular);
+  nature-big: build-url($nature, $regular);
+  necessity-and-contingency-big: build-url($necessity-and-contingency, $regular);
+  oligarchy-big: build-url($oligarchy, $regular);
+  one-and-many-big: build-url($one-and-many, $regular);
+  opinion-big: build-url($opinion, $regular);
+  opposition-big: build-url($opposition, $regular);
+  philosophy-big: build-url($philosophy, $regular);
+  physics-big: build-url($physics, $regular);
+  pleasure-and-pain-big: build-url($pleasure-and-pain, $regular);
+  quality-big: build-url($quality, $regular);
+  poetry-big: build-url($poetry, $regular);
+  principle-big: build-url($principle, $regular);
+  progress-big: build-url($progress, $regular);
+  prophecy-big: build-url($prophecy, $regular);
+  prudence-big: build-url($prudence, $regular);
+  punishment-big: build-url($punishment, $regular);
+  quantity-big: build-url($quantity, $regular);
+  reasoning-big: build-url($reasoning, $regular);
+  relation-big: build-url($relation, $regular);
+  religion-big: build-url($religion, $regular);
+  revolution-big: build-url($revolution, $regular);
+  rhetoric-big: build-url($rhetoric, $regular);
+  same-and-other-big: build-url($same-and-other, $regular);
+  science-big: build-url($science, $regular);
+  sense-big: build-url($sense, $regular);
+  tyranny-and-despotism-big: build-url($tyranny-and-despotism, $regular);
+  sign-and-symbol-big: build-url($sign-and-symbol, $regular);
+  sin-big: build-url($sin, $regular);
+  slavery-big: build-url($slavery, $regular);
+  soul-big: build-url($soul, $regular);
+  space-big: build-url($space, $regular);
+  state-big: build-url($state, $regular);
+  temperance-big: build-url($temperance, $regular);
+  theology-big: build-url($theology, $regular);
+  time-big: build-url($time, $regular);
+  truth-big: build-url($truth, $regular);
+  universal-and-particular-big: build-url($universal-and-particular, $regular);
+  virtue-and-vice-big: build-url($virtue-and-vice, $regular);
+  war-and-peace-big: build-url($war-and-peace, $regular);
+  wealth-big: build-url($wealth, $regular);
+  will-big: build-url($will, $regular);
+  wisdom-big: build-url($wisdom, $regular);
+  world-big: build-url($world, $regular);
 }
