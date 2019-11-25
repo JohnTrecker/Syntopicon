@@ -13,6 +13,7 @@ import Subtopics from './routes/Subtopics';
 import Text from './routes/Text';
 import Topics from './routes/Topics';
 import Search from './routes/Search';
+import Improve from './routes/Improve';
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
         <Route exact path={routes.REFERENCES} component={References} />
         <Route exact path={routes.EXCERPT} component={Text} />
         <Route exact path={routes.SEARCH} component={Search} />
+        <Route exact path={routes.IMPROVE} component={Improve} />
         <Redirect to='/' />
       </Switch>
     </Suspense>

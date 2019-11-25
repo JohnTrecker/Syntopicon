@@ -1,0 +1,70 @@
+.improve {
+  &--container{
+    height: 100%;
+    width: 80vw;
+    background-image: url('./images/horse.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: center;
+  }
+
+  &--content {
+    position: relative;
+    float: right;
+    background: none;
+    height: 100vh;
+    width: fit-content;
+    max-width: 52%;
+    padding: 15vh 5vw 0;
+
+    .content {
+      &--branding {
+        text-transform: uppercase;
+        text-align: center;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      &--title {
+        margin-bottom: 20px;
+        font-size: 25px;
+      }
+
+      &--tagline {
+        font-size: 12px;
+        margin-bottom: 25px;
+        text-align: center;
+      }
+
+      &--description {
+        background: rgba(255,255,255,0.3);
+        font-size: 14px;
+        line-height: 25px;
+        padding: 30px;
+        margin-top: 25px;
+        box-sizing: border-box;
+
+
+        .input {
+          &-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+          }
+          &-label {
+            float: left;
+          }
+          &-element {
+            outline: none;
+            float: right;
+            width: 90%;
+          }
+        }
+      }
+    }
+  }
+}

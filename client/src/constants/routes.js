@@ -6,6 +6,7 @@ const routes = {
   SEARCH: '/search',
   SUBTOPICS: '/subtopics',
   TOPICS: '/topics',
+  IMPROVE: '/improve',
 }
 
 export default routes;
