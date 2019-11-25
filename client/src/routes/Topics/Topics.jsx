@@ -2,9 +2,9 @@ import React, {useState, useEffect} from 'react';
 import { Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { useTopic } from 'hooks/useTopicState';
+import Topic from './components';
 
 import './Topics.scss'
-import variables from 'styles/variables/_images.scss'
 const axios = require('axios');
 
 
@@ -25,26 +25,15 @@ function Topics() {
     dispatch({type: 'UPDATE_TOPIC', payload})
   }
 
-  function setImage({name}){
-    const imageUrl = variables[name.toLowerCase().replace(/\s/g, '-')]
-    if (imageUrl) console.log(imageUrl)
-    return imageUrl
-      ? { 'backgroundImage': `url(${imageUrl})` }
-      : {}
-  }
-
   return (
     <div className="topics--container">
       <ol className='topic-boxes-container'>
-        {topics.map(topic => (
-          <li
-            key={topic.id}
-            onClick={() => handleSelect(topic)}
-            className="topic-box clickable"
-            style={setImage(topic)}
-          >
-            <p className="topic-label">{topic.name}</p>
-          </li>
+        {topics.map((topic) => (
+          <Topic
+            id={topic.id}
+            name={topic.name}
+            handleSelect={handleSelect}
+          />
         ))}
       </ol>
       {state.topic.id && <Redirect

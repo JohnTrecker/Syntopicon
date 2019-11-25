@@ -1,11 +1,11 @@
-@import 'styles/variables/_themes';
 @import 'styles/variables/_layout';
 
 .topics--container {
-  position: $content-container-position;
-  top: $content-container-top;
-  width: $content-container-width;
-  overflow: auto;
+  @extend %content-container;
+  // position: $content-container-position;
+  // top: $content-container-top;
+  // width: $content-container-width;
+  // overflow: auto;
 
   .topic-boxes-container {
     display: flex;
@@ -13,51 +13,5 @@
     flex-direction: row;
     justify-content: center;
     flex-wrap: wrap;
-  }
-  .topic-box {
-    color: #FFF;
-    font-size: 2em;
-    position: inherit;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
-    border: 1px solid black;
-    width: 300px;
-    height: 225px;
-    margin: 30px;
-    text-align: center;
-    transition: all 1s ease-out 0s;
-
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position-x: center;
-
-    .topic-label {
-      width: fit-content;
-      margin: 10px;
-      padding: 5px;
-      background: rgba(0,0,0,.4);
-      box-sizing: border-box;
-    }
-
-    &.initial {
-      margin-right: 500px;
-    }
-
-    &:nth-child(5n + 1) {
-      background-color: $main-background-1;
-    }
-    &:nth-child(5n + 2) {
-      background-color: $main-background-2;
-    }
-    &:nth-child(5n + 3) {
-      background-color: $main-background-3;
-    }
-    &:nth-child(5n + 4) {
-      background-color: $main-background-4;
-    }
-    &:nth-child(5n + 5) {
-      background-color: $main-background-5;
-    }
   }
 }
