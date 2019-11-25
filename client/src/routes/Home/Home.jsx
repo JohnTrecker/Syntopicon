@@ -1,13 +1,14 @@
 import React from 'react';
 import Panel from './components/Panel';
+import routes from 'constants/routes';
 import './Home.scss'
 
 function Home() {
   return (
     <div className="home--container">
-      <Panel type="panel-topics" title="Peruse" href="/topics" />
-      <Panel type="panel-search" title="Search" href="/search" />
-      <Panel type="panel-follow" title="Follow" href="/account" />
+      <Panel title="Peruse" href={routes.TOPICS} />
+      <Panel title="Search" href={routes.SEARCH} />
+      <Panel title="Improve" href={routes.IMPROVE} />
     </div>
   );
 }

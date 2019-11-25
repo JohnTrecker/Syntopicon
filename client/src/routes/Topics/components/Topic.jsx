@@ -6,7 +6,6 @@ import './Topic.scss'
 const Topic = ({id, name, handleSelect}) => {
   function setImage() {
     const imageUrl = variables[name.toLowerCase().replace(/\s/g, '-')]
-    if (imageUrl) console.log(imageUrl)
     return imageUrl ? imageUrl.replace(/"/g, '') : ''
   }
 

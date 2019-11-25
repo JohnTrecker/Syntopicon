@@ -4,11 +4,11 @@ import { NavLink } from 'react-router-dom'
 import './Panel.scss'
 
 
-const Panel = (props) => (
-  <section className={`panel ${props.type}`}>
+const Panel = ({title, href}) => (
+  <section className={`panel`}>
     <div className="panel--title-overlay" />
-    <h1 className="panel--title">{props.title}</h1>
-    <NavLink to={props.href} className="panel--cta">
+    <h1 className="panel--title">{title}</h1>
+    <NavLink to={href} className="panel--cta">
       View
     </NavLink>
   </section>

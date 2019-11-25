@@ -3,6 +3,7 @@
 .reference--container {
     position: $content-container-position;
     width: $content-container-width;
+    height: 100vh;
     display: flex;
 
   .list--container {
@@ -14,7 +15,6 @@
 
     .reference-list {
       position: absolute;
-      top: 2vh;
       height: 100%;
       width: auto;
       overflow: auto;

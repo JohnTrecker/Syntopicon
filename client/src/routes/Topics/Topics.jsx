@@ -31,6 +31,7 @@ function Topics() {
         {topics.map((topic) => (
           <Topic
             id={topic.id}
+            key={topic.id}
             name={topic.name}
             handleSelect={handleSelect}
           />

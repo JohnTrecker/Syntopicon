@@ -37,7 +37,6 @@ const Improve = () => {
       .then(res => {
         const subs = res.data.data.subtopics.map(({subtopic: name, id}) => ({name, id}));
         setSubtopics(subs)
-        console.log(subs)
         cacheValues(subs, 'subtopics')
       })
       .catch(err => console.log(err))
