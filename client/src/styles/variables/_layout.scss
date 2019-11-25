@@ -1,6 +1,15 @@
 $nav-container-width: 20vw;
 
-$content-container-top: 5vh;
+$content-container-position: relative;
+$content-container-top: 0;
 $content-container-width: 80vw;
 $content-container-height: 100%;
-$content-container-position: relative;
+$content-container-overflow: hidden;
+
+%content-container {
+  position: relative;
+  top: 5vh;
+  width: 80vw;
+  height: 100%;
+  // overflow: hidden;
+}
