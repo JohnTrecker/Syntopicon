@@ -1,9 +1,13 @@
 .tree-node-text {
   // width: 600px;
   width: auto;
-  height: auto;
+  height: fit-content;
   width: fit-content;
-  max-width: 45vw;
+  max-width: 400px;
+
+  // @media only screen and (min-width: 600px) {
+  //   max-width: 350px;
+  // }
 
   p {
     z-index: 1;

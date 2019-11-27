@@ -22,7 +22,7 @@ NodeLabel.propTypes = {
 export default {
   render: <NodeLabel className="tree-node-text"/>,
   foreignObjectWrapper: {
-    width: 600,
-    height: '5em',
+    width: '35vw',
+    height: '100%',
   }
 };

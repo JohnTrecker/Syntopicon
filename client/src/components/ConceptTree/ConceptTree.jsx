@@ -17,9 +17,9 @@ const ConceptTree = (props) => {
   const [translate, setTranslate] = useState({ x: _baseX, y: _baseY })
   const [state, dispatch] = useTopic()
 
-  // TODO: modify nodeSize, translation, or zoom depending on number of topic nodes, number / positionq of leaf nodes
+  // TODO: modify nodeSize, translation, or zoom depending on number of topic nodes, number / position of leaf nodes
   function positionSVG() {
-    let _baseY = height / 3
+    let _baseY = height * 2 / 5
     let _baseX = width / 3 - _pathwidth
 
     return { _baseX, _baseY }
@@ -38,7 +38,7 @@ const ConceptTree = (props) => {
   function handleDepth0(nodeData) {
     const { _collapsed, _children } = nodeData
     if (_collapsed) setTranslate({ x: _baseX + _pathwidth, y: _baseY })
-    if (!_collapsed && _children) setTranslate({ x: _baseX - _pathwidth, y: _baseY })
+    if (!_collapsed && _children) setTranslate({ x: _baseX, y: _baseY })
   }
 
   function handleDepth1(nodeData) {
@@ -70,7 +70,7 @@ const ConceptTree = (props) => {
     return
   }
 
-  const nodeSize = { x: _pathwidth, y: props.data.children.length > 3 ? 55 : 150 }
+  const nodeSize = { x: _pathwidth, y: props.data.children.length < 3 ? 150 : 55 }
   return (
     <div className='tree-container'>
       <Tree
@@ -80,8 +80,8 @@ const ConceptTree = (props) => {
         nodeSize={nodeSize}
         onClick={handleClick}
         separation={{siblings: 1, nonSiblings: 1}}
-        textLayout={{textAnchor: "start", x: 25, y: 5 }}
         translate={translate}
+        // depthFactor={_pathwidth}
         allowForeignObjects
         shouldCollapseNeighborNodes
         useCollapseData
