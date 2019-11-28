@@ -41,7 +41,7 @@ class BaseHandler(RequestHandler):
         try:
             self.body = json_decode(self.request.body)
         except ValueError:
-            self.logger.error(ValueError)
+            # self.logger.error(ValueError)
             self.body = self.request.body
         BaseHandler.logger.info(
             'Received id: {} request: {}'.format(
