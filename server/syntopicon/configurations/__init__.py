@@ -1,9 +1,16 @@
 from os import environ
 from tornado.options import define, parse_command_line
 
-from syntopicon.configurations import development
+from syntopicon.configurations import development, stage
 
-configurations = development
+SYNTOPICON_ENV = environ.get('SYNTOPICON_ENV')
+
+configurations = {}
+
+if SYNTOPICON_ENV == 'stage':
+    configurations = stage
+else:
+    configurations = development
 
 # API SERVER CONFIGURATIONS
 define(
