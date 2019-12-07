@@ -17,6 +17,7 @@ class Topic(BaseModel):
     def json(self):
         return {
             'id': self.id,
+            'referrer_id': self.referrer_id,
             'name': self.name,
-            'num_subtopics': self.num_subtopics,
+            'subtopics': self.subtopics,
         }
