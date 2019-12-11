@@ -27,7 +27,7 @@ const Select = ({subtopics, handleSelect}) => {
   function renderParent({ title, id }) {
     return (
       <li key={id} className="subtopics-list-item">
-        <h2>{title}</h2>
+        <h2 onClick={() => handleSelect({ id, title })}>{title}</h2>
       </li>
     );
   }
