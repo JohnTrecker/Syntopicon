@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import { useTopic } from 'hooks/useTopicState';
 import Breadcrumb from 'components/Breadcrumb'
 import Image from 'components/Image'
-import Taxonomy from './components/Taxonomy'
+import Select from './components/Select'
 import './Subtopics.scss'
 const axios = require('axios');
 
@@ -59,7 +59,7 @@ const Subtopics = (props) => {
       <Breadcrumb />
       <Image name={state.topic.name}/>
       <section className="taxonomy--container">
-        <Taxonomy
+        <Select
           subtopics={subtopics}
           handleSelect={handleSelect}
         />
