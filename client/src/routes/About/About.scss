@@ -2,6 +2,7 @@
   &--container{
     height: 100%;
     width: 80vw;
+    overflow: hidden;
     background-image: url('./images/horse.jpg');
     background-repeat: no-repeat;
     background-size: cover;
