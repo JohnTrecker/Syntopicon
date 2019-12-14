@@ -13,6 +13,7 @@ class ManyReferencesHandler(BaseHandler):
         records = self.db_session.query(Reference)\
           .join(Work)\
           .filter(Reference.subtopic_id == subtopic_id)\
+          .order_by(Reference.author_id.desc())\
           .all()
 
         for record in records:
