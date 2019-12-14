@@ -19,7 +19,7 @@ const Image = ({name}) => {
       className="image--container"
       style={{ backgroundImage: `url(${big})` }}
     >
-      <p>
+      <p className="attribution">
         Photo by{" "}
         <a href={`https://unsplash.com/${handle}`}>
           {author}
