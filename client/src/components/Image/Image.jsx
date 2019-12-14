@@ -1,22 +1,33 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import variables from 'styles/variables/_images.scss'
+import variables from 'styles/variables/images'
 import './Image.scss'
 
 
 const Image = ({name}) => {
-  function setImage() {
+  function getImage() {
     if (!name) return {}
-    const resource = `${name.toLowerCase().replace(/\s/g, '-')}-big`
-    const imageUrl = variables[resource]
-    return imageUrl
-      ? { 'backgroundImage': `url(${imageUrl})` }
-      : {}
+    const alias = name.replace(/\s/g, "_").toLowerCase()
+    const imageMeta = variables[alias]
+    return imageMeta ? imageMeta : {}
   }
 
+  const { big, author, handle } = getImage()
+
   return (
-    <div className="image--container" style={setImage()}></div>
-  )
+    <div
+      className="image--container"
+      style={{ backgroundImage: `url(${big})` }}
+    >
+      <p>
+        Photo by{" "}
+        <a href={`https://unsplash.com/${handle}`}>
+          {author}
+        </a>{" "}
+        on <a href="https://unsplash.com">Unsplash</a>
+      </p>
+    </div>
+  );
 }
 
 Image.propTypes = {
