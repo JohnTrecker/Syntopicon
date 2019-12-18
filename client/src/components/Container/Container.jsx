@@ -10,7 +10,7 @@ const Container = (Component) => (
     <TopicProvider>
       <Router>
         <Navbar />
-        <Component style={{"width": "80vh"}}/>
+        <Component />
       </Router>
     </TopicProvider>
   </div>

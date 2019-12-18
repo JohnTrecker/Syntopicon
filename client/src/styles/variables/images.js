@@ -76,7 +76,7 @@ const monarchy = { uri: 'photo-1551058639-e209197aba8b', small: buildUrl('photo-
 const nature = { uri: 'photo-1463107971871-fbac9ddb920f', small: buildUrl('photo-1463107971871-fbac9ddb920f'), big: buildUrl('photo-1463107971871-fbac9ddb920f', regular), author: '', handle: '' };//photo-1485795046599-702122cd1267
 const necessity_and_contingency = { uri: 'photo-1462690417829-5b41247f6b0e', small: buildUrl('photo-1462690417829-5b41247f6b0e'), big: buildUrl('photo-1462690417829-5b41247f6b0e', regular), author: 'Christian Joudrey', handle: '@cjoudrey' };
 const oligarchy = { uri: 'photo-1543840951-931bdaabb169', small: buildUrl('photo-1543840951-931bdaabb169'), big: buildUrl('photo-1543840951-931bdaabb169', regular), author: 'Joel Barwick', handle: '@joelbarwick' };
-const oneAndMany = { uri: 'photo-1464917423479-6bd9527d469f', small: buildUrl('photo-1464917423479-6bd9527d469f'), big: buildUrl('photo-1464917423479-6bd9527d469f', regular), author: 'Priscilla Du Preez', handle: '@priscilladupreez' };
+const one_and_many = { uri: 'photo-1464917423479-6bd9527d469f', small: buildUrl('photo-1464917423479-6bd9527d469f'), big: buildUrl('photo-1464917423479-6bd9527d469f', regular), author: 'Priscilla Du Preez', handle: '@priscilladupreez' };
 const opinion = { uri: 'photo-1529739121416-921f4dae728e', small: buildUrl('photo-1529739121416-921f4dae728e'), big: buildUrl('photo-1529739121416-921f4dae728e', regular), author: 'Alvin Balemesa', handle: '@ainbal' };
 const opposition = { uri: 'photo-1505958891520-0c2f2950693f', small: buildUrl('photo-1505958891520-0c2f2950693f'), big: buildUrl('photo-1505958891520-0c2f2950693f', regular), author: 'Jeremy Bishop', handle: '@jeremybishop' };
 const philosophy = { uri: 'photo-1564737141443-04001033cb6c', small: buildUrl('photo-1564737141443-04001033cb6c'), big: buildUrl('photo-1564737141443-04001033cb6c', regular), author: 'MEAX', handle: '@meaxgang' }; // 'photo-1550016941-7717d5d1a38a'; // Jasper Smith, @jaspersmith
@@ -185,7 +185,7 @@ const variables = {
   nature,
   necessity_and_contingency,
   oligarchy,
-  oneAndMany,
+  one_and_many,
   opinion,
   opposition,
   philosophy,

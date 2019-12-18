@@ -16,7 +16,7 @@ const Topic = ({id, name, handleSelect}) => {
       onClick={() => handleSelect({ id, name })}
       className={`topic-box clickable ${name}`}
     >
-      <LazyLoad offsetVertical={700}>
+      <LazyLoad offsetBottom={2000}>
         <img src={setImage()} alt="" />
       </LazyLoad>
       <p className="topic-label">{name}</p>
