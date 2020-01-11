@@ -23,18 +23,6 @@ export function rest_service () {
   return request(process.env.SERVER_PROXY_URI)
 }
 
-export function graphql_simple() { 
-  return request(process.env.SERVER_PROXY_URI.replace('rest', 'graphql/simple' ))
-            .post('/')
-            .set('Accept', 'application/json');
-}
-
-export function graphql_relay() { 
-  return request(process.env.SERVER_PROXY_URI.replace('rest', 'graphql/relay' ))
-            .post('/')
-            .set('Accept', 'application/json');
-}
-
 export function resetdb () {
   let pg
   if (have_psql) {
@@ -48,7 +36,6 @@ export function resetdb () {
     throw new Error(`Could not reset database in rest tests. Error = ${pg.stderr.toString()}`)
   }
 }
-
 
 request.Test.prototype.withRole = function (role) {
   if (typeof role !== 'string') {

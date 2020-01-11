@@ -1,4 +1,4 @@
-import { rest_service, resetdb } from '../common'
+import { rest_service, resetdb } from './common'
 import should from 'should'
 
 describe('read', function () {
@@ -12,7 +12,7 @@ describe('read', function () {
       .expect(200, done)
       .expect(r => {
         r.body.length.should.equal(3)
-        r.body[0].id.should.equal('dG9kbzox')
+        r.body[0].id.should.equal(1)
       })
   })
 
@@ -21,7 +21,7 @@ describe('read', function () {
       .get('/todos/1?select=id,todo')
       .expect(200, done)
       .expect(r => {
-        r.body.id.should.equal('dG9kbzox')
+        r.body.id.should.equal(1)
         r.body.todo.should.equal('item_1')
       })
   })

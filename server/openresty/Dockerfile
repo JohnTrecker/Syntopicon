@@ -5,7 +5,7 @@
 # docker push $REMOTE_REPO:latest
 
 
-FROM subzerocloud/openresty:latest
+FROM openresty/openresty:stretch
 
 COPY nginx /usr/local/openresty/nginx
 COPY lualib /usr/local/openresty/lualib

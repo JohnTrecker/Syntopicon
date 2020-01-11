@@ -1,4 +1,4 @@
-import { rest_service, resetdb } from '../common'
+import { rest_service, resetdb } from './common'
 import { should } from 'should'
 
 describe('auth', function () {
@@ -16,20 +16,8 @@ describe('auth', function () {
       .expect('Content-Type', /json/)
       .expect(r => {
         //console.log(r.body)
-        r.body.email.should.equal('alice@email.com')
-      }, done)
-      .expect('set-cookie', /SESSIONID/)
-      .expect(200, done)
-  })
-
-  it('logout', function (done) {
-    rest_service()
-      .post('/rpc/logout')
-      .set('Accept', 'application/vnd.pgrst.object+json')
-      .send()
-      .expect('Content-Type', /json/)
-      .expect('set-cookie', /SESSIONID/)
-      .expect(200, done)
+        r.body.me.email.should.equal('alice@email.com')
+      }).expect(200, done)
   })
 
   it('me', function (done) {
@@ -54,10 +42,8 @@ describe('auth', function () {
       .expect('Content-Type', /json/)
       .expect(r => {
         //console.log(r.body)
-        //r.body.length.should.above(0)
-      })
-      .expect('set-cookie', /SESSIONID/)
-      .expect(200, done)
+        r.body.length.should.above(0)
+      }).expect(200, done)
   })
 
   it('signup', function (done) {
@@ -70,11 +56,10 @@ describe('auth', function () {
         password: 'pass'
       })
       .expect('Content-Type', /json/)
+      
       .expect(r => {
         //console.log(r.body)
-        r.body.email.should.equal('john@email.com')
-      })
-      .expect('set-cookie', /SESSIONID/)
-      .expect(200, done)
+        r.body.me.email.should.equal('john@email.com')
+      }).expect(200, done)
   })
 })

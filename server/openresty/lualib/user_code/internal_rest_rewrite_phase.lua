@@ -1,10 +1,9 @@
-local hooks = require("hooks")
 -- support /endpoint/:id url style
 local m, err = ngx.re.match(ngx.var.uri, "^/([a-z_]+)/([0-9]+)")
 if m then
     ngx.req.set_uri('/' .. m[1])
     local args = ngx.req.get_uri_args()
-    args.row_id = 'eq.' .. m[2]
+    args.id = 'eq.' .. m[2]
     ngx.req.set_uri_args(args)
     ngx.req.set_header('Accept', 'application/vnd.pgrst.object+json')
 end
@@ -13,5 +12,3 @@ end
 if type(hooks.on_rest_request) == 'function' then
 	hooks.on_rest_request()
 end
-
-each(ngx.req.set_header, ngx.ctx.custom_headers or {})

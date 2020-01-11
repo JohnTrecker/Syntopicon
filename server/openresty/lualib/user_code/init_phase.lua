@@ -1,13 +1,9 @@
-require 'prelude'()
-require 'pl.stringx'.import()
+cjson = require('cjson')
+utils = require('utils')
 
-local cjson = require('cjson')
-local utils = require('utils')
-local hooks = require("hooks")
-local subzero = require('subzero')
-local postgrest = require('postgrest.handle')
+hooks = require("hooks")
 
 if type(hooks.on_init) == 'function' then
 	hooks.on_init()
 end
-postgrest.init('/rest')
+
