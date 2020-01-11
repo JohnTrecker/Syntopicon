@@ -1,8 +1,7 @@
 
-create or replace function login(email text, password text) returns customer as $$
+create or replace function login(email text, password text) returns json as $$
 declare
     usr record;
-    token text;
 begin
 
 	select * from data."user" as u
@@ -12,23 +11,25 @@ begin
     if usr is NULL then
         raise exception 'invalid email/password';
     else
-        token := pgjwt.sign(
-            json_build_object(
-                'role', usr.role,
-                'user_id', usr.id,
-                'exp', extract(epoch from now())::integer + settings.get('jwt_lifetime')::int -- token expires in 1 hour
+        
+        return json_build_object(
+            'me', json_build_object(
+                'id', usr.id,
+                'name', usr.name,
+                'email', usr.email,
+                'role', 'customer'
             ),
-            settings.get('jwt_secret')
-        );
-        perform response.set_cookie('SESSIONID', token, settings.get('jwt_lifetime')::int,'/');
-        return (
-            usr.id,
-            usr.name,
-            usr.email,
-            usr.role::text
+            'token', pgjwt.sign(
+                json_build_object(
+                    'role', usr.role,
+                    'user_id', usr.id,
+                    'exp', extract(epoch from now())::integer + settings.get('jwt_lifetime')::int -- token expires in 1 hour
+                ),
+                settings.get('jwt_secret')
+            )
         );
     end if;
 end
-$$ security definer language plpgsql;
+$$ stable security definer language plpgsql;
 -- by default all functions are accessible to the public, we need to remove that and define our specific access rules
 revoke all privileges on function login(text, text) from public;

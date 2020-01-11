@@ -1,4 +1,4 @@
-create or replace function me() returns customer as $$
+create or replace function me() returns json as $$
 declare
     usr record;
 begin
@@ -7,11 +7,11 @@ begin
     where id = request.user_id()
     into usr;
 
-    return (
-        usr.id,
-        usr.name,
-        usr.email,
-        usr.role::text
+    return json_build_object(
+        'id', usr.id, 
+        'name', usr.name,
+        'email', usr.email, 
+        'role', usr.role
     );
 end
 $$ stable security definer language plpgsql;

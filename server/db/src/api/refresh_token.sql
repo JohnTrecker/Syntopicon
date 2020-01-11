@@ -1,8 +1,7 @@
-create or replace function refresh_token() returns boolean as $$
+create or replace function refresh_token() returns text as $$
 declare
     usr record;
     token text;
-    cookie text;
 begin
 
     select * from data."user" as u
@@ -16,12 +15,11 @@ begin
             json_build_object(
                 'role', usr.role,
                 'user_id', usr.id,
-                'exp', extract(epoch from now())::integer + settings.get('jwt_lifetime')::int
+                'exp', extract(epoch from now())::integer + settings.get('jwt_lifetime')::int -- token expires in 1 hour
             ),
             settings.get('jwt_secret')
         );
-        perform response.set_cookie('SESSIONID', token, settings.get('jwt_lifetime')::int,'/');
-        return true;
+        return token;
     end if;
 end
 $$ stable security definer language plpgsql;
