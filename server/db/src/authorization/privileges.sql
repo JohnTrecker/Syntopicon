@@ -68,10 +68,10 @@ to webuser;
 -- anonymous users can only request specific columns from this view
 grant select (id, todo) on api.todos to anonymous;
 grant select (id, last_name, first_name) on api.authors to anonymous;
--- grant select (id, primary_trans, secondary_trans) on api.translators to anonymous;
+grant select (id, primary_trans, secondary_trans) on api.translators to anonymous;
 grant select (id, author, title, translator) on api.works to anonymous;
 grant select (id, author, volume, page_start, page_end) on api.references to anonymous;
--- grant select (id, first_name, last_name) on api.referrers to anonymous;
+grant select (id, first_name, last_name) on api.referrers to anonymous;
 grant select (id, name, subtopics) on api.topics to anonymous;
 grant select (id, topic_id, referrer_id, description) on api.subtopics to anonymous;
 grant select (id, text) on api.excerpts to anonymous;
