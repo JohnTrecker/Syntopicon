@@ -54,8 +54,7 @@ select settings.set('jwt_lifetime', '3600');
 \ir authorization/privileges.sql
 
 \echo # Loading sample data
-\ir sample_data/data.sql
-
+\ir sample_data/seed.sql
 
 commit;
 \echo # ==========================================
