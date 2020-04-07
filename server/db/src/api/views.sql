@@ -7,7 +7,7 @@ select id, text from data.excerpt;
 alter view excerpts owner to api;
 
 create or replace view "references" as
-select id, topic_id, subtopic_id, author, summary_id, excerpt_id, work_id, volume, page_start, page_end from data.reference;
+select id, topic_id, subtopic_id, author_id, work_id, author, volume, page_start, page_end, notes, summary_id, excerpt_id, referrer_id, upvotes, downvotes from data.reference;
 alter view "references" owner to api;
 
 create or replace view referrers as
@@ -15,7 +15,7 @@ select id, last_name, first_name from data.referrer;
 alter view referrers owner to api;
 
 create or replace view subtopics as
-select id, topic_id, referrer_id, description from data.subtopic;
+select id, topic_id, alt_id, referrer_id, description from data.subtopic;
 alter view subtopics owner to api;
 
 create or replace view summaries as
@@ -23,7 +23,7 @@ select id, summary from data.summary;
 alter view summaries owner to api;
 
 create or replace view topics as
-select id, name, subtopics from data.topic;
+select id, referrer_id, name, subtopics from data.topic;
 alter view topics owner to api;
 
 create or replace view translators as

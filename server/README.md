@@ -96,6 +96,13 @@ npm run test_rest               # Run integration tests
 
 Anyone and everyone is welcome to contribute.
 
+## Todo:
+
+[] implement RLS on api.references
+[] write tests
+[] implement circle ci
+[] configure env vars
+
 ## Support and Documentation
 * [subZero Documentation](https://docs.subzero.cloud/postgrest-starter-kit/)
 * [PostgREST API Referance](https://postgrest.com/en/stable/api.html)

@@ -37,7 +37,7 @@ with check (
 
 -- give access to the view owner to this table
 grant select, insert, update, delete on
-data.todo, data.author, data.excerpt, data.reference, data.subtopic, data.summary, data.topic, data.work
+data.todo, data.author, data.excerpt, data.reference, data.referrer, data.subtopic, data.summary, data.topic, data.work
 to api;
 
 grant usage on
@@ -53,7 +53,7 @@ to webuser;
 
 -- authenticated users can request/change all the columns for this view
 grant select, insert, update, delete on
-api.todos, api.authors, api.subtopics, api.topics, api.summaries, api.references, api.works
+api.todos, api.authors, api.subtopics, api.topics, api.summaries, api.references, api.referrers, api.works
 to webuser;
 -- grant select, insert, update, delete on api.authors to webuser;
 -- grant select, insert, update, delete on api.translators to webuser;
@@ -70,10 +70,10 @@ grant select (id, todo) on api.todos to anonymous;
 grant select (id, last_name, first_name) on api.authors to anonymous;
 grant select (id, primary_trans, secondary_trans) on api.translators to anonymous;
 grant select (id, author, title, translator) on api.works to anonymous;
-grant select (id, author, volume, page_start, page_end) on api.references to anonymous;
+grant select (id, topic_id, subtopic_id, author_id, work_id, author, volume, page_start, page_end, notes, summary_id, excerpt_id, referrer_id, upvotes, downvotes) on api.references to anonymous;
 grant select (id, first_name, last_name) on api.referrers to anonymous;
-grant select (id, name, subtopics) on api.topics to anonymous;
-grant select (id, topic_id, referrer_id, description) on api.subtopics to anonymous;
+grant select (id, referrer_id, name, subtopics) on api.topics to anonymous;
+grant select (id, topic_id, alt_id, referrer_id, description) on api.subtopics to anonymous;
 grant select (id, text) on api.excerpts to anonymous;
 grant select (id, summary) on api.summaries to anonymous;
 -------------------------------------------------------------------------------
