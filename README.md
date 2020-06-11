@@ -5,7 +5,7 @@
 
 "Read the best books first or you may not have a chance to read them at all." -- Henry David Thoreau
 
-Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia Britannica's Great Books of the Western World, the name was coined by Mortimer J. Adler to describe the jewel of his life's work: a catalogued index of 102 fundamental "great ideas" around which competing schools of thought have developed over the past 28 centuries. With over 500,000 references to the works of eminent thinkers from Homer to Shakespeare, Euclid to Einstein, Aristotle to Descartes, the Syntopicon is a monument of academic labor that has fallen into obscurity. This project aims to revive its use among English-speaking men and women who earnestly seek a more liberal education.
+Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia Britannica's Great Books of the Western World, the name was coined by Mortimer J. Adler to describe the crowning achievment his life's work: a catalogued index of 102 fundamental "great ideas" around which competing schools of thought have developed over the past 28 centuries. With over 500,000 references to the works of eminent thinkers from Homer to Shakespeare, Euclid to Einstein, Aristotle to Descartes, the Syntopicon is a monument of academic labor that has fallen into obscurity. This project aims to revive its use for anyone looking for a more liberal education.
 
 <!--
 # TODOS:
@@ -44,11 +44,11 @@ Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia
 	# [x] include bible summaries
 		# [x] normalize deuterocanonical books in python-scriptures module
 # [] prepare tables for deployment
-		[] clean tables
-			[] include subtopic_id in each subtopic in topic.subtopics
-			[] make tables text and summary many-to-one
-			[] refs
-				[] drop passages longer than 100 pgs
+	[] clean tables
+		[] include subtopic_id in each subtopic in topic.subtopics
+		[] make tables text and summary many-to-one
+		[] refs
+			[] drop passages longer than 100 pgs
 				[] add refs.referencer column
 				[] add refs.summary_id column
 				[] add refs.text_id column
