@@ -1,3 +1,5 @@
 node_modules
 package-lock.json
 db/src/sample_data/csv
+db/src/data/csv
+.env
