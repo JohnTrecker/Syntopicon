@@ -1,19 +1,5 @@
-# Syntopicon REST API Server
+# Syntopicon GraphQL/REST API
 
-
-
-## Features
-
-✓ Cross-platform development on macOS, Windows or Linux inside [Docker](https://www.docker.com/)<br>
-✓ [PostgreSQL](https://www.postgresql.org/) database schema boilerplate with authentication and authorization flow<br>
-✓ [OpenResty](https://openresty.org/en/) configuration files for the reverse proxy<br>
-✓ [RabbitMQ](https://www.rabbitmq.com/) integration through [pg-amqp-bridge](https://github.com/subzerocloud/pg-amqp-bridge)<br>
-✓ [Lua](https://www.lua.org/) functions to hook into each stage of the HTTP request and add custom logic (integrate 3rd party systems)<br>
-✓ Debugging and live code reloading (sql/configs/lua) functionality using [subzero-cli](https://github.com/subzerocloud/subzero-cli)<br>
-✓ Full migration management (migration files are automatically created) through [subzero-cli](https://github.com/subzerocloud/subzero-cli)/[sqitch](http://sqitch.org/)/[apgdiff](https://github.com/subzerocloud/apgdiff)<br>
-✓ SQL unit test using [pgTAP](http://pgtap.org/)<br>
-✓ Integration tests with [SuperTest / Mocha](https://github.com/visionmedia/supertest)<br>
-✓ Docker files for building production images<br>
 
 ## Directory Layout
 
@@ -28,15 +14,13 @@
 │       ├── sample_data       # A few sample rows
 │       └── init.sql          # Schema definition entry point
 ├── openresty                 # Reverse proxy configurations and Lua code
-│   ├── lualib
-│   │   └── user_code         # Application Lua code
-│   ├── nginx                 # Nginx files
-│   │   ├── conf              # Configuration files
-│   │   └── html              # Static frontend files
-│   ├── Dockerfile            # Dockerfile definition for production
-│   └── entrypoint.sh         # Custom entrypoint
+│   ├── lua                   # Application Lua code
+│   ├── nginx                 # Nginx configuration files
+│   ├── html                  # Static frontend files
+│   └── Dockerfile            # Dockerfile definition for building custom production images
 ├── tests                     # Tests for all the components
 │   ├── db                    # pgTap tests for the db
+│   ├── graphql               # GraphQL interface tests
 │   └── rest                  # REST interface tests
 ├── docker-compose.yml        # Defines Docker services, networks and volumes
 └── .env                      # Project configurations
@@ -45,7 +29,7 @@
 
 
 
-## Installation
+## Installation 
 
 ### Prerequisites
 * [Docker](https://www.docker.com)
@@ -59,9 +43,12 @@ In the root folder of application, run the docker-compose command
 docker-compose up -d
 ```
 
-The API server will become available at the following endpoint:
+The API server will become available at the following endpoints:
 
 - REST [http://localhost:8080/rest/](http://localhost:8080/rest/)
+- GraphiQL IDE [http://localhost:8080/graphiql/](http://localhost:8080/graphiql/)
+- GraphQL Simple Schema [http://localhost:8080/graphql/simple/](http://localhost:8080/graphql/simple/)
+- GraphQL Relay Schema [http://localhost:8080/graphql/relay/](http://localhost:8080/graphql/relay/)
 
 Try a simple request
 
@@ -69,25 +56,42 @@ Try a simple request
 curl http://localhost:8080/rest/topics?select=id,name
 ```
 
+Try a GraphQL query in the integrated GraphiQL IDE at [http://localhost:8080/graphiql/](http://localhost:8080/graphiql/)
+
+```
+{
+  topics{
+    id
+    name
+  }
+}
+```
 
 ## Development workflow and debugging
 
-Execute `subzero dashboard` in the root folder.<br />
+Execute `subzero dashboard` in the root of your folder.<br />
 After this step you can view the logs of all the stack components (SQL queries will also be logged) and
 if you edit a sql/conf/lua file in your project, the changes will immediately be applied.
 
 
 ## Testing
 
+The starter kit comes with a testing infrastructure setup.
+You can write pgTAP tests that run directly in your database, useful for testing the logic that resides in your database (user privileges, Row Level Security, stored procedures).
+Integration tests are written in JavaScript.
+
+Here is how you run them
+
 ```bash
 npm install                     # Install test dependencies
-npm test                        # Run all tests (db, rest)
+npm test                        # Run all tests (db, rest, graphql)
 npm run test_db                 # Run pgTAP tests
-npm run test_rest               # Run integration tests
+npm run test_rest               # Run rest integration tests
+npm run test_graphql            # Run graphql integration tests
 ```
 
-
 ## Deployment
+* [subZero Cloud](http://docs.subzero.cloud/production-infrastructure/subzero-cloud/)
 * [Amazon ECS+RDS](http://docs.subzero.cloud/production-infrastructure/aws-ecs-rds/)
 * [Amazon Fargate+RDS](http://docs.subzero.cloud/production-infrastructure/aws-fargate-rds/)
 * [Dedicated Linux Server](https://docs.subzero.cloud/production-infrastructure/ubuntu-server/)
@@ -96,20 +100,14 @@ npm run test_rest               # Run integration tests
 
 Anyone and everyone is welcome to contribute.
 
-## Todo:
-
-[] implement RLS on api.references
-[] write tests
-[] implement circle ci
-[] configure env vars
-
 ## Support and Documentation
-* [subZero Documentation](https://docs.subzero.cloud/postgrest-starter-kit/)
+* [Documentation](https://docs.subzero.cloud)
 * [PostgREST API Referance](https://postgrest.com/en/stable/api.html)
 * [PostgreSQL Manual](https://www.postgresql.org/docs/current/static/index.html)
-* [GitHub Issues](https://github.com/johntrecker/syntopicon/server/issues) — Check open issues, send feature requests
 
 ## License
 
+This source code in this repository is licensed under [MIT](https://github.com/subzerocloud/subzero-starter-kit/blob/master/LICENSE.txt) license<br />
+Components implementing the GraphQL interface (customized PostgREST and OpenResty docker images) are available under a [commercial license](https://subzero.cloud)<br />
 The documentation to the project is licensed under the [CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/) license.
 

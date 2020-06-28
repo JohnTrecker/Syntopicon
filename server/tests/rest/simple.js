@@ -1,4 +1,4 @@
-import { rest_service } from './common'
+import { rest_service } from '../common'
 
 describe('root endpoint', function () {
   it('returns json', function (done) {

@@ -1,7 +1,8 @@
-create or replace function refresh_token() returns text as $$
+create or replace function refresh_token() returns boolean as $$
 declare
     usr record;
     token text;
+    cookie text;
 begin
 
     select * from data."user" as u
@@ -19,7 +20,8 @@ begin
             ),
             settings.get('jwt_secret')
         );
-        return token;
+        perform response.set_cookie('SESSIONID', token, settings.get('jwt_lifetime')::int,'/');
+        return true;
     end if;
 end
 $$ stable security definer language plpgsql;

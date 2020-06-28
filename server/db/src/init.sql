@@ -17,13 +17,16 @@ set client_min_messages to warning;
 begin;
 create extension if not exists pgcrypto;
 
-\echo # Loading dependencies
+\echo # Loading helper libs
 
--- functions for storing different settins in a table
+-- functions for storing different settings in a table
 \ir libs/settings.sql
 
 -- functions for reading different http request properties exposed by PostgREST
 \ir libs/request.sql
+
+-- functions for for setting response headers and cookies
+\ir libs/response.sql
 
 -- functions for sending messages to RabbitMQ entities
 \ir libs/rabbitmq.sql
@@ -31,7 +34,9 @@ create extension if not exists pgcrypto;
 -- functions for JWT token generation in the database context
 \ir libs/pgjwt.sql
 
--- save app settings (they are storred in the settings.secrets table)
+
+
+-- save app settings (they are stored in the settings.secrets table)
 select settings.set('jwt_secret', :quoted_jwt_secret);
 select settings.set('jwt_lifetime', '3600');
 
@@ -43,8 +48,8 @@ select settings.set('jwt_lifetime', '3600');
 -- between different schemas. The schema name "data" is just a convention
 \ir data/schema.sql
 
--- entities inside this schema (which should be only views and stored procedures) will be
--- exposed as API endpoints. Access to them however is still governed by the
+-- entities inside this schema (which should be only views and stored procedures) will be 
+-- exposed as API endpoints. Access to them however is still governed by the 
 -- privileges defined for the current PostgreSQL role making the requests
 \ir api/schema.sql
 
@@ -54,8 +59,8 @@ select settings.set('jwt_lifetime', '3600');
 \ir authorization/privileges.sql
 
 \echo # Loading sample data
--- \ir sample_data/sample.sql
-\ir sample_data/seed.sql
+\ir sample_data/data.sql
+
 
 commit;
 \echo # ==========================================

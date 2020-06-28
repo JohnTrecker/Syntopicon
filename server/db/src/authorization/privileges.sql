@@ -9,16 +9,18 @@ grant usage on schema api to anonymous, webuser;
 
 -- set privileges to all the auth flow functions
 grant execute on function api.login(text,text) to anonymous;
+grant execute on function api.logout() to anonymous;
 grant execute on function api.signup(text,text,text) to anonymous;
 grant execute on function api.me() to webuser;
 grant execute on function api.login(text,text) to webuser;
+grant execute on function api.logout() to webuser;
 grant execute on function api.refresh_token() to webuser;
 
 -- define the who can access todo model data
 -- enable RLS on the table holding the data
 alter table data.todo enable row level security;
 -- define the RLS policy controlling what rows are visible to a particular application user
-create policy todo_access_policy on data.todo to api
+create policy todo_access_policy on data.todo to api 
 using (
 	-- the authenticated users can see all his todo items
 	-- notice how the rule changes based on the current user_id
@@ -34,13 +36,27 @@ with check (
 	(request.user_role() = 'webuser' and request.user_id() = owner_id)
 );
 
+-- authenticated users can request/change all the columns for this view
+grant select, insert, update, delete on data.todo to api;
+grant select, insert, update, delete on api.todos to webuser;
+grant usage on data.todo_id_seq to webuser;
+
+
+-- anonymous users can only request specific columns from this view
+grant select (id,row_id,todo,private) on api.todos to anonymous;
+-------------------------------------------------------------------------------
+
+-- production
+--
+
+
 -- give access to the view owner to this table
 grant select, insert, update, delete on
-data.todo, data.author, data.excerpt, data.reference, data.referrer, data.subtopic, data.summary, data.topic, data.work
+data.author, data.excerpt, data.reference, data.referrer, data.subtopic, data.summary, data.topic, data.work
 to api;
 
 grant usage on
-data.todo_id_seq, data.author_id_seq, data.author_id_seq, data.excerpt_id_seq, data.reference_id_seq, data.subtopic_id_seq, data.summary_id_seq, data.topic_id_seq, data.work_id_seq
+data.author_id_seq, data.excerpt_id_seq, data.reference_id_seq, data.referrer_id_seq, data.subtopic_id_seq, data.summary_id_seq, data.topic_id_seq, data.work_id_seq
 to webuser;
 
 
@@ -49,15 +65,15 @@ to webuser;
 -- are the rights of our application user in regard to this api view.
 
 -- authenticated users can request/change all the columns for this view
-grant select, insert on api.authors to webuser;
-grant select, insert on api.excerpts to webuser;
-grant select, insert on api.references to webuser;
-grant select, insert on api.referrers to webuser;
-grant select, insert on api.subtopics to webuser;
-grant select, insert on api.summaries to webuser;
-grant select, insert on api.topics to webuser;
-grant select, insert on api.translators to webuser;
-grant select, insert on api.works to webuser;
+grant select, insert, update, delete on api.authors to webuser;
+grant select, insert, update, delete on api.excerpts to webuser;
+grant select, insert, update, delete on api.references to webuser;
+grant select, insert, update, delete on api.referrers to webuser;
+grant select, insert, update, delete on api.subtopics to webuser;
+grant select, insert, update, delete on api.summaries to webuser;
+grant select, insert, update, delete on api.topics to webuser;
+grant select, insert, update, delete on api.translators to webuser;
+grant select, insert, update, delete on api.works to webuser;
 
 -- anonymous users can only request specific columns from this view
 grant select (id, todo) on api.todos to anonymous;
@@ -72,6 +88,52 @@ grant select (id, primary_trans, secondary_trans) on api.translators to anonymou
 grant select (id, author, title, translator) on api.works to anonymous;
 -------------------------------------------------------------------------------
 
--- set search_path = data, public;
+-- practice
 
-grant select, insert, update, delete on api.authors to api;
+-- added. grant priveleges to authenticated users
+grant select, insert, update, delete 
+on api.clients, api.projects, api.tasks, api.project_comments, api.task_comments, api.comments
+to webuser;
+
+-- ...
+set search_path = data, public;
+
+alter table client enable row level security; -- i.e. data.client 
+grant select, update, delete on client to api;
+create policy access_own_rows on client to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id );
+
+
+alter table project enable row level security;
+grant select, insert, update, delete on project to api;
+create policy access_own_rows on project to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id );
+
+
+alter table task enable row level security;
+grant select, insert, update, delete on task to api;
+create policy access_own_rows on task to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id );
+
+
+alter table project_comment enable row level security;
+grant select, insert, update, delete on project_comment to api;
+create policy access_own_rows on project_comment to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id );
+
+alter table task_comment enable row level security;
+grant select, insert, update, delete on task_comment to api;
+create policy access_own_rows on task_comment to api
+using ( request.user_role() = 'webuser' and request.user_id() = user_id );
+
+-- ...
+grant usage on sequence data.client_id_seq to webuser;
+grant usage on sequence data.project_id_seq to webuser;
+grant usage on sequence data.task_id_seq to webuser;
+grant usage on sequence data.task_comment_id_seq to webuser;
+grant usage on sequence data.project_comment_id_seq to webuser;
+
+-- added. grant priveleges to anonymous users
+grant select 
+on api.clients, api.projects, api.tasks, api.project_comments, api.task_comments, api.comments
+to anonymous;
