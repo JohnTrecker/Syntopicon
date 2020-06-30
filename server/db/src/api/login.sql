@@ -16,7 +16,7 @@ begin
             json_build_object(
                 'role', usr.role,
                 'user_id', usr.id,
-                'exp', extract(epoch from now())::integer + settings.get('jwt_lifetime')::int -- token expires in 1 hour
+                'exp', extract(epoch from now())::integer + settings.get('jwt_lifetime')::int
             ),
             settings.get('jwt_secret')
         );

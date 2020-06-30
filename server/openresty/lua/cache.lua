@@ -1,7 +1,8 @@
 -- cache using nginx internal shared dictionary
 local cache = require 'cache.core'
 local backend = require 'cache.backend.nginx'
-backend.init(ngx.shared.cache_tags) -- the parameter is a lua_shared_dict defined in nginx.conf
+-- the parameter is a lua_shared_dict defined in nginx.conf
+backend.init(ngx.shared.cache_tags)
 
 local endpoint_synonyms = { 
     item='items'
@@ -38,7 +39,8 @@ local function get_cache_key()
     local tags = get_request_tags()
     local key_parts = { endpoint, ngx.var.args or '', headers.Authorization }
     local key = table.concat(key_parts,':')
-    local ttl = 60 -- seconds
+    -- seconds
+    local ttl = 60
     return key, ttl, tags
 end
 

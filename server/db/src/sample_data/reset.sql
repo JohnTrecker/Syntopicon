@@ -17,10 +17,10 @@ truncate data.work restart identity cascade;
 
 -- practice
 truncate data.todo restart identity cascade;
-truncate data.client restart identity cascade; -- added
-truncate data.project restart identity cascade; -- added
-truncate data.task restart identity cascade; -- added
-truncate data.project_comment restart identity cascade; -- added
-truncate data.task_comment restart identity cascade; -- added
+truncate data.client restart identity cascade;
+truncate data.project restart identity cascade;
+truncate data.task restart identity cascade;
+truncate data.project_comment restart identity cascade;
+truncate data.task_comment restart identity cascade;
 \ir data.sql
 COMMIT;

@@ -36,7 +36,8 @@ $$;
 
 CREATE OR REPLACE FUNCTION url_decode(data text) RETURNS bytea LANGUAGE sql AS $$
 WITH t AS (SELECT translate(data, '-_', '+/')),
-     rem AS (SELECT length((SELECT * FROM t)) % 4) -- compute padding size
+    -- compute padding size
+    rem AS (SELECT length((SELECT * FROM t)) % 4)
     SELECT decode(
         (SELECT * FROM t) ||
         CASE WHEN (SELECT * FROM rem) > 0
@@ -54,7 +55,8 @@ WITH
       WHEN algorithm = 'HS256' THEN 'sha256'
       WHEN algorithm = 'HS384' THEN 'sha384'
       WHEN algorithm = 'HS512' THEN 'sha512'
-      ELSE '' END)  -- hmac throws error
+      ELSE '' END)
+      -- hmac throws error
 SELECT pgjwt.url_encode(public.hmac(signables, secret, (select * FROM alg)));
 $$;
 

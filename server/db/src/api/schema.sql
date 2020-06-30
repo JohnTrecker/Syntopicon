@@ -6,7 +6,8 @@ set search_path = api, public;
 -- it is needed for the definition of the RLS policies
 drop role if exists api;
 create role api;
-grant api to current_user; -- this is a workaround for RDS where the master user does not have SUPERUSER priviliges  
+-- this is a workaround for RDS where the master user does not have SUPERUSER priviliges  
+grant api to current_user;
 
 
 -- our endpoints
