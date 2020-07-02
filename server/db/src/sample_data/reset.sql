@@ -1,7 +1,9 @@
 BEGIN;
 \set QUIET on
 \set ON_ERROR_STOP on
+\set processs `echo $ENV_PROCESS`
 set client_min_messages to warning;
+
 truncate data.user restart identity cascade;
 
 -- production
@@ -22,5 +24,9 @@ truncate data.project restart identity cascade;
 truncate data.task restart identity cascade;
 truncate data.project_comment restart identity cascade;
 truncate data.task_comment restart identity cascade;
-\ir data.sql
+
+\ir seed_users.sql
+\ir seed_todos.sql
+\ir seed_sample_syntopicon.sql;
+
 COMMIT;

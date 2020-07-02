@@ -7,3 +7,6 @@ INSERT INTO "user" (id,name,email,"password") VALUES
 (2,'bob','bob@email.com','pass'),
 (3,'mortimer','adler@email.com','pass')
 ;
+
+ALTER SEQUENCE user_id_seq RESTART WITH 4;
+ANALYZE data.user;
