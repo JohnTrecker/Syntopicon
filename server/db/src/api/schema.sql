@@ -18,5 +18,5 @@ create type customer as (id int, name text, email text, role text);
 \ir signup.sql
 \ir me.sql
 \ir todos.sql
-\ir search_todos.sql
 \ir views.sql
+\ir search_functions.sql
