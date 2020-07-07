@@ -2,10 +2,10 @@ set search_path = data, public;
 
 INSERT INTO todo (id,todo,private,owner_id) VALUES
 (1,'item_1',FALSE,1),
-(2,'item_2',FALSE,1),
+(2,'item_2',TRUE,1),
 (3,'item_3',FALSE,1),
-(4,'item_4',FALSE,2),
-(5,'item_5',FALSE,2)
+(4,'item_4',TRUE,2),
+(5,'item_5',TRUE,2),
 (6,'item_6',FALSE,2)
 ;
 

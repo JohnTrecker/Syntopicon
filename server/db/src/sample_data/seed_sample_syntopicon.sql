@@ -1,4 +1,3 @@
-
 set search_path = data, public;
 
 -- fill table author (6)

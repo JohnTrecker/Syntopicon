@@ -38,8 +38,6 @@ set search_path = data, public;
 
 
 -- restart sequences
-ALTER SEQUENCE user_id_seq RESTART WITH 3;
-ALTER SEQUENCE todo_id_seq RESTART WITH 7;
 ALTER SEQUENCE author_id_seq RESTART WITH 131;
 ALTER SEQUENCE translator_id_seq RESTART WITH 131;
 ALTER SEQUENCE work_id_seq RESTART WITH 362;
@@ -51,7 +49,6 @@ ALTER SEQUENCE excerpt_id_seq RESTART WITH 37785;
 ALTER SEQUENCE reference_id_seq RESTART WITH 96250;
 --
 -- analyze modified tables
-ANALYZE todo;
 ANALYZE author;
 ANALYZE translator;
 ANALYZE work;
