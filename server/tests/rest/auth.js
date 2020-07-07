@@ -41,7 +41,7 @@ describe('auth', function () {
       .expect('Content-Type', /json/)
       .expect(r => {
         //console.log(r.body)
-        r.body.email.should.equal('alice@email.com')
+        r.body.email.should.equal('adler@email.com')
       }).expect(200, done)
   })
 

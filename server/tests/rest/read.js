@@ -16,7 +16,7 @@ describe('read', function () {
       })
   })
 
-  it('by primary key', function (done) {
+  it.skip('by primary key', function (done) {
     rest_service()
       .get('/topics/1?select=id,name')
       .expect(200, done)

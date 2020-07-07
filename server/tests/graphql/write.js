@@ -6,7 +6,7 @@ describe('write', function() {
   before(function(done){ resetdb(); done(); });
   after(function(done){ resetdb(); done(); });
 
-  it('can insert one todo', function(done) {
+  it('can insert one reference', function(done) {
     graphql()
       .withRole('webuser')
       .send({ 
@@ -14,9 +14,14 @@ describe('write', function() {
         query: `
           mutation {
             insert{
-              todo(input: {todo: "new name"}){
-                row_id
-                todo
+              reference(input: {author: "Sophocles", author_id: 3, referrer_id: 1, topic_id: 1, subtopic_id: 3, excerpt_id: 6, work_id: 3, summary_id: 4}){
+                id
+                author {
+                  last_name
+                }
+                referrer {
+                  last_name
+                }
               }
             }
           }
@@ -25,10 +30,10 @@ describe('write', function() {
       .expect('Content-Type', /json/)
       .expect(200, done)
       .expect( r => {
-        //console.log(r.body.data)
-        //r.body.data.todos.length.should.equal(10);
-        r.body.data.insert.todo.todo.should.equal('new name');
-        r.body.data.insert.todo.row_id.should.be.type('number');
+        // console.log(r.body.data)
+        r.body.data.insert.reference.author.last_name.should.equal('Sophocles');
+        r.body.data.insert.reference.referrer.last_name.should.equal('Adler');
+        r.body.data.insert.reference.id.should.be.type('number');
       })
       
   });
