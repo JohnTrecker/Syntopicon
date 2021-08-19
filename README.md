@@ -1,4 +1,4 @@
-![Logo of the project](http://media.gettyimages.com/photos/mortimer-j-adler-surrounded-by-his-great-ideas-picture-id50447930?s=594x594)
+![Logo of the project](https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP._gs9vEceLvwcZX0UbLzgIgHaI3%26pid%3DApi&f=1)
 
 # Syntopicon
 > An open source index of great ideas
