@@ -60,7 +60,6 @@ Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia
 		[x] subtopics
 		[x] references
 	[] routes MVP
--->
 
 ## API Schema
 
@@ -84,7 +83,6 @@ Syntopicon is an open API of ideas. Inspired by the 1952 edition of Encyclopedia
 |         | /references/:id           |    PUT    |     JSON     | Update Reference with matching `id` and return JSON of updated Reference|
 |         | /references/:id           |   DELETE  |    empty     | Delete Reference with matching `id` and return JSON of deleted Reference|
 
-<!--
 
 
 
