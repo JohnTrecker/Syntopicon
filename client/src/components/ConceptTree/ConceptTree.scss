@@ -2,13 +2,13 @@
   width: 100%;
   height: 100%;
 
-  // .nodeBase {
-  //   .tree-node-text {
-  //     width: auto;
-  //     width: fit-content;
-  //     max-width: 45vw;
-  //   }
-  // }
+  .nodeBase {
+    .tree-node-text {
+      width: auto;
+      width: fit-content;
+      max-width: 45vw;
+    }
+  }
 
   .leafNodeBase {
     fill: white;
@@ -25,4 +25,5 @@
     transition-timing-function: ease-out;
     transition-delay: 0s, 0s;
   }
+
 }

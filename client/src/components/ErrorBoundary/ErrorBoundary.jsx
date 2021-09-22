@@ -10,7 +10,6 @@ class ErrorBoundary extends Component {
 
   componentDidCatch(error, errorInfo) {
     this.setState({ hasError: true })
-    console.log(error, errorInfo);
   }
 
   render() {
@@ -19,13 +18,19 @@ class ErrorBoundary extends Component {
         <div className="error-boundary--content">
           <p>We&apos;re sorry — something&apos;s gone wrong.</p>
           <p>Our team has been notified.</p>
-          {/* <Redirect to={{pathname: "/topics"}}/>; */}
+          <DelayedRedirect delay={3000}/>
         </div>
       )
     }
 
     return this.props.children;
   }
+}
+
+function DelayedRedirect({delay}){
+  return setTimeout(() => (
+    <Redirect to={{pathname: "/topics"}}/>
+  ), delay);
 }
 
 ErrorBoundary.propTypes = {

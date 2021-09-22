@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Autocomplete from 'components/Autocomplete'
 import ConceptTree from 'components/ConceptTree'
 import suggestions from 'data/suggestions.json';
-import template from 'data/template.json'
+import template from 'data/template.json';
 import './Search.scss'
 
 

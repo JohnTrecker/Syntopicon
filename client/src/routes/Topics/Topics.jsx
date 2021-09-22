@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { useTopic } from 'hooks/useTopicState';
 import Topic from './components';
+import {default as jsonTopics} from 'data/topics.json';
 
 import './Topics.scss'
 const axios = require('axios');
@@ -16,7 +17,13 @@ function Topics() {
   function fetchTopics() {
     axios.get('http://localhost:8888/v1/topics')
       .then(res => setTopics(res.data.data))
-      .catch(err => console.log(err))
+      .catch(_ => {
+        setTopics(
+          Object.entries(jsonTopics)
+            .map(
+              ([topic, id]) => ({name: topic, id})
+            )
+      )})
   }
 
   function handleSelect(selected) {

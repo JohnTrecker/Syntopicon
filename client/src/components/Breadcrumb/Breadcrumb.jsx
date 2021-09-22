@@ -44,11 +44,11 @@ const Breadcrumbs = () => {
         break
       }
       case '/topics' : {
-        dispatch({ type: 'UPDATE_TOPIC', payload: { subtopic: {}, reference: {} } })
+        dispatch({ type: 'UPDATE_SUBTOPIC', payload: { subtopic: {}, reference: {} } })
         break
       }
       case '/subtopics' : {
-        dispatch({ type: 'UPDATE_TOPIC', payload: { reference: {} } })
+        dispatch({ type: 'UPDATE_REFERENCE', payload: { reference: {} } })
         break
       }
       default: {

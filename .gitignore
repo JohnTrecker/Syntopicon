@@ -1,9 +1,5 @@
-archive2.js
-secrets.js
-**/data/*
-.DS_Store
 node_modules
-**/env
-**/__pycache__
-utility/venv/
-server_*
+**/data/**
+package-lock.json
+server_postgrest/
+**/.DS_Sore

@@ -5,7 +5,9 @@ const TopicDispatchContext = createContext()
 
 function topicReducer(state, action) {
   switch (action.type) {
-    case 'UPDATE_TOPIC': {
+    case 'UPDATE_TOPIC':
+    case 'UPDATE_SUBTOPIC':
+    case 'UPDATE_REFERENCE': {
       return { ...state, ...action.payload }
     }
     default: {

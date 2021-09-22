@@ -17,6 +17,32 @@ const ConceptTree = (props) => {
   const [translate, setTranslate] = useState({ x: _baseX, y: _baseY })
   const [state, dispatch] = useTopic()
 
+  const nodeSize = { x: _pathwidth, y: props.data.children.length < 3 ? 150 : 55 }
+  
+  return (
+    <div className='tree-container'>
+      <Tree
+        className='svg-tree'
+        data={props.data}
+        nodeLabelComponent={NodeLabel}
+        nodeSize={nodeSize}
+        onClick={handleClick}
+        separation={{siblings: 1, nonSiblings: 1}}
+        translate={translate}
+        // depthFactor={_pathwidth}
+        allowForeignObjects
+        shouldCollapseNeighborNodes
+        useCollapseData
+      />
+      {state.topic.id && <Redirect
+        to={{
+          pathname: state.subtopic.id ? "/references" : "/subtopics",
+          search: state.subtopic.id ? `?sub=${state.subtopic.id}` : `?top=${state.topic.id}`,
+        }}
+    />}
+    </div>
+  )
+
   // TODO: modify nodeSize, translation, or zoom depending on number of topic nodes, number / position of leaf nodes
   function positionSVG() {
     let _baseY = height * 2 / 5
@@ -66,34 +92,9 @@ const ConceptTree = (props) => {
       topic: { id: topics[parent.name], name: parent.name },
     }
 
-    dispatch({ type: 'UPDATE_TOPIC', payload })
+    dispatch({ type: 'UPDATE_SUBTOPIC', payload })
     return
   }
-
-  const nodeSize = { x: _pathwidth, y: props.data.children.length < 3 ? 150 : 55 }
-  return (
-    <div className='tree-container'>
-      <Tree
-        className='svg-tree'
-        data={props.data}
-        nodeLabelComponent={NodeLabel}
-        nodeSize={nodeSize}
-        onClick={handleClick}
-        separation={{siblings: 1, nonSiblings: 1}}
-        translate={translate}
-        // depthFactor={_pathwidth}
-        allowForeignObjects
-        shouldCollapseNeighborNodes
-        useCollapseData
-      />
-      {state.topic.id && <Redirect
-        to={{
-          pathname: state.subtopic.id ? "/references" : "/subtopics",
-          search: state.subtopic.id ? `?sub=${state.subtopic.id}` : `?top=${state.topic.id}`,
-        }}
-    />}
-    </div>
-  )
 }
 
 ConceptTree.propTypes = {

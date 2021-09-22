@@ -4,11 +4,8 @@ import variables from 'styles/variables/images'
 import './Topic.scss'
 
 const Topic = ({id, name, handleSelect}) => {
-  function setImage() {
-    let alias = name.replace(/\s/g, '_').toLowerCase()
-    const imageMeta = variables[alias]
-    return imageMeta ? imageMeta.small : ''
-  }
+  const alias = name.replace(/\s/g, '_').toLowerCase()
+  const source = (alias in variables) ? variables[alias].small : ''
 
   return (
     <li
@@ -17,7 +14,7 @@ const Topic = ({id, name, handleSelect}) => {
       className={`topic-box clickable ${name}`}
     >
       <LazyLoad offsetBottom={2000}>
-        <img src={setImage()} alt="" />
+        <img src={source} alt={`${alias}-image`} />
       </LazyLoad>
       <p className="topic-label">{name}</p>
     </li>
