@@ -121,7 +121,7 @@ create table reference (
   referrer_id  int not null references "referrer"(id),
   author       text not null,
   volume       int,
-  page_start   text not null,
+  page_start   text,
   page_end     text,
   notes        text,
   upvotes      int not null default 0,
