@@ -1,29 +1,31 @@
 #!/usr/bin/env python
-
+import math as math
 import pandas as pd
 import streamlit as st
 import os
 import csv
 import json
 import time
-import scriptures
+# import scriptures
 
-from summary_intern import Summarizer
-from scriptures.texts.deuterocanon import Deuterocanon
-from librarian import get_ref_meta
+# from summary_intern import Summarizer
+# from scriptures.texts.deuterocanon import Deuterocanon
+# from librarian import get_ref_meta
 
-s = Summarizer()
-d = Deuterocanon()
+# s = Summarizer()
+# d = Deuterocanon()
 
 
-# refs = pd.read_csv('../data/csv/reference.csv', encoding='utf8', index_col=False)
-# summ = pd.read_csv('../data/csv/summary.csv', encoding='utf8', index_col=False)
+refs = pd.read_csv('../data/csv/reference.csv', encoding='utf8', index_col=False)
+summ = pd.read_csv('../data/csv/summary.csv', encoding='utf8', index_col=False)
 # subs = pd.read_csv('../data/csv/subtopic.csv', encoding='utf8', index_col=False)
 # tops = pd.read_csv('../data/csv/topic.csv', encoding='utf8', index_col=False)
-works = pd.read_csv('../data/csv/work.csv', encoding='utf8', index_col=False)
+# works = pd.read_csv('../data/csv/work.csv', encoding='utf8', index_col=False)
 # vols = pd.read_csv('../data/csv/vols.csv', encoding='utf8', index_col=False)
 # auths = pd.read_csv('../data/csv/author.csv', encoding='utf8', index_col=False)
 # texts = pd.read_csv('../data/csv/text.csv', encoding='utf8', index_col=False)
+# aka...
+excerpts = pd.read_csv('../data/csv/excerpt.csv', encoding='utf8', index_col=False)
 # trans = pd.read_csv('../data/csv/translator.csv', encoding='utf8', index_col=False)
 
 def fix_errata():
@@ -187,7 +189,7 @@ def separate_refs():
 	ps = refs.page_start
 
 	a = refs[pd.notnull(ps) & ps.str.isnumeric()]
-	a.page_stard.astype(int)
+	a.page_start.astype(int)
 	a.volume.astype(int)
 	len_a = a.shape[0]
 
@@ -204,12 +206,23 @@ def separate_refs():
 	len_c = c.shape[0]
 
 	st.title('seperated refs')
-	st.write('integer refs', len_a, 'numeral refs', len_b, 'biblical refs', len_c)
+	st.write('integer refs', len_a, 'roman numeral refs', len_b, 'biblical refs', len_c)
 	st.write('total:', len_a + len_b + len_c, 'expected:', refs.shape[0])
 	st.title('All refs accounted for')
 	st.write((len_a + len_b + len_c) == refs.shape[0])
 
 	return (a, b, c)
+
+def get_page_ranges(ps, pe):
+	no_page_end = False if isinstance(pe, str) else True
+	return str(ps) if no_page_end else f'{ps}-{pe}'
+
+def set_page_ranges():
+	a = refs.copy()
+	a['pages'] = a.apply(lambda x: get_page_ranges(x.page_start, x.page_end), axis=1)
+	a.drop(['page_start', 'page_end'], axis=1, inplace=True)
+	a.to_csv('../data/test/refs_20210827_pageref.csv', index=False, sep=',', encoding='utf-8')
+	st.write('new refs written')
 
 def get_work_id(ref_id, volume, page_start):
 	if volume is None or page_start is None:
@@ -230,7 +243,7 @@ def set_work_ids():
 	a.to_csv(path_or_buf='../data/csv/test/refs_2019_10_19.csv', index=False)
 	st.write('new refs written')
 
-def get_refs_by_page_length(length = 100, note=None):
+def get_refs_by_page_length(length = 30, note=None):
 	PAGE_LENGTH = length
 	ps = refs.page_start
 	pe = refs.page_end
@@ -242,10 +255,10 @@ def get_refs_by_page_length(length = 100, note=None):
 
 	b = a.loc[pe_a - ps_a > PAGE_LENGTH]
 	if note:
-		c = b[pd.notnull(b.notes) & b.notes.str.contains(note)]
-		b = c
+		b = b[pd.notnull(b.notes) & b.notes.str.contains(note)]
 	st.title('References longer than {} pages'.format(PAGE_LENGTH))
 	st.write(b.shape[0])
+	st.write(b.head(30))
 	return b
 
 def get_long_goethe_refs():
@@ -254,17 +267,40 @@ def get_long_goethe_refs():
 	return b
 
 def drop_longs():
+	st.title('Dropping references longer than 50 pages')
 	longs = pd.concat([get_refs_by_page_length(), get_long_goethe_refs()])
 	longs.set_index('id', verify_integrity=True, inplace=True)
+
+	long_summary_ids = pd.unique(longs.summary_id)
+	long_excerpt_ids = pd.unique(longs.excerpt_id)
+	
 	new_ref = refs.copy().set_index('id', verify_integrity=True)
 	new_summary = summ.copy().set_index('id', verify_integrity=True)
+	new_excerpt = excerpts.copy().set_index('id', verify_integrity=True)
 
 	c = new_ref.drop(longs.index, axis=0)
 	c.to_csv('../data/csv/reference2.csv', index=True, sep=',', encoding='utf-8')
 
-	d = new_summary.drop(longs.index, axis=0)
+	d = new_summary.drop(long_summary_ids, axis=0)
 	d.to_csv('../data/csv/summary2.csv', index=True, sep=',', encoding='utf-8')
+
+	e = new_excerpt.drop(long_excerpt_ids, axis=0)
+	e.to_csv('../data/csv/excerpt2.csv', index=True, sep=',', encoding='utf-8')
+	
+	st.title('Long references dropped.')
+	
 	return
+
+def add_quote_to_pages_cols():
+	a = refs.copy()
+	a = a.astype({'page_start': str, 'page_end': str})
+	a.to_csv('../data/csv/reference2.csv', index=True, sep=',', encoding='utf-8')
+	st.write('refs modified')
+	return
+
+def get_data_size():
+		size = os.path.getsize('../data/csv/')
+		st.write(size)	
 
 def parse_scripture(passage: str) -> (str, int, int, int):
 	"""returns tuple of book name, chapter start, verse start, chapter end, and verse end"""
