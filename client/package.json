@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
-    "node-sass": "^7.0.0",
+    "node-sass": "^9.0.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "5.0.1"
   },
